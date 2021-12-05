@@ -20,8 +20,8 @@ public class App
 
         Elements labelWrapper = page.getElementsByClass("label").select("img");
 
-        /*Elements name = page.getElementsByClass("name");
-        Elements brewery = page.getElementsByClass("brewery");
+        Elements nameWrapper = page.getElementsByClass("name");
+        /*Elements brewery = page.getElementsByClass("brewery");
         Elements style = page.getElementsByClass("style");
         Elements abv = page.getElementsByClass("abv");
         Elements ibu = page.getElementsByClass("ibu");*/
@@ -31,12 +31,12 @@ public class App
             JSONObject document = new JSONObject();
             String label = labelWrapper.get(index).attr("src");
             document.put("label", label);
-
-            /*jsonObject.put("name", name);
-            jsonObject.put("brewery", brewery);
-            jsonObject.put("style", style);
-            jsonObject.put("abv", abv);
-            jsonObject.put("ibu", ibu);*/
+            String name = nameWrapper.get(index).getElementsByTag("a").html();
+            document.put("name", name);
+            /*document.put("brewery", brewery);
+            document.put("style", style);
+            document.put("abv", abv);
+            document.put("ibu", ibu);*/
 
             file.write(document.toJSONString());
             file.write("\n");
