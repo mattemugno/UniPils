@@ -39,7 +39,6 @@ def find_all_links(browser, soup, links_ratebeer):
         href = item.find_all(class_='MuiTypography-root Text___StyledTypographyTypeless-bukSfn pzIrn '
                                     'colorized__WrappedComponent-hrwcZr bRPQdN Anchor___StyledText2-jwDTwU jYqICB '
                                     'px-4 py-4 fj-s MuiTypography-body2')[0]['href']
-        # print("https://www.ratebeer.com/" + href)
         links_ratebeer.write("https://www.ratebeer.com/" + href + '\n')
     else:
         button = WebDriverWait(browser, 5).until(ec.presence_of_element_located((By.XPATH, '/html/body/div[1]/div['
@@ -47,8 +46,6 @@ def find_all_links(browser, soup, links_ratebeer):
                                                                                            '2]/div/div/div/div['
                                                                                            '2]/div[2]/div[21]/div['
                                                                                            '2]/div/div[3]/button[2]')))
-        # button = browser.find_element_by_xpath('/html/body/div[1]/div[2]/div[2]/div/div/div/div[2]/div[2]/div['
-        # '21]/div[2]/div/div[3]/button[2]')
         browser.execute_script("arguments[0].scrollIntoView();", button)
         browser.execute_script("arguments[0].click();", button)
 
