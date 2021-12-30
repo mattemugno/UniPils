@@ -32,16 +32,16 @@ def scrapy():
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-    
-    with open('C:\\Users\\matte\\Desktop\\links.txt', 'r') as file:
+
+    with open('C:\\Users\\pucci\\Desktop\\links.txt', 'r') as file:
         for line in file:
             browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
             browser.get(line)
             time.sleep(5)
             print(line)
-            comments = open('C:\\Users\\matte\\Desktop\\comments.txt', 'a', encoding='utf8')
+            comments = open('C:\\Users\\pucci\\Desktop\\comments.txt', 'a', encoding='utf8')
             i = 0
-            while i < 1:
+            while i < 2:
                 find_all_comments(browser, comments)
                 i += 1
             comments.close()
@@ -81,20 +81,21 @@ def find_all_comments(browser, comments):
             print('[date]: ' + str(date) + ' [comment]: ' + comment.replace('Show less', ''))
             i += 1
     else:
-        button = WebDriverWait(browser, 7).until(ec.presence_of_element_located((By.XPATH, '/html/body/div[1]/div['
-                                                                                           '2]/div['
-                                                                                           '2]/div/div/div/div['
-                                                                                           '2]/div[4]/div/div[3]/div['
-                                                                                           '16]/div[2]/div/div['
-                                                                                           '3]/button[2]')))
-        browser.execute_script("arguments[0].scrollIntoView();", button)
-        browser.execute_script("arguments[0].click();", button)
-        page_source = browser.page_source
-        soup = bs4.BeautifulSoup(page_source, 'html.parser')
+        try:
+            button = WebDriverWait(browser, 7).until(ec.presence_of_element_located((By.XPATH, '/html/body/div[1]/div['
+                                                                                               '2]/div['
+                                                                                               '2]/div/div/div/div['
+                                                                                               '2]/div[4]/div/div[3]/div['
+                                                                                               '16]/div[2]/div/div['
+                                                                                               '3]/button[2]')))
+            browser.execute_script("arguments[0].scrollIntoView();", button)
+            browser.execute_script("arguments[0].click();", button)
+            page_source = browser.page_source
+            soup = bs4.BeautifulSoup(page_source, 'html.parser')
+        except TimeoutException:
+            print('[ERROR]: TimeoutException raised')
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     scrapy()
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
