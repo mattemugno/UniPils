@@ -15,6 +15,7 @@ from random import randrange
 from datetime import timedelta, datetime
 
 global soup
+global count
 
 
 def random_date(start, end):
@@ -32,7 +33,8 @@ def scrapy():
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
-
+    global count, app
+    count = 0
     with open('C:\\Users\\pucci\\Desktop\\links.txt', 'r') as file:
         for line in file:
             browser = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=options)
@@ -41,15 +43,17 @@ def scrapy():
             print(line)
             comments = open('C:\\Users\\pucci\\Desktop\\comments.txt', 'a', encoding='utf8')
             i = 0
-            while i < 2:
+            while i < 200:
                 find_all_comments(browser, comments)
+                if(count == app):
+                    break
                 i += 1
             comments.close()
     file.close()
 
 
 def find_all_comments(browser, comments):
-    global soup
+    global soup, count, app
     page_source = browser.page_source
     soup = bs4.BeautifulSoup(page_source, 'html.parser')
     i = 0
@@ -78,8 +82,9 @@ def find_all_comments(browser, comments):
             comments.write(
                 '[date]: ' + str(date) + ' [comment]: ' + comment.replace('Show less', '').replace('Bottiglia',
                                                                                                    '') + '\n')
-            print('[date]: ' + str(date) + ' [comment]: ' + comment.replace('Show less', ''))
+            #print('[date]: ' + str(date) + ' [comment]: ' + comment.replace('Show less', ''))
             i += 1
+            count += 1
     else:
         try:
             button = WebDriverWait(browser, 7).until(ec.presence_of_element_located((By.XPATH, '/html/body/div[1]/div['
@@ -94,8 +99,12 @@ def find_all_comments(browser, comments):
             soup = bs4.BeautifulSoup(page_source, 'html.parser')
         except TimeoutException:
             print('[ERROR]: TimeoutException raised')
+            app = count
+            print(count)
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     scrapy()
+    print('!!!!!!!!!',count,'!!!!!!!!!!!')
+    print(count)
