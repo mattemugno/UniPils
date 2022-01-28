@@ -1,0 +1,26 @@
+import json
+from neo4j import GraphDatabase
+
+uri = "neo4j://localhost:7687"
+driver = GraphDatabase.driver(uri, auth=("neo4j", "pass"))
+file = "C://Users/pucci/Desktop/Users.json"
+# prova = "C://Users/pucci/Desktop/Users-prova.json"
+
+
+def create_relation_purchased(tx, username, beerId):
+    tx.run("MATCH (u:User), (b:Beer)"
+           " WHERE u.username = $username AND b.id = $beerId"
+           " MERGE (u)-[:PURCHASED]->(b)",
+           username=username, beerId=beerId)
+
+
+with open(file, "r", encoding="latin-1", errors="ignore") as f:
+    data = json.load(f)
+    for doc in data['users']:
+        username = doc['login']['username']
+        for order in doc['orders']:
+            for beers in order['order_list']:
+                # print(beers['beer_name'])
+                with driver.session() as session:
+                    session.write_transaction(create_relation_purchased, username, beers['beer_id'])
+    f.close()
