@@ -70,13 +70,16 @@ public class RegistrationController {
         }
 
         //int newId = MongoDriver.getMaxUserId() + 1;
-        User user = new User(uName, first, last, em, gen, date, cell);
-        if(!neo4j.addUser(user)) {
+        User userNeo = new User(uName,pwd);
+
+        if(!neo4j.addUser(userNeo)) {
             Utils.showErrorAlert("User not inserted");
             return;
         }
+
+        User userMongo = new User(uName, first, last, em, gen, date, cell);
         //MongoDriver.setMaxUserId(user.getUserId());
-        MongoDriver.addUser(user);
+        MongoDriver.addUser(userMongo);
         Utils.showInfoAlert("User inserted successfully");
         //SessionUtils.setUserLogged(user);
         Utils.changeScene("hello-view.fxml", actionEvent);
