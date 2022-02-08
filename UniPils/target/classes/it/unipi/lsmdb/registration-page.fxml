@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.RegistrationController">
+      <Label layoutX="295.0" layoutY="261.0" text="Username:" />
+      <Label layoutX="297.0" layoutY="302.0" text="Password:" />
+      <Label layoutX="312.0" layoutY="342.0" text="E-mail:" />
+      <Accordion layoutX="105.0" layoutY="67.0" />
+      <PasswordField fx:id="password" layoutX="377.0" layoutY="297.0" />
+      <TextField fx:id="username" layoutX="377.0" layoutY="256.0" />
+      <TextField fx:id="email" layoutX="377.0" layoutY="338.0" />
+      <Label layoutX="403.0" layoutY="171.0" prefHeight="21.0" prefWidth="133.0" text="Welcome to UniPils!" />
+      <Label layoutX="393.0" layoutY="203.0" prefHeight="21.0" prefWidth="154.0" text="Join us if you love beer" />
+      <TextField fx:id="fName" layoutX="377.0" layoutY="381.0" />
+      <TextField fx:id="lName" layoutX="377.0" layoutY="415.0" />
+      <TextField fx:id="cellular" layoutX="377.0" layoutY="524.0" />
+      <Label layoutX="295.0" layoutY="385.0" text="First name:" />
+      <Label layoutX="296.0" layoutY="419.0" text="Last name:" />
+      <Label layoutX="324.0" layoutY="455.0" text="DOB:" />
+      <Label layoutX="310.0" layoutY="487.0" text="Gender:" />
+      <CheckBox fx:id="male" layoutX="384.0" layoutY="487.0" mnemonicParsing="false" text="M" />
+      <CheckBox fx:id="female" layoutX="469.0" layoutY="487.0" mnemonicParsing="false" text="F" />
+      <Label layoutX="309.0" layoutY="529.0" text="Cellular:" />
+      <DatePicker fx:id="dob" layoutX="378.0" layoutY="450.0" />
+      <Button layoutX="436.0" layoutY="567.0" mnemonicParsing="false" onAction="#register" text="Sign in" />
+   <Button layoutX="425.0" layoutY="67.0" mnemonicParsing="false" onAction="#goBack" text="Button" />
+</AnchorPane>
