@@ -1,7 +1,6 @@
 package it.unipi.lsmdb.bean;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class User {
 
@@ -23,6 +22,38 @@ public class User {
         this.dob=dob;
         this.cell=cell;
     }
+
+    public String getUsername(){
+        return username;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public String getFirst(){
+        return first;
+    }
+
+    public String getLast(){
+        return last;
+    }
+    public String getCellular(){
+        return cell;
+    }
+
+    public String getGender(){
+        return gender;
+    }
+
+    public LocalDate getDob(){
+        return dob;
+    }
+
 
 
 

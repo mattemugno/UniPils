@@ -1,5 +1,8 @@
 package it.unipi.lsmdb.controller;
 
+import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.persistence.MongoDriver;
+import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +22,7 @@ public class RegistrationController {
     @FXML private CheckBox male;
     @FXML private CheckBox female;
     @FXML private TextField cellular;
-    @FXML private DatePicker dob;// = new DatePicker(LocalDate.now());
+    @FXML private DatePicker dob;
 
     @FXML
     private void register(ActionEvent actionEvent) {
@@ -34,8 +37,13 @@ public class RegistrationController {
         String cell = cellular.getText();
         String gen;
 
-        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("")||((m.equals(""))&&(f.equals("")))||(cell.equals(""))) {
+        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("")||((m.equals(""))&&(f.equals("")))||(cell.equals(""))||(date == null)) {
             Utils.showErrorAlert("Fill in all fields");
+            return;
+        }
+
+        if((!m.equals(""))&&(!f.equals(""))) {
+            Utils.showErrorAlert("Pick only one gender");
             return;
         }
 
@@ -54,13 +62,23 @@ public class RegistrationController {
             return;
         }
 
-        //int newId = MongoDriver.getMaxUserId() + 1;
-        //User user = new User(uName, first, last, em, gen, date, cell);
-        //MongoDriver.setMaxUserId(user.getUserId());
-        //MongoDriver.addUser(user);
-        //Utils.showInfoAlert("User succesfully added");
-        //SessionUtils.setUserLogged(user);
+        NeoDriver neo4j = NeoDriver.getInstance();
+        if(!neo4j.getUsersFromUnique(uName)){
+            //show the error message
+            Utils.showErrorAlert("username or email already exist");
+            return;
+        }
 
+        //int newId = MongoDriver.getMaxUserId() + 1;
+        User user = new User(uName, first, last, em, gen, date, cell);
+        if(!neo4j.addUser(user)) {
+            Utils.showErrorAlert("User not inserted");
+            return;
+        }
+        //MongoDriver.setMaxUserId(user.getUserId());
+        MongoDriver.addUser(user);
+        Utils.showInfoAlert("User inserted successfully");
+        //SessionUtils.setUserLogged(user);
         Utils.changeScene("hello-view.fxml", actionEvent);
     }
 
@@ -70,5 +88,8 @@ public class RegistrationController {
         Utils.changeScene("hello-view.fxml", ae);
     }
 
-
+    /*LocalDate localDate = datePicker.getValue();
+    Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
+    Date date = Date.from(instant);
+System.out.println(localDate + "\n" + instant + "\n" + date);*/
 }

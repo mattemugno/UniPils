@@ -5,6 +5,7 @@ module it.unipi.lsmdb {
     requires org.mongodb.driver.sync.client;
     requires org.mongodb.driver.core;
     requires org.mongodb.bson;
+    requires org.neo4j.driver;
 
     opens it.unipi.lsmdb to javafx.fxml;
     exports it.unipi.lsmdb;
