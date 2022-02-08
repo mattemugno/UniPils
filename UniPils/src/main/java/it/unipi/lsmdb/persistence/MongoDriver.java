@@ -1,7 +1,8 @@
 package it.unipi.lsmdb.persistence;
 
-
 import it.unipi.lsmdb.config.InfoConfig;
+import com.mongodb.client.*;
+import com.mongodb.ConnectionString;
 
 public class MongoDriver {
 
@@ -15,7 +16,5 @@ public class MongoDriver {
             "/?retryWrites=true&w=3&wtimeoutMS=5000&readPreference=nearest";
 
     private static final ConnectionString uri= new ConnectionString(connectionString);
-
-
 
 }
