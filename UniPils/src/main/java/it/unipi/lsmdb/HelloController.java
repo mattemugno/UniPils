@@ -1,4 +1,4 @@
-package dii.unipi.lsmdb;
+package it.unipi.lsmdb;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

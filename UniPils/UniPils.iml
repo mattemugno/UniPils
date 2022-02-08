@@ -37,5 +37,8 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:13" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-base:win:13" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-sync:4.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:bson:4.4.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:4.4.0" level="project" />
   </component>
 </module>

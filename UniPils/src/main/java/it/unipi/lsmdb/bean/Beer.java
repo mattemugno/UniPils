@@ -1,4 +1,4 @@
-package dii.unipi.lsmdb.bean;
+package it.unipi.lsmdb.bean;
 
 public class Beer {
 

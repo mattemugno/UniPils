@@ -1,4 +1,4 @@
-package dii.unipi.lsmdb;
+package it.unipi.lsmdb;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

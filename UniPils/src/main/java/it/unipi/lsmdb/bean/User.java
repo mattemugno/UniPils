@@ -1,4 +1,4 @@
-package dii.unipi.lsmdb.bean;
+package it.unipi.lsmdb.bean;
 
 import java.time.LocalDate;
 import java.util.Date;

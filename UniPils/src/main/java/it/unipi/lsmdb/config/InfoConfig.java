@@ -1,4 +1,4 @@
-package dii.unipi.lsmdb.config;
+package it.unipi.lsmdb.config;
 
 import org.w3c.dom.Document;
 

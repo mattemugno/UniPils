@@ -1,6 +1,6 @@
-package dii.unipi.lsmdb.utils;
+package it.unipi.lsmdb.utils;
 
-import dii.unipi.lsmdb.HelloApplication;
+import it.unipi.lsmdb.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;

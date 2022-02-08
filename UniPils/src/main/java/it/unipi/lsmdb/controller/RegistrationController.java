@@ -1,21 +1,11 @@
-package dii.unipi.lsmdb.controller;
+package it.unipi.lsmdb.controller;
 
-import dii.unipi.lsmdb.utils.Utils;
-import dii.unipi.lsmdb.persistence.MongoDriver;
-import dii.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

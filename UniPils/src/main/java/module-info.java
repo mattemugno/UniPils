@@ -1,11 +1,11 @@
-module dii.unipi.lsmdb {
+module it.unipi.lsmdb {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.xml;
 
-    opens dii.unipi.lsmdb to javafx.fxml;
-    exports dii.unipi.lsmdb;
-    exports dii.unipi.lsmdb.controller;
-    opens dii.unipi.lsmdb.controller to javafx.fxml;
+    opens it.unipi.lsmdb to javafx.fxml;
+    exports it.unipi.lsmdb;
+    exports it.unipi.lsmdb.controller;
+    opens it.unipi.lsmdb.controller to javafx.fxml;
 
 }
