@@ -18,7 +18,7 @@ public class DataSession {
         DataSession.IdUserLogged=id;
     }
 
-    public static void logout() {
+    public static void logoutSession() {
         userLogged = null;
     }
 }
