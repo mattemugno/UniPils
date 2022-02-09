@@ -15,4 +15,6 @@ public class Beer {
     private String brewery_name;
     private String brewery_city;
     private int view_count;
+
+
 }

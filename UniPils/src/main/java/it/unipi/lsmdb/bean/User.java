@@ -9,7 +9,8 @@ public class User {
     private String gender;
     private ArrayList<String> name;
     private String email;
-    private ArrayList<String> login;
+    private String username;
+    private String password;
     private LocalDate dob;
     private String cell;
     private ArrayList<Order> orders;
@@ -18,10 +19,11 @@ public class User {
 
 
 
-    public User(String gender, ArrayList<String> name, String email, ArrayList<String> login,
+    public User(String gender, ArrayList<String> name, String email, String username, String password,
                 LocalDate dob, String cell,ArrayList<Order> orders,ArrayList<Payment> payments,String address){
         this.name=name;
-        this.login=login;
+        this.username=username;
+        this.password=password;
         this.orders=orders;
         this.payments=payments;
         this.address=address;
@@ -37,10 +39,6 @@ public class User {
 
     public ArrayList<String> getName() {
         return name;
-    }
-
-    public ArrayList<String> getLogin() {
-        return login;
     }
 
     public LocalDate getDob() {
@@ -91,10 +89,6 @@ public class User {
         this.dob = dob;
     }
 
-    public void setLogin(ArrayList<String> login) {
-        this.login = login;
-    }
-
     public void setOrders(ArrayList<Order> orders) {
         this.orders = orders;
     }
@@ -103,5 +97,20 @@ public class User {
         this.payments = payments;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }
