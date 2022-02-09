@@ -1,8 +1,5 @@
 package it.unipi.lsmdb.controller;
 
-import it.unipi.lsmdb.bean.User;
-import it.unipi.lsmdb.persistence.MongoDriver;
-import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,7 +19,7 @@ public class RegistrationController {
     @FXML private CheckBox male;
     @FXML private CheckBox female;
     @FXML private TextField cellular;
-    @FXML private DatePicker dob;
+    @FXML private DatePicker dob;// = new DatePicker(LocalDate.now());
 
     @FXML
     private void register(ActionEvent actionEvent) {
@@ -91,8 +88,5 @@ public class RegistrationController {
         Utils.changeScene("hello-view.fxml", ae);
     }
 
-    /*LocalDate localDate = datePicker.getValue();
-    Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
-    Date date = Date.from(instant);
-System.out.println(localDate + "\n" + instant + "\n" + date);*/
+
 }
