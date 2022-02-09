@@ -5,6 +5,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.BeersController">
    <children>
+      <fx:include fx:id="embeddedMenu" source="menu-page.fxml" layoutY="250.0"/>
       <Button layoutX="248.0" layoutY="94.0" mnemonicParsing="false" onAction="#onClickViewBeers" text="Button" />
    </children>
 </AnchorPane>
