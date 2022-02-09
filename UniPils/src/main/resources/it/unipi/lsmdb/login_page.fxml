@@ -9,9 +9,9 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="811.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.LoginController">
    <children>
       <fx:include fx:id="embeddedMenu" source="menu-page.fxml" layoutY="250.0" />
-      <Button fx:id="loginButton" layoutX="497.0" layoutY="380.0" mnemonicParsing="false" onAction="#onClickLogin" text="Log in" />
-      <PasswordField layoutX="449.0" layoutY="331.0" />
-      <TextField layoutX="449.0" layoutY="288.0" />
+      <Button fx:id="loginButton" layoutX="267.0" layoutY="249.0" mnemonicParsing="false" onAction="#onClickLogin" text="Log in" />
+      <PasswordField fx:id="pass" layoutX="449.0" layoutY="331.0" />
+      <TextField fx:id="user" layoutX="449.0" layoutY="288.0" />
       <Label layoutX="376.0" layoutY="292.0" prefHeight="18.0" prefWidth="62.0" text="Username:" />
       <Label layoutX="376.0" layoutY="334.0" prefHeight="18.0" prefWidth="62.0" text="Password:" />
       <Button layoutX="440.0" layoutY="419.0" mnemonicParsing="false" onAction="#onClickRegistration" text="Not Registered? Sign up here" />

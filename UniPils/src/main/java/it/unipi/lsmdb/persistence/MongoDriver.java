@@ -121,14 +121,15 @@ public class MongoDriver {
 
             doc.append("cell", u.getCell());
 
-            try {
+            //try {
+            System.out.println(doc);
                 collection.insertOne(doc);
                 String id;
                 id = doc.getObjectId("_id").toString();
                 DataSession.IdUserLogged(id);
-            } catch (Exception e){
+            /*} catch (Exception e){
                 e.printStackTrace();
-            }
+            }*/
 
 
         }catch(Exception ex){
