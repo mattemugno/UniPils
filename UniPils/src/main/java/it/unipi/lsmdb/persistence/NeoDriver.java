@@ -2,30 +2,25 @@ package it.unipi.lsmdb.persistence;
 
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.InfoConfig;
-import org.neo4j.driver.Record;
 import org.neo4j.driver.*;
 
-public class NeoDriver{
+public class NeoDriver {
 
-    private Driver driver;
+    private static NeoDriver instance = null;
     private final String uri;
     private final String user;
     private final String password;
+    private Driver driver;
 
-    private static NeoDriver instance = null;
-
-    private NeoDriver()
-    {
-        uri = "neo4j://" + InfoConfig.getNeo4jIp() + ":" + InfoConfig.getNeo4jPort();
+    private NeoDriver() {
+        uri = "bolt://" + InfoConfig.getNeo4jIp() + ":" + InfoConfig.getNeo4jPort();
         this.user = InfoConfig.getNeo4jUsername();
         this.password = InfoConfig.getNeo4jPassword();
         openConnection();
     }
 
-    public static NeoDriver getInstance()
-    {
-        if (instance == null)
-        {
+    public static NeoDriver getInstance() {
+        if (instance == null) {
             instance = new NeoDriver();
         }
         return instance;
@@ -34,33 +29,38 @@ public class NeoDriver{
 
     private void openConnection() {
         try {
-            driver = GraphDatabase.driver( uri, AuthTokens.basic( user, password ) );
-        }catch (Exception ex){
+            driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
+            driver.verifyConnectivity();
+        } catch (Exception ex) {
             System.out.println("Impossible open connection with Neo4j");
         }
     }
 
     public void closeConnection() {
-        try{
+        try {
             driver.close();
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("Impossible close connection with Neo4j");
         }
     }
 
-    public boolean addUser(User user){
+    public boolean addUser(User user) {
 
-        try(Session session= driver.session()){
+        try (Session session = driver.session()) {
 
-            session.writeTransaction((TransactionWork<Void>) tx ->{
-                tx.run("MERGE (u:User {username:$uname, password:$pwd})",
-                Values.parameters(
-                        "uname", user.getUsername(),
-                        "pwd", user.getPassword()));
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MERGE (u:User {username:$uname, password:$pwd, first_name: $first, last_name: $last})",
+                        Values.parameters(
+                                "uname", user.getUsername(),
+                                "pwd", user.getPassword(),
+                                "first", user.getFirst(),
+                                "last", user.getLast()
+                        )
+                );
 
                 return null;
             });
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             closeConnection();
             return false;

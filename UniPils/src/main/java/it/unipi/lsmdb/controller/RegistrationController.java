@@ -32,25 +32,20 @@ public class RegistrationController {
         String first = fName.getText();
         String last = lName.getText();
         LocalDate date = dob.getValue();
-        String m = male.getText();
-        String f = female.getText();
+        boolean m = male.isSelected();
+        boolean f = female.isSelected();
         String cell = cellular.getText();
         String gen;
 
-        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("")||((m.equals(""))&&(f.equals("")))||(cell.equals(""))||(date == null)) {
+        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("")||((!m)&&(!f))||(cell.equals(""))||(date == null)) {
             Utils.showErrorAlert("Fill in all fields");
             return;
         }
 
-        if((!m.equals(""))&&(!f.equals(""))) {
-            Utils.showErrorAlert("Pick only one gender");
-            return;
-        }
-
-        if(f.equals(""))
-            gen = m;
+        if(m)
+            gen = "male";
         else
-            gen = f;
+            gen = "female";
 
         //email check
         Pattern p=Pattern.compile(".+@.+\\.[a-z]+");
@@ -63,11 +58,11 @@ public class RegistrationController {
         }
 
         NeoDriver neo4j = NeoDriver.getInstance();
-        if(!neo4j.getUsersFromUnique(uName)){
+        /*if(!neo4j.getUsersFromUnique(uName)){
             //show the error message
             Utils.showErrorAlert("username or email already exist");
             return;
-        }
+        }*/
 
         //int newId = MongoDriver.getMaxUserId() + 1;
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
