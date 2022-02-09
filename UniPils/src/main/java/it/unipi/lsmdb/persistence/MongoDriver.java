@@ -70,8 +70,6 @@ public class MongoDriver {
     }
 
 
-
-
     public static ArrayList<User> getBeersFromUsername(String username){
         List<Document> results;
 
