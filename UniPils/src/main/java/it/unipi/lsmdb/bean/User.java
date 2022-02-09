@@ -7,7 +7,8 @@ import java.util.Date;
 public class User {
 
     private String gender;
-    private ArrayList<String> name;
+    private String first;
+    private String last;
     private String email;
     private String username;
     private String password;
@@ -19,14 +20,12 @@ public class User {
 
 
 
-    public User(String gender, ArrayList<String> name, String email, String username, String password,
-                LocalDate dob, String cell,ArrayList<Order> orders,ArrayList<Payment> payments,String address){
-        this.name=name;
+    public User(String gender, String first, String last, String email, String username, String password,
+                LocalDate dob, String cell){
+        this.first=first;
+        this.last=last;
         this.username=username;
         this.password=password;
-        this.orders=orders;
-        this.payments=payments;
-        this.address=address;
         this.email=email;
         this.gender=gender;
         this.dob=dob;
@@ -35,10 +34,6 @@ public class User {
 
     public String getGender(){
         return gender;
-    }
-
-    public ArrayList<String> getName() {
-        return name;
     }
 
     public LocalDate getDob() {
@@ -71,10 +66,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setName(ArrayList<String> name) {
-        this.name = name;
     }
 
     public void setAddress(String address) {
@@ -113,4 +104,19 @@ public class User {
         this.password = password;
     }
 
+    public void setFirst(String first) {
+        this.first = first;
+    }
+
+    public String getFirst() {
+        return first;
+    }
+
+    public String getLast() {
+        return last;
+    }
+
+    public void setLast(String last) {
+        this.last = last;
+    }
 }

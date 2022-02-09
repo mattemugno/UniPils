@@ -1,23 +1,22 @@
 package it.unipi.lsmdb.persistence;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.mongodb.client.model.*;
-import it.unipi.lsmdb.bean.Beer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.InfoConfig;
-import com.mongodb.client.*;
-import com.mongodb.ConnectionString;
-import it.unipi.lsmdb.utils.Utils;
 import org.bson.Document;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.bson.conversions.Bson;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.mongodb.client.model.Aggregates.sort;
-import static com.mongodb.client.model.Projections.*;
+import static it.unipi.lsmdb.utils.Utils.calculateAge;
 
 public class MongoDriver {
 
@@ -85,30 +84,40 @@ public class MongoDriver {
                         new Document("login.username", "silversnake781")),
                 new Document("$project",
                         new Document("orders.order_list", 1L)));
-        //Bson myMatch = Aggregates.match(Filters.eq("login.username", username));
-        //Bson mySort = sort(Sorts.descending("datePublished"));
-        //Bson projection = Aggregates.project( fields(excludeId(), include("recipeId","name", "authorName", "recipeCategory", "datePublished")));
 
-        //results = collection.aggregate(Arrays.asList(myMatch, mySort, projection))
-             //   .into(new ArrayList<>());
-        ArrayList<Document> res=new ArrayList<Document>(results);
+        ArrayList<Document> res= new ArrayList<>(results);
         closeConnection();
         return getBeanFromDocuments(res);
     }
 
     public static boolean addUser(User u){
-        openUserConnection();
+        openConnection("Users");
 
         try{
 
             Document doc= new Document();
-            doc.append("username", u.getUsername());
-            doc.append("email", u.getEmail());
-            doc.append("first_name", u.getFirst());
-            doc.append("last_name", u.getLast());
-            doc.append("DOB", u.getDob());
+
             doc.append("gender", u.getGender());
-            doc.append("cellular", u.getCellular());
+
+            Document doc_name = new Document();
+                doc_name.append("first", u.getFirst());
+                doc_name.append("last", u.getLast());
+            doc.append("name", doc_name);
+
+            doc.append("email", u.getEmail());
+
+            Document doc_login = new Document();
+                doc_login.append("username", u.getUsername());
+                doc_login.append("password", u.getPassword());
+            doc.append("login", doc_login);
+
+            Document doc_dob = new Document();
+                doc_dob.append("date", u.getDob());
+                LocalDate lt = LocalDate.now();
+                doc_dob.append("age", calculateAge(u.getDob(), lt));
+            doc.append("dob", doc_dob);
+
+            doc.append("cell", u.getCell());
 
             collection.insertOne(doc);
 

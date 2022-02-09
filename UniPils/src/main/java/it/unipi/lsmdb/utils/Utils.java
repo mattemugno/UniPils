@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class Utils {
 
@@ -43,6 +45,13 @@ public class Utils {
         alert.showAndWait();
     }
 
+    public static int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
+    }
     /*public static void closeApp() {
         Neo4jDriver.getInstance().closeConnection();
     }*/
