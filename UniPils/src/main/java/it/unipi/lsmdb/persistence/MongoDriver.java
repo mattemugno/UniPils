@@ -117,7 +117,12 @@ public class MongoDriver {
 
             doc.append("cell", u.getCell());
 
-            collection.insertOne(doc);
+            try {
+                collection.insertOne(doc);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
 
         }catch(Exception ex){
             closeConnection();
@@ -126,7 +131,5 @@ public class MongoDriver {
         closeConnection();
         return true;
     }
-
-
 
 }
