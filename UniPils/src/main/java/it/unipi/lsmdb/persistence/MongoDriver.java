@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.config.InfoConfig;
 import org.bson.Document;
 
@@ -119,6 +120,9 @@ public class MongoDriver {
 
             try {
                 collection.insertOne(doc);
+                String id;
+                id = doc.getObjectId("_id").toString();
+                DataSession.IdUserLogged(id);
             } catch (Exception e){
                 e.printStackTrace();
             }

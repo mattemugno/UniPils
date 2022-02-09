@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
@@ -73,14 +74,14 @@ public class RegistrationController {
         }
 
         Utils.showInfoAlert("User inserted successfully");
-        //SessionUtils.setUserLogged(user);
-        Utils.changeScene("hello-view.fxml", actionEvent);
+        DataSession.setUserLogged(user);
+        Utils.changeScene("menu-page.fxml", actionEvent);
     }
 
     @FXML
     public void goBack(ActionEvent actionEvent) {
         ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("hello-view.fxml", ae);
+        Utils.changeScene("menu-page.fxml", ae);
     }
 
 
