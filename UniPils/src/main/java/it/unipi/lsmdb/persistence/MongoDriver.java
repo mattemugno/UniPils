@@ -11,12 +11,17 @@ import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.config.InfoConfig;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
+import static com.mongodb.client.model.Accumulators.sum;
+import static com.mongodb.client.model.Aggregates.*;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Indexes.descending;
+import static com.mongodb.client.model.Projections.*;
 import static it.unipi.lsmdb.utils.Utils.calculateAge;
 
 public class MongoDriver {
@@ -41,7 +46,6 @@ public class MongoDriver {
             System.out.println("Impossible open connection with MongoDB");
         }
     }
-
 
     private static void closeConnection(){
         try{
@@ -69,7 +73,6 @@ public class MongoDriver {
             return null;
         }
     }
-
 
     public static ArrayList<User> getBeersFromUsername(String username){
         List<Document> results;
@@ -136,4 +139,38 @@ public class MongoDriver {
         return true;
     }
 
+    public static ArrayList<User> getBeerOfTheMonth(){
+
+        openConnection("Users");
+
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        cal.add(Calendar.MONTH, -6);
+        Date lastMonth = cal.getTime();
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson unwindOrders = unwind("$orders");
+        Bson matchDate = match(and(gte("orders.confirmation_date", lastMonth),
+                        lte("orders.confirmation_date", currentDate)));
+        Bson unwindOrdersList = unwind("$orders.order_list");
+        Bson groupId = group("$orders.order_list.beer_id", sum("total_purchased", 1));
+        Bson sort = sort(descending("total_purchased"));
+        Bson limitResults = limit(20);
+        Bson projectFields = project(fields(excludeId(),
+                include("beer_name"),
+                computed("Total Purchased", "$total_purchased")));
+
+        try {
+            collection.aggregate(Arrays.asList(unwindOrders, matchDate, unwindOrdersList,
+                    groupId, sort, limitResults, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return getBeanFromDocuments(results);
+    }
 }
