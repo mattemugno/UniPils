@@ -27,7 +27,7 @@ public class InfoConfig {
         try {
             // creating a constructor of file class and
             // parsing an XML file
-            File file = new File("LSMDB-Project/UniPils/src/main/resources/config/config.xml");
+            File file = new File("UniPils/src/main/resources/config/config.xml");
 
 
             // Defines a factory API that enables
