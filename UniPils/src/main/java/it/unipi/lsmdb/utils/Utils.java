@@ -2,6 +2,8 @@ package it.unipi.lsmdb.utils;
 
 import it.unipi.lsmdb.HelloApplication;
 import it.unipi.lsmdb.bean.Beer;
+import it.unipi.lsmdb.bean.Order;
+import it.unipi.lsmdb.bean.OrderList;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
@@ -76,6 +78,56 @@ public class Utils {
         } else
             return false;
     }
+
+    public static boolean addOrder(User u, Order o){
+        NeoDriver neo4j = NeoDriver.getInstance();
+        if(MongoDriver.addOrder(u,o)) {
+            for (OrderList ol : o.getOrderList()) {
+                neo4j.addPurchased(u.getUsername(), ol.getBeerId());
+            }
+            Utils.showInfoAlert("Order succesfully added");
+            return true;
+        }
+        showErrorAlert("Error in adding Order");
+        return false;
+    }
+
+
+    public static boolean deleteUser(User user) {
+        NeoDriver neo4j = NeoDriver.getInstance();
+
+        if (MongoDriver.deleteUser(user)) {
+            if(neo4j.deleteUser(user.getUsername())) {
+                Utils.showInfoAlert("User succesfully deleted");
+                return true;
+            }else{
+                showErrorAlert("Error in deleting user");
+                return false;
+            }
+
+        }
+        showErrorAlert("Error in deleting user");
+        return false;
+    }
+
+    public static boolean deleteBeer(Beer beer) {
+        NeoDriver neo4j = NeoDriver.getInstance();
+
+        if (MongoDriver.deleteBeer(beer)) {
+            if(neo4j.deleteBeer(beer.getId())) {
+                Utils.showInfoAlert("Beer succesfully deleted");
+                return true;
+            }else{
+                showErrorAlert("Error in deleting beer");
+                return false;
+            }
+
+        }
+        showErrorAlert("Error in deleting beer");
+        return false;
+    }
+
+
 
     public static void showErrorAlert(String s){
         Alert alert = new Alert(Alert.AlertType.ERROR);
