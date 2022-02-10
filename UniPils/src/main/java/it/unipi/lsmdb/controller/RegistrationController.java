@@ -59,13 +59,7 @@ public class RegistrationController {
         }
 
         NeoDriver neo4j = NeoDriver.getInstance();
-        /*if(!neo4j.getUsersFromUnique(uName)){
-            //show the error message
-            Utils.showErrorAlert("username or email already exist");
-            return;
-        }*/
 
-        //int newId = MongoDriver.getMaxUserId() + 1;
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
 
         if(!neo4j.addUser(user) || !MongoDriver.addUser(user)) {

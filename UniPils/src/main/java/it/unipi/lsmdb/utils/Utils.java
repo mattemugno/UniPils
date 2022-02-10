@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.utils;
 
 import it.unipi.lsmdb.HelloApplication;
+import it.unipi.lsmdb.persistence.NeoDriver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -52,8 +53,8 @@ public class Utils {
             return 0;
         }
     }
-    /*public static void closeApp() {
-        Neo4jDriver.getInstance().closeConnection();
-    }*/
+    public static void closeApp() {
+        NeoDriver.getInstance().closeConnection();
+    }
 }
 
