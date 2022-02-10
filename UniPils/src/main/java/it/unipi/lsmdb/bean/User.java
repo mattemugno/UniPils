@@ -18,8 +18,6 @@ public class User {
     private ArrayList<Payment> payments;
     private String address;
 
-
-
     public User(String gender, String first, String last, String email, String username, String password,
                 LocalDate dob, String cell){
         this.first=first;

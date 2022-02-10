@@ -14,9 +14,10 @@ public class Beer {
     private int brewery_id;
     private String brewery_name;
     private String brewery_city;
+    private String brewery_types;
     private int view_count;
 
-    public Beer(int id, String name, String state, String country, String style, int availability, int abv, int volume, int price, int brewery_id, String brewery_name, String brewery_city, int view_count) {
+    public Beer(int id, String name, String state, String country, String style, int availability, int abv, int volume, int price, int brewery_id, String brewery_name, String brewery_city,String brewery_types, int view_count) {
         this.id=id;
         this.name=name;
         this.state=state;
@@ -28,6 +29,7 @@ public class Beer {
         this.price=price;
         this.brewery_name=brewery_name;
         this.brewery_city=brewery_city;
+        this.brewery_types=brewery_types;
         this.view_count=view_count;
     }
 
@@ -135,4 +137,8 @@ public class Beer {
     public void setView_count(int view_count) {
         this.view_count = view_count;
     }
+
+    public String getBrewery_types(){return brewery_types; }
+
+    public void setBrewery_types(String brewery_types){this.brewery_types=brewery_types;}
 }
