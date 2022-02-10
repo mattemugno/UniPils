@@ -57,6 +57,7 @@ public class RegistrationBeerController {
 
         Beer beer = new Beer(newId, uName, st, co, sty, availa, a, volu,pri,brewId,brew_name,brew_city,brew_types,0);
         Utils.addBeer(beer);
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
 

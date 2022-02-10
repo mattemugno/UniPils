@@ -27,6 +27,7 @@ public class Beer {
         this.abv=abv;
         this.volume=volume;
         this.price=price;
+        this.brewery_id=brewery_id;
         this.brewery_name=brewery_name;
         this.brewery_city=brewery_city;
         this.brewery_types=brewery_types;

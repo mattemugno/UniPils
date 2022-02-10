@@ -302,14 +302,13 @@ public class MongoDriver {
     }
 
     public static int getMaxBeerId(){
-        Document result;
+        ArrayList<Document> result;
 
         openConnection("Beers");
-        result= (Document) collection.find().sort(descending("id")).limit(1);
-
+        result=collection.find().sort(descending("_id")).limit(1).into(new ArrayList<>());
         closeConnection();
         try {
-            return result.getInteger("id");
+            return result.get(0).getInteger("_id");
         }catch(Exception e){
             e.printStackTrace();
             return 0;
@@ -317,14 +316,15 @@ public class MongoDriver {
     }
 
     public static int getBreweryId(String name){
-        Document result;
-        int maxId;
+        ArrayList<Document> result;
+        int maxId=0;
         openConnection("Beers");
-        result= (Document) collection.find(eq("Brewery.name",name)).limit(1);
-        if(result==null){
+        result=collection.find(eq("Brewery.name",name)).limit(1).into(new ArrayList<>());
+
+        if(result.isEmpty()){
             maxId=getMaxBreweryId()+1;
         }else{
-            maxId=result.getInteger("Brewery.id");
+            maxId=result.get(0).get("Brewery",Document.class).getInteger("id");
         }
 
         closeConnection();
@@ -337,14 +337,13 @@ public class MongoDriver {
     }
 
     private static int getMaxBreweryId() {
-        Document result;
+        ArrayList<Document> result;
 
         openConnection("Beers");
-        result= (Document) collection.find().sort(descending("Brewery.id")).limit(1);
-
+        result= collection.find().sort(descending("Brewery.id")).limit(1).into(new ArrayList<>());
         closeConnection();
         try {
-            return result.getInteger("id");
+            return result.get(0).get("Brewery",Document.class).getInteger("id");
         }catch(Exception e){
             e.printStackTrace();
             return 0;
