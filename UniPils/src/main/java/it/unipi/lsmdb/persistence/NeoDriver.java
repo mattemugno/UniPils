@@ -5,7 +5,9 @@ import it.unipi.lsmdb.bean.Review;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.InfoConfig;
 import org.neo4j.driver.*;
+import org.neo4j.driver.Record;
 
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NeoDriver {
@@ -50,6 +52,7 @@ public class NeoDriver {
 
     //#############         CRUD OPERATIONS         ##############
 
+    //function called in registration case
     public boolean addUser(User user) {
 
         try (Session session = driver.session()) {
@@ -68,15 +71,16 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
+    //function called in login case
     public boolean getUser(String username, String password){
+
         AtomicBoolean found = new AtomicBoolean(true);
+
         try (Session session = driver.session()) {
 
             session.readTransaction( tx -> {
@@ -91,22 +95,21 @@ public class NeoDriver {
                 }
                 return null;
             });
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        if(!found.get())
-            return false;
-        closeConnection();
-        return true;
+
+        return found.get();
     }
 
+    //function called by admin when need to add new beer
     public boolean addBeer(Beer beer) {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MERGE (b:Beer {name:$beerName, id:$beerId, style=$sty, brewery_name:$breweryName, brewery_id: $breweryId})",
+                tx.run("MERGE (b:Beer {name:$beerName, id:$beerId, style:$sty, brewery_name:$breweryName, brewery_id: $breweryId})",
                         Values.parameters(
                                 "beerName", beer.getName(),
                                 "beerId", beer.getId(),
@@ -120,26 +123,27 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean addReview(Review review, User user, Beer beer){
+    public boolean addReview(Review review, String username, int beerId){
+
+        //String ts = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User),(b:Beer)"+
-                          "WHERE u.username=$username and b.id=$bid"+
-                          "MERGE (u:User)-[:POSTED]->(r:Review {comment:$text, score:$sc, timestamp:$ts})-[:RELATED]->(b:Beer)",
+                          "WHERE u.username=$username and b.id=$bid "+
+                          "MERGE (u)-[:POSTED]->(r:Review {comment:$text, score:$sc, timestamp:localdatetime()})-[:RELATED]->(b)",
                         Values.parameters(
-                                "username", user.getUsername(),
-                                "bid", beer.getId(),
-                                "comment", review.getComment(),
-                                "score", review.getScore(),
-                                "timestamp", Values.ofLocalDateTime()
+                                "username", username,
+                                "bid", beerId,
+                                "text", review.getComment(),
+                                "sc", review.getScore()
+                                //"ts", ts  //formato diverso da quello del dataset
                         )
                 );
 
@@ -147,23 +151,21 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean addFollows(User u1, User u2) {
+    public boolean addFollows(String u1, String u2) {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u1:User),(u2:User)"+
-                          "WHERE u1.username=$un1 and u2.username=$un2"+
+                          "WHERE u1.username=$un1 and u2.username=$un2 "+
                           "MERGE (u1)-[:FOLLOWS]->(u2)",
                         Values.parameters(
-                                "un1", u1.getUsername(),
-                                "un2", u2.getUsername()
+                                "un1", u1,
+                                "un2", u2
                         )
                 );
 
@@ -178,16 +180,16 @@ public class NeoDriver {
         return true;
     }
 
-    public boolean deleteFollows(User u1, User u2) {
+    public boolean deleteFollows(String u1, String u2) {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (u1:User),(u2:User)"+
-                                "WHERE u1.username=$un1 and u2.username=$un2"+
-                                "DELETE (u1)-[:FOLLOWS]->(u2)",
+                tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User)"+
+                                "WHERE u1.username=$un1 and u2.username=$un2 "+
+                                "DELETE rel",
                         Values.parameters(
-                                "un1", u1.getUsername(),
-                                "un2", u2.getUsername()
+                                "un1", u1,
+                                "un2", u2
                         )
                 );
 
@@ -195,24 +197,22 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean addPurchased(User user, Beer beer) {
+    public boolean addPurchased(String username, int beerId) {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User),(b:Beer)"+
-                          "WHERE u.username=$username and b.id=$bid"+
+                          "WHERE u.username=$username and b.id=$bid "+
                           "MERGE (u)-[:PURCHASED]->(b)",
 
                         Values.parameters(
-                                "username", user.getUsername(),
-                                "bid", beer.getId()
+                                "username", username,
+                                "bid", beerId
                         )
                 );
 
@@ -220,24 +220,22 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean addHasInWishlist(User user, Beer beer) {
+    public boolean addHasInWishlist(String username, int beerId) {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User),(b:Beer)"+
-                                "WHERE u.username=$username and b.id=$bid"+
+                                "WHERE u.username=$username and b.id=$bid "+
                                 "MERGE (u)-[:HAS_IN_WISHLIST]->(b)",
 
                         Values.parameters(
-                                "username", user.getUsername(),
-                                "bid", beer.getId()
+                                "username", username,
+                                "bid", beerId
                         )
                 );
 
@@ -245,25 +243,23 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean updateReview(Review review, User user, Beer beer){
+    public boolean updateReview(String username, int beerId, String comm, int sc){
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer)"+
-                          "WHERE u.username=$username and b.id=$bid"+
+                          "WHERE u.username=$username and b.id=$bid "+
                           "SET r.comment=$text, r.score=$score",
                         Values.parameters(
-                                "username", user.getUsername(),
-                                "bid", beer.getId(),
-                                "text", review.getComment(),
-                                "score", review.getScore()
+                                "username", username,
+                                "bid", beerId,
+                                "text", comm,
+                                "score", sc
                         )
                 );
 
@@ -271,23 +267,21 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean deleteUser(User user) {
+    public boolean deleteUser(String username) {
 
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User)"+
-                          "WHERE u.username=$username"+
+                          "WHERE u.username=$username "+
                           "DETACH DELETE u",
                         Values.parameters(
-                                "username", user.getUsername()
+                                "username", username
                         )
                 );
 
@@ -295,23 +289,21 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean deleteBeer(Beer beer) {
+    public boolean deleteBeer(int beerId) {
 
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (b:Beer)"+
-                          "WHERE b.id=bid"+
+                          "WHERE b.id=$bid "+
                           "DETACH DELETE b",
                         Values.parameters(
-                                "bid", beer.getId()
+                                "bid", beerId
                         )
                 );
 
@@ -319,24 +311,22 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean deleteReview(User user, Beer beer, Review review) {
+    public boolean deleteReview(String username, int beerId) {
 
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
                 tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer)"+
-                                "WHERE u.username=$username and b.id=$bid"+
+                                "WHERE u.username=$username and b.id=$bid "+
                                 "DETACH DELETE r",
                         Values.parameters(
-                                "username", user.getUsername(),
-                                "bid", beer.getId()
+                                "username", username,
+                                "bid", beerId
                         )
                 );
 
@@ -344,34 +334,254 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
-    public boolean findBeer(String searchInput){
+    public ArrayList<String> findBeer(String searchInput){
+
+        ArrayList<String> beers= new ArrayList<>();
+
         try (Session session = driver.session()) {
 
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (b:Beer)"+
-                          "WHERE b.name=$field or b.style=$field or b.brewery_name=$field or b.id=$field or b.brewery_id=$field"+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (b:Beer)"+
+                          "WHERE b.name=$field or b.style=$field or b.brewery_name=$field or b.brewery_id=$field "+
                           "RETURN b.id, b.name, b.style, b.brewery_name",
                         Values.parameters(
                                 "field", searchInput
                         )
                 );
 
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String beer_id = String.valueOf(r.get("b.id"));
+                    String beer_name = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brew = r.get("b.brewery_name").asString();
+                    String row = beer_id + " " + beer_name + " " + style + " " + brew;
+                    beers.add(row);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<String> findBeerById(int field){
+
+        ArrayList<String> beers= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (b:Beer)"+
+                                "WHERE b.id=$field "+
+                                "RETURN b.id, b.name, b.style, b.brewery_name",
+                        Values.parameters(
+                                "field", field
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String b_id = String.valueOf(r.get("b.id"));
+                    String beer_name = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brew = r.get("b.brewery_name").asString();
+                    String row = b_id + " " + beer_name + " " + style + " " + brew;
+                    beers.add(row);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    //###########         COMPLEX QUERIES NEO4J            ##############
+
+    public ArrayList<String> MostPurchasedBeers(){
+
+        ArrayList<String> beers= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH path=(u:User)-[p:PURCHASED]-(b:Beer)"+
+                                "RETURN b.name AS beer_name, COUNT(p) AS total_purchased "+
+                                "ORDER BY total_purchased DESC LIMIT 10"
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String beer_name = r.get("beer_name").asString();
+                    String tot = String.valueOf(r.get("total_purchased"));
+                    String row = beer_name + " " + tot;
+                    beers.add(row);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<String> MostActiveUsers(){
+
+        ArrayList<String> users= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH (u:User)-[r]->()"+
+                        "RETURN u.username, COUNT(r) as num_interactions "+
+                        "ORDER BY num_interactions DESC LIMIT 10"
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String user = r.get("u.username").asString();
+                    String tot = String.valueOf(r.get("num_interactions"));
+                    String row = user + " " + tot;
+                    users.add(row);
+                }
+                return users;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return users;
+    }
+
+    public ArrayList<String> MostPopularBeerInWishlists(){
+
+        ArrayList<String> beers= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH path=(u:User)-[h:HAS_IN_WISHLIST]-(b:Beer)"+
+                        "RETURN b.name AS beer_name, COUNT(h) AS quantity "+
+                        "ORDER BY quantity DESC LIMIT 10"
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String beer_name = r.get("beer_name").asString();
+                    String tot = String.valueOf(r.get("quantity"));
+                    String row = beer_name + " " + tot;
+                    beers.add(row);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    //!!!!!!!!!!NON TORNA!!!!!!!!!!!!!!!!!
+    //non sono sicuro se la query è nella sua versione piu aggiornata
+    public boolean MostInteractedBreweries(){
+        try (Session session = driver.session()) {
+
+            session.readTransaction((TransactionWork<Void>) tx -> {
+                Result result=tx.run("MATCH (u:User)-[r]->(b:Beer)<-[related:RELATED]-(review:Review)-[:POSTED]-(u:User)"+
+                        "RETURN b.brewery_id, b.brewery_name, u.username, (COUNT(r) + COUNT(related)) AS num_interactions "+
+                        "ORDER BY num_interactions DESC LIMIT 10"
+                );
+
                 return null;
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
+    }
+
+    //!!!!!!!!!!!!!NON TORNA!!!!!!!!!!!!!!!
+    public ArrayList<String> SuggestedUsers(String username){
+
+        ArrayList<String> users= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH (u1:User{username:$username})-[:FOLLOWS]->(u2:User)<-[:FOLLOWS]-(u3:User), "+
+                        " (u1:User{username:$username})-[p:PURCHASED]->(b:Beer)<-[:PURCHASED]-(u3:User)"+
+                        "WHERE NOT EXISTS ((u1)-[:FOLLOWS]-(u3))"+
+                        "RETURN DISTINCT u3.username, COUNT(DISTINCT u2) AS common_friends, COUNT(DISTINCT b) as common_beers "+
+                        "ORDER BY common_friends, common_beers DESC LIMIT 10",
+                        Values.parameters(
+                                "username", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String user = r.get("u3.username").asString();
+                    String tot = String.valueOf(r.get("same_beers_purchased"));
+                    String row = user + " " + tot;
+                    users.add(row);
+                }
+                return users;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return users;
+    }
+
+    public ArrayList<String> SuggestedBeers(String username){
+
+        ArrayList<String> beers= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH (u1:User {username:$username})-[:FOLLOWS]-(u2:User)-[:PURCHASED]->(b:Beer)"+
+                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(b:Beer)) "+
+                                "RETURN b.id as beerId, b.name as beerName "+
+                                "UNION "+
+                                "CALL{ "+
+                                "MATCH (u:User {username:$username })-[:PURCHASED]->(b:Beer) "+
+                                "RETURN u AS u1, b.style AS style, COUNT(b.style) as total "+
+                                "ORDER BY total DESC LIMIT 1} "+
+                                "WITH style,u1 MATCH (bb:Beer)"+
+                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(bb:Beer)) and bb.style=style "+
+                                "RETURN bb.id as beerId, bb.name as beerName",
+                        Values.parameters(
+                                "username", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    String beer_id = String.valueOf(r.get("beerId"));
+                    String beer_name = r.get("beerName").asString();
+                    String row = beer_id + " " + beer_name;
+                    beers.add(row);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
     }
 
 }

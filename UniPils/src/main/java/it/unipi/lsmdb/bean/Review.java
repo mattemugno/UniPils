@@ -9,7 +9,7 @@ public class Review {
     private int score;
 
 
-    public Review(String comment, int rate, Date timestamp){
+    public Review(String comment, int rate){
         this.comment = comment;
         this.score = rate;
     }
