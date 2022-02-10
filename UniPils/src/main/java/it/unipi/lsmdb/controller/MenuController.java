@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MenuController /*implements Initializable*/ {
+public class MenuController implements Initializable {
 
     @FXML private Button beerButton;
     @FXML private Button friendsButton;
@@ -21,21 +21,32 @@ public class MenuController /*implements Initializable*/ {
     @FXML private Button wishButton;
     @FXML private Label usernameLabel;
 
-    /*@Override @FXML
+    /*if (DataSession.getUserLogged() == null)
+    String usernameLogged = DataSession.getUserLogged().getUsername();
+                    usernameLabel.setText(usernameLogged);
+                else
+                        usernameLabel.setText("");*/
+
+    @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+        /*loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                if (DataSession.getUserLogged() == null)
-                    doLogin();
-                else
-                    doLogout();
-
             }
-        });
+        });*/
+        if (DataSession.getUserLogged() != null){
+            String usernameLogged = DataSession.getUserLogged();
+            usernameLabel.setText(usernameLogged);
+            loginButton.setText("Logout");
+            loginButton.setOnAction(new EventHandler<ActionEvent>());
         }
+        else {
+            usernameLabel.setText("");
+            loginButton.setText("Login");
+        }
+    }
 
-    @FXML
+    /*@FXML
     private void doLogin() {
         usernameLabel.setText("");
     }

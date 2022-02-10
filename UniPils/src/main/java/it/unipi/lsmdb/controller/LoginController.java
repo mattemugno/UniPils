@@ -1,5 +1,6 @@
 package it.unipi.lsmdb.controller;
 
+import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
@@ -14,24 +15,27 @@ public class LoginController {
     @FXML private TextField pass;
 
     @FXML
-    private void onClickLogin(ActionEvent actionEvent){
+    private void onClickLogin(ActionEvent actionEvent) {
         //ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
         String uName = user.getText();
         String pwd = pass.getText();
 
-        if(uName.equals("") || pwd.equals("")){
-            Utils.showErrorAlert("You have to fill both fields");
-            return;
-        }
+            if (uName.equals("") || pwd.equals("")) {
+                Utils.showErrorAlert("You have to fill both fields");
+                return;
+            }
 
-        NeoDriver neo4j = NeoDriver.getInstance();
+            NeoDriver neo4j = NeoDriver.getInstance();
 
-        if(!neo4j.getUser(uName, pwd)){
-            Utils.showErrorAlert("Username and/or password not valid");
-            return;
-        }
+            if (!neo4j.getUser(uName, pwd)) {
+                Utils.showErrorAlert("Username and/or password not valid");
+                return;
+            }
 
-        Utils.changeScene("menu-page.fxml", actionEvent);
+        System.out.println("AAAAAAAAA");
+            DataSession.setUserLogged(uName);
+            Utils.changeScene("menu-page.fxml", actionEvent);
+
     }
 
     @FXML

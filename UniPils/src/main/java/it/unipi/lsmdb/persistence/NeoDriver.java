@@ -6,6 +6,8 @@ import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.InfoConfig;
 import org.neo4j.driver.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class NeoDriver {
 
     private static NeoDriver instance = null;
@@ -74,16 +76,19 @@ public class NeoDriver {
     }
 
     public boolean getUser(String username, String password){
+        AtomicBoolean found = new AtomicBoolean(true);
         try (Session session = driver.session()) {
 
-            session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (u:User) WHERE u.username=$uName and u.password=$pwd",
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH (u:User) WHERE u.username=$uName and u.password=$pwd RETURN *",
                         Values.parameters(
                                 "uName", username,
                                 "pwd", password
                         )
                 );
-
+                if (!result.hasNext()) {
+                    found.set(false);
+                }
                 return null;
             });
         } catch (Exception ex) {
@@ -91,6 +96,8 @@ public class NeoDriver {
             closeConnection();
             return false;
         }
+        if(!found.get())
+            return false;
         closeConnection();
         return true;
     }

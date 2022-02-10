@@ -74,7 +74,7 @@ public class RegistrationController {
         }
 
         Utils.showInfoAlert("User inserted successfully");
-        DataSession.setUserLogged(user);
+        DataSession.setUserLogged(user.getUsername());
         Utils.changeScene("menu-page.fxml", actionEvent);
     }
 
