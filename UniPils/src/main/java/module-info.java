@@ -9,6 +9,7 @@ module it.unipi.lsmdb {
     requires com.fasterxml.jackson.databind;
 
     opens it.unipi.lsmdb to javafx.fxml;
+    opens it.unipi.lsmdb.bean to com.fasterxml.jackson.databind;
     exports it.unipi.lsmdb;
     exports it.unipi.lsmdb.controller;
     opens it.unipi.lsmdb.controller to javafx.fxml;

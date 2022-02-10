@@ -14,7 +14,6 @@ import it.unipi.lsmdb.config.InfoConfig;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.io.DataInput;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
