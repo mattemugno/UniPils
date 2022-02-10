@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,10 +15,17 @@ import java.util.List;
 public class BeersController {
 
     @FXML private Button beerButton;
+    @FXML private Button addBeer;
 
     @FXML private void onClickViewBeers(ActionEvent actionEvent){
         ArrayList<User> listBeers=MongoDriver.getBuyers();
         //System.out.println(Arrays.toString(listBeers.toArray()));
+
+    }
+
+    @FXML private void addBeer(ActionEvent actionEvent){
+        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+        Utils.changeScene("registration-beer.fxml", ae);
 
     }
 }
