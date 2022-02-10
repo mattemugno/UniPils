@@ -16,7 +16,6 @@ public class LoginController {
 
     @FXML
     private void onClickLogin(ActionEvent actionEvent) {
-        //ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
         String uName = user.getText();
         String pwd = pass.getText();
 
@@ -32,7 +31,6 @@ public class LoginController {
                 return;
             }
 
-        System.out.println("AAAAAAAAA");
             DataSession.setUserLogged(uName);
             Utils.changeScene("menu-page.fxml", actionEvent);
 

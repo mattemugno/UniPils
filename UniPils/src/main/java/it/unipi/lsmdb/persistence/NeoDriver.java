@@ -76,7 +76,9 @@ public class NeoDriver {
     }
 
     public boolean getUser(String username, String password){
+
         AtomicBoolean found = new AtomicBoolean(true);
+
         try (Session session = driver.session()) {
 
             session.readTransaction( tx -> {
@@ -91,15 +93,13 @@ public class NeoDriver {
                 }
                 return null;
             });
+
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        if(!found.get())
-            return false;
-        closeConnection();
-        return true;
+
+        return found.get();
     }
 
     public boolean addBeer(Beer beer) {

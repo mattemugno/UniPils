@@ -3,7 +3,6 @@ package it.unipi.lsmdb.controller;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,53 +13,36 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
-    @FXML private Button beerButton;
-    @FXML private Button friendsButton;
     @FXML private Button loginButton;
-    @FXML private Button cartButton;
-    @FXML private Button wishButton;
     @FXML private Label usernameLabel;
-
-    /*if (DataSession.getUserLogged() == null)
-    String usernameLogged = DataSession.getUserLogged().getUsername();
-                    usernameLabel.setText(usernameLogged);
-                else
-                        usernameLabel.setText("");*/
 
     @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        /*loginButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-            }
-        });*/
         if (DataSession.getUserLogged() != null){
+            //se sono loggato
             String usernameLogged = DataSession.getUserLogged();
             usernameLabel.setText(usernameLogged);
             loginButton.setText("Logout");
-            loginButton.setOnAction(new EventHandler<ActionEvent>());
+            loginButton.setOnAction(this::logoutUser);
         }
         else {
+            //se non sono loggato
             usernameLabel.setText("");
-            loginButton.setText("Login");
+            loginButton.setOnAction(this::loginUser);
         }
     }
 
-    /*@FXML
-    private void doLogin() {
-        usernameLabel.setText("");
+    @FXML
+    private void logoutUser(ActionEvent actionEvent){
+        //cancello i dati di sessione e faccio il resfresh della scena
+        DataSession.logoutSession();
+        Utils.changeScene("menu-page.fxml", actionEvent);
     }
 
     @FXML
-    private void doLogout() {
-        String usernameLogged = DataSession.getUserLogged().getUsername();
-        usernameLabel.setText(usernameLogged);
-    }*/
-
-    @FXML
-    private void onClickLogin(ActionEvent actionEvent){
-        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("login_page.fxml", ae);
+    private void loginUser(ActionEvent actionEvent){
+        //vado soltanto alla schermata di login
+        Utils.changeScene("login_page.fxml", actionEvent);
     }
 
     @FXML private void onClickBeers(ActionEvent actionEvent){

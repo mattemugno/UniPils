@@ -25,6 +25,6 @@ public class DataSession {
     }
 
     public static void logoutSession() {
-        userLogged = null;
+        UsernameUserLogged = null;
     }
 }
