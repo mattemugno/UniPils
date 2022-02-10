@@ -3,10 +3,7 @@ package it.unipi.lsmdb.persistence;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import it.unipi.lsmdb.bean.Beer;
@@ -17,6 +14,7 @@ import it.unipi.lsmdb.config.InfoConfig;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import java.io.DataInput;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
@@ -70,7 +68,6 @@ public class MongoDriver {
                 User user = objectMapper.readValue(doc.toJson(), User.class);
                 users.add(user);
             }
-
             return users;
 
         }catch(Exception e){
@@ -128,16 +125,14 @@ public class MongoDriver {
 
             doc.append("cell", u.getCell());
 
-            //try {
-            System.out.println(doc);
+            try {
                 collection.insertOne(doc);
                 String id;
                 id = doc.getObjectId("_id").toString();
                 DataSession.IdUserLogged(id);
-            /*} catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
-            }*/
-
+            }
 
         }catch(Exception ex){
             closeConnection();
@@ -145,6 +140,24 @@ public class MongoDriver {
         }
         closeConnection();
         return true;
+    }
+
+    public static ArrayList<User> getUser(String username){
+        openConnection("Users");
+        ArrayList<Document> results = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
+            while(cursor.hasNext()){
+                Document user = cursor.next();
+                if (user == null) return null;
+                else results.add(user);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        return getBeanFromDocuments(results);
     }
 
     public static boolean deleteUser(User u){
@@ -290,8 +303,6 @@ public class MongoDriver {
 
     //#############  AGGREGATION ###########
 
-
-
     public static ArrayList<User> getBeerOfTheMonth(){
 
         openConnection("Users");
@@ -335,14 +346,12 @@ public class MongoDriver {
         Consumer<Document> createDocuments = doc -> {results.add(doc);};
 
         Bson matchStyle = match(eq("style", style));
-        Bson groupPrice = group(fields(
-                eq("price", "$price"),
-                eq("beer_name", "$name")
-        ));
-        Bson sort = sort(ascending("_id.price"));
-        Bson projectFields = project(fields(excludeId(),
-                computed("price", "$_id.price"),
-                computed("BeerName", "$_id.beer_name")));
+        Bson groupPrice = group("$price", push("beer_name", "$name"));
+        Bson sort = sort(ascending("_id"));
+        Bson limit = limit(20);
+        Bson projectFields = project(
+                fields(excludeId(), computed("price", "$_id"), computed("Beer Name", "$beer_name"))
+        );
 
         try {
             collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, projectFields)).forEach(createDocuments);
@@ -350,6 +359,7 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
+        System.out.println(results);
         closeConnection();
         return getBeanFromDocuments(results);
     }
