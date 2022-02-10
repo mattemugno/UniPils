@@ -21,11 +21,12 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static com.mongodb.client.model.Accumulators.sum;
+import static com.mongodb.client.model.Accumulators.*;
 import static com.mongodb.client.model.Aggregates.*;
 import static com.mongodb.client.model.Filters.*;
 import static com.mongodb.client.model.Indexes.descending;
 import static com.mongodb.client.model.Projections.*;
+import static com.mongodb.client.model.Sorts.ascending;
 import static it.unipi.lsmdb.utils.Utils.calculateAge;
 
 public class MongoDriver {
@@ -297,7 +298,7 @@ public class MongoDriver {
 
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getTime();
-        cal.add(Calendar.MONTH, -6);
+        cal.add(Calendar.MONTH, -1);
         Date lastMonth = cal.getTime();
 
         ArrayList<Document> results = new ArrayList<>();
@@ -307,12 +308,13 @@ public class MongoDriver {
         Bson matchDate = match(and(gte("orders.confirmation_date", lastMonth),
                         lte("orders.confirmation_date", currentDate)));
         Bson unwindOrdersList = unwind("$orders.order_list");
-        Bson groupId = group("$orders.order_list.beer_id", sum("total_purchased", 1));
+        Bson groupId = group("$orders.order_list.beer_id", sum("total_purchased", 1),
+                first("beer_name", "$orders.order_list.beer_name"));
         Bson sort = sort(descending("total_purchased"));
         Bson limitResults = limit(20);
         Bson projectFields = project(fields(excludeId(),
                 include("beer_name"),
-                computed("Total Purchased", "$total_purchased")));
+                computed("TotalPurchased", "$total_purchased")));
 
         try {
             collection.aggregate(Arrays.asList(unwindOrders, matchDate, unwindOrdersList,
@@ -324,4 +326,96 @@ public class MongoDriver {
         closeConnection();
         return getBeanFromDocuments(results);
     }
+
+    public static ArrayList<User> getCheapestBeerByStyle(String style){
+
+        openConnection("Beers");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson matchStyle = match(eq("style", style));
+        Bson groupPrice = group(fields(
+                eq("price", "$price"),
+                eq("beer_name", "$name")
+        ));
+        Bson sort = sort(ascending("_id.price"));
+        Bson projectFields = project(fields(excludeId(),
+                computed("price", "$_id.price"),
+                computed("BeerName", "$_id.beer_name")));
+
+        try {
+            collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        closeConnection();
+        return getBeanFromDocuments(results);
+    }
+
+    public static ArrayList<User> getMostPopularEachState(){
+
+        openConnection("Beers");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson matchState = match(eq("country", "US"));
+        Bson groupStateStyle = group(fields(
+                eq("style", "$style"),
+                eq("state", "$state")),
+                sum("beers", 1)
+        );
+        Bson sort = sort(descending("beers"));
+        Bson groupState = group("$_id.state", first("style", "$_id.style"),
+                max("mostPopularStyleCount", "$beers"));
+        Bson sortMostPopular = sort(descending("mostPopularStyleCount"));
+        Bson limit = limit(15);
+        Bson projectFields = project(fields(excludeId(),
+                computed("state", "$_id"),
+                include("style"),
+                computed("MostPopularStyleCountry", "$mostPopularStyleCount")
+        ));
+
+        try {
+            collection.aggregate(Arrays.asList(matchState, groupStateStyle, sort, groupState, sortMostPopular, limit)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return getBeanFromDocuments(results);
+    }
+
+    public static ArrayList<User> getBuyers(){
+
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson unwindOrders = unwind("$orders");
+        Bson matchBuyers = match(exists("orders", true));
+        Bson groupUser = group("$_id", sum("numberOrders", 1));
+        Bson groupTotalBuyers = group("$null", sum("numberOfBuyers", 1), avg("AvgOrders", "$numberOrders"));
+        Bson projectFields = project(fields(excludeId(),
+                include("numberOfBuyers"),
+                include("AvgOrders")
+        ));
+
+        try {
+            collection.aggregate(Arrays.asList(unwindOrders, matchBuyers, groupUser, groupTotalBuyers, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return getBeanFromDocuments(results);
+    }
 }
+
+
+

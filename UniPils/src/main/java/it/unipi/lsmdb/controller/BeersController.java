@@ -15,9 +15,8 @@ public class BeersController {
 
     @FXML private Button beerButton;
 
-    @FXML private void addBeer(ActionEvent actionEvent){
-
-        //ArrayList<User> listBeers=MongoDriver.getBeerOfTheMonth();
+    @FXML private void onClickViewBeers(ActionEvent actionEvent){
+        ArrayList<User> listBeers=MongoDriver.getBuyers();
         //System.out.println(Arrays.toString(listBeers.toArray()));
 
     }
