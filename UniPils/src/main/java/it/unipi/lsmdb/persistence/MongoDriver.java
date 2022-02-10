@@ -7,6 +7,10 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
+import it.unipi.lsmdb.bean.Beer;
+import it.unipi.lsmdb.bean.Order;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.config.InfoConfig;
@@ -92,6 +96,8 @@ public class MongoDriver {
         return getBeanFromDocuments(res);
     }
 
+    //#############         CRUD OPERATIONS         ##############
+
     public static boolean addUser(User u){
         openConnection("Users");
 
@@ -139,6 +145,151 @@ public class MongoDriver {
         closeConnection();
         return true;
     }
+
+    public static boolean deleteUser(User u){
+        openConnection("Users");
+        try{
+            collection.deleteOne(Filters.eq("username", u.getUsername()));
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean updateUser(User u){
+        openConnection("Users");
+        try{
+            boolean res=deleteUser(u);
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify user");
+                return false;
+            }
+
+            res= addUser(u);
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify user");
+                return false;
+            }
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean addOrder(User u, Order o){
+        openConnection("Users");
+        System.out.println(u.getUsername());
+        try{
+            Document doc = new Document();
+
+            doc.append("id_order",o.getIdOrder());
+            doc.append("order_list",Arrays.asList(o.getOrderList()));
+            doc.append("delivery-date",o.getDeliveryDate());
+            doc.append("feedback",o.getFeedback());
+            doc.append("total_cost",o.getTotalCost());
+            doc.append("confirmation_date",o.getConfirmationDate());
+
+            Bson filter = Filters.eq("username", u.getUsername()); //get the parent-document
+            Bson setUpdate;
+            if(u.getOrders() != null && u.getOrders().size() > 0)
+                setUpdate = Updates.push("orders", doc);
+            else {
+                ArrayList<Document> orderList = new ArrayList<>();
+                orderList.add(doc);
+                setUpdate = Updates.set("orders", orderList);
+            }
+
+            collection.updateOne(filter, setUpdate);
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean addBeer(Beer b){
+        openConnection("Beers");
+        try{
+            Document doc= new Document();
+            doc.append("_id",b.getId());
+            doc.append("name", b.getName());
+            doc.append("state",b.getName());
+            doc.append("country",b.getCountry());
+            doc.append("style",b.getStyle());
+            doc.append("availability",b.getAvailability());
+            doc.append("abv",b.getAbv());
+            doc.append("volume",b.getVolume());
+            doc.append("price",b.getPrice());
+
+            Document doc_brewery = new Document();
+                doc_brewery.append("id", b.getBrewery_id());
+                doc_brewery.append("name",b.getBrewery_name());
+                doc_brewery.append("city",b.getBrewery_city());
+                doc_brewery.append("types", b.getBrewery_types());
+            doc.append("Brewery", doc_brewery);
+
+            doc.append("view_count",b.getView_count());
+
+            System.out.println(doc);
+            collection.insertOne(doc);
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean deleteBeer(Beer b){
+        openConnection("Beers");
+        try{
+            collection.deleteOne(Filters.eq("_id", b.getId()));
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean updateBeer(Beer b){
+        openConnection("Beers");
+        try{
+            boolean res=deleteBeer(b);
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify beer");
+                return false;
+            }
+
+            res= addBeer(b);
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify beer");
+                return false;
+            }
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    //#############  AGGREGATION ###########
+
+
 
     public static ArrayList<User> getBeerOfTheMonth(){
 
