@@ -58,7 +58,7 @@ public class RegistrationController {
             return;
         }
 
-        NeoDriver neo4j = NeoDriver.getInstance();
+        //NeoDriver neo4j = NeoDriver.getInstance();
         /*if(!neo4j.getUsersFromUnique(uName)){
             //show the error message
             Utils.showErrorAlert("username or email already exist");
@@ -68,12 +68,12 @@ public class RegistrationController {
         //int newId = MongoDriver.getMaxUserId() + 1;
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
 
-        if(!neo4j.addUser(user) || !MongoDriver.addUser(user)) {
+        /*if(!neo4j.addUser(user) || !MongoDriver.addUser(user)) {
             Utils.showErrorAlert("User not inserted");
             return;
-        }
-
-        Utils.showInfoAlert("User inserted successfully");
+        }*/
+        Utils.addUser(user);
+        //Utils.showInfoAlert("User inserted successfully");
         DataSession.setUserLogged(user.getUsername());
         Utils.changeScene("menu-page.fxml", actionEvent);
     }

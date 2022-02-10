@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="765.0" xmlns="http://javafx.com/javafx/17" fx:controller="it.unipi.lsmdb.controller.RegistrationBeerController" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="287.0" layoutY="65.0" prefHeight="35.0" prefWidth="75.0" text="Beer name:">
          <font>
@@ -64,17 +64,17 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button layoutX="381.0" layoutY="516.0" mnemonicParsing="false" text="Add Beer" />
-      <TextField layoutX="383.0" layoutY="70.0" />
-      <TextField layoutX="383.0" layoutY="105.0" />
-      <TextField layoutX="383.0" layoutY="146.0" />
-      <TextField layoutX="383.0" layoutY="181.0" />
-      <TextField layoutX="383.0" layoutY="224.0" />
-      <TextField layoutX="383.0" layoutY="266.0" />
-      <TextField layoutX="383.0" layoutY="311.0" />
-      <TextField layoutX="383.0" layoutY="346.0" />
-      <TextField layoutX="383.0" layoutY="388.0" />
-      <TextField layoutX="383.0" layoutY="424.0" prefHeight="0.0" prefWidth="149.0" />
-      <TextField layoutX="383.0" layoutY="473.0" />
+      <Button layoutX="381.0" layoutY="516.0" mnemonicParsing="false" onAction="#registerBeer" text="Add Beer" />
+      <TextField fx:id="name" layoutX="383.0" layoutY="70.0" />
+      <TextField fx:id="state" layoutX="383.0" layoutY="105.0" />
+      <TextField fx:id="country" layoutX="383.0" layoutY="146.0" />
+      <TextField fx:id="style" layoutX="383.0" layoutY="181.0" />
+      <TextField fx:id="availability" layoutX="383.0" layoutY="224.0" />
+      <TextField fx:id="abv" layoutX="383.0" layoutY="266.0" />
+      <TextField fx:id="volume" layoutX="383.0" layoutY="311.0" />
+      <TextField fx:id="price" layoutX="383.0" layoutY="346.0" />
+      <TextField fx:id="brewery_name" layoutX="383.0" layoutY="388.0" />
+      <TextField fx:id="brewery_city" layoutX="383.0" layoutY="424.0" prefHeight="0.0" prefWidth="149.0" />
+      <TextField fx:id="brewery_types" layoutX="383.0" layoutY="473.0" />
    </children>
 </AnchorPane>

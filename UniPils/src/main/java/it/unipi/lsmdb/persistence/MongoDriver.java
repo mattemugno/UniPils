@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
@@ -298,6 +299,56 @@ public class MongoDriver {
         }
         closeConnection();
         return true;
+    }
+
+    public static int getMaxBeerId(){
+        Document result;
+
+        openConnection("Beers");
+        result= (Document) collection.find().sort(descending("id")).limit(1);
+
+        closeConnection();
+        try {
+            return result.getInteger("id");
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int getBreweryId(String name){
+        Document result;
+        int maxId;
+        openConnection("Beers");
+        result= (Document) collection.find(eq("Brewery.name",name)).limit(1);
+        if(result==null){
+            maxId=getMaxBreweryId()+1;
+        }else{
+            maxId=result.getInteger("Brewery.id");
+        }
+
+        closeConnection();
+        try {
+            return maxId;
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    private static int getMaxBreweryId() {
+        Document result;
+
+        openConnection("Beers");
+        result= (Document) collection.find().sort(descending("Brewery.id")).limit(1);
+
+        closeConnection();
+        try {
+            return result.getInteger("id");
+        }catch(Exception e){
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     //#############  AGGREGATION ###########

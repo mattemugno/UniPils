@@ -1,6 +1,10 @@
 package it.unipi.lsmdb.utils;
 
 import it.unipi.lsmdb.HelloApplication;
+import it.unipi.lsmdb.bean.Beer;
+import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.persistence.MongoDriver;
+import it.unipi.lsmdb.persistence.NeoDriver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -29,6 +33,48 @@ public class Utils {
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean addUser(User u){
+        NeoDriver neo4j = NeoDriver.getInstance();
+        if(MongoDriver.addUser(u))
+        {
+            //If neo is ok, perform mongo
+            if(!neo4j.addUser(u))
+            {
+                // if mongo is not ok, remove the previously added recipe
+                MongoDriver.deleteUser(u);
+                showErrorAlert("Error in adding user");
+                return false;
+            }
+            else
+            {
+                Utils.showInfoAlert("User succesfully added");
+                return true;
+            }
+        } else
+            return false;
+    }
+
+    public static boolean addBeer(Beer b){
+        NeoDriver neo4j = NeoDriver.getInstance();
+        if(MongoDriver.addBeer(b))
+        {
+            //If neo is ok, perform mongo
+            if(!neo4j.addBeer(b))
+            {
+                // if mongo is not ok, remove the previously added recipe
+                MongoDriver.deleteBeer(b);
+                showErrorAlert("Error in adding beer");
+                return false;
+            }
+            else
+            {
+                Utils.showInfoAlert("Beer succesfully added");
+                return true;
+            }
+        } else
+            return false;
     }
 
     public static void showErrorAlert(String s){
