@@ -22,7 +22,7 @@
                <children>
                </children>
             </AnchorPane>
-            <VBox fx:id="beersInfoPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+            <VBox fx:id="beersInfoPane"  minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
 
                </children>

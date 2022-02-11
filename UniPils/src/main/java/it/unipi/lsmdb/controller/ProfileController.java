@@ -47,7 +47,7 @@ public class ProfileController implements Initializable {
             VBox boxBeer = new VBox(5);
             boxBeer.setPadding(new Insets(5,5,5,5));
 
-            HBox hb=new HBox();
+            HBox hb=new HBox(5);
 
             Label nameBeer = new Label();
             nameBeer.setText("Beer:  " + b.getName());
@@ -55,9 +55,10 @@ public class ProfileController implements Initializable {
 
             Button btn=new Button();
             btn.setText("See more details");
+            btn.setPadding(new Insets(5,5,5,5));
             btn.setFont(font);
             btn.setOnAction(actionEvent -> {
-                DataSession.setIdBeerToShow(b.getId());
+                DataSession.setIdBeerToShow(b.get_id());
                 Utils.changeScene("profile-beer.fxml", actionEvent);});
 
             hb.getChildren().addAll(nameBeer,btn);
@@ -71,7 +72,7 @@ public class ProfileController implements Initializable {
             brewName.setText("Brewery:  " + b.getBrewery_name());
             brewName.setFont(font);
 
-            ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.getId());
+            ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.get_id());
             TextArea comment = new TextArea();
             if(!reviews.isEmpty()){
                 comment.setText("Review:  " + reviews.get(0).getComment());
