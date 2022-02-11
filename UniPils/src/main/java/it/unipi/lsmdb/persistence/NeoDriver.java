@@ -271,6 +271,59 @@ public class NeoDriver {
         return true;
     }
 
+    public ArrayList<String> getFollowers(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                        "WHERE u2.username=$un "+
+                                        "RETURN u1.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
+    public ArrayList<String> getFollowing(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                "WHERE u1.username=$un "+
+                                "RETURN u2.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
+
     public boolean deleteFollows(String u1, String u2) {
         try (Session session = driver.session()) {
 

@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
 <SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="887.0" fx:controller="it.unipi.lsmdb.controller.ProfileController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <items>
       <AnchorPane fx:id="menuPane" minHeight="0.0" minWidth="0.0" prefHeight="672.0" prefWidth="262.0">
@@ -24,6 +25,8 @@
             <ScrollPane fx:id="scroll">
                <content>
                   <AnchorPane fx:id="beersPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <Button fx:id="followerButton" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClickFollower" text="Follower" />
+                     <Button fx:id="followingButton" layoutX="450.0" layoutY="52.0" mnemonicParsing="false" onAction="#onClickFollowing" text="Following" />
                      <Label fx:id="userLabel" layoutX="7.0" layoutY="4.0" prefHeight="31.0" prefWidth="318.0" text="Username">
                         <font>
                            <Font size="24.0" />

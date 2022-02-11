@@ -7,6 +7,7 @@ import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -112,6 +113,16 @@ public class ProfileController implements Initializable {
             oneBeer.getChildren().addAll(boxBeer,sep);
             beersInfoPane.getChildren().add(oneBeer);
         }
+    }
+
+    @FXML private void onClickFollower(ActionEvent actionEvent){
+        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+        Utils.changeScene("follower-page.fxml", ae);
+    }
+
+    @FXML private void onClickFollowing(ActionEvent actionEvent){
+        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+        Utils.changeScene("following-page.fxml", ae);
     }
 
 
