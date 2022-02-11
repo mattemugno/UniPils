@@ -7,6 +7,7 @@ import it.unipi.lsmdb.config.InfoConfig;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -135,7 +136,7 @@ public class NeoDriver {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (u:User),(b:Beer)"+
+                tx.run("MATCH (u:User)(b:Beer)"+
                           "WHERE u.username=$username and b.id=$bid "+
                           "MERGE (u)-[:POSTED]->(r:Review {comment:$text, score:$sc, timestamp:localdatetime()})-[:RELATED]->(b)",
                         Values.parameters(
@@ -154,6 +155,69 @@ public class NeoDriver {
             return false;
         }
         return true;
+    }
+
+    public ArrayList<Review> getBeerReviews(int beerId){
+
+        ArrayList<Review> reviews= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.writeTransaction( tx -> {
+                Result result = tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer)"+
+                                "WHERE b.id=$bid "+
+                                "RETURN r.comment, r.score, r.timestamp",
+                        Values.parameters(
+                                "bid", beerId
+                        )
+                );
+                while(result.hasNext()){
+                    Record r = result.next();
+                    String text = String.valueOf(r.get("r.comment"));
+                    Value score = r.get("r.score");
+                    Value ts = r.get("r.timestamp");
+                    Review rev = new Review(text, score,ts);
+                    reviews.add(rev);
+                }
+                return reviews;
+
+
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return reviews;
+    }
+
+    public ArrayList<String> getAuthorReview(int beerId){
+
+        ArrayList<String> authors= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.writeTransaction( tx -> {
+                Result result = tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer)"+
+                                "WHERE b.id=$bid "+
+                                "RETURN u.username",
+                        Values.parameters(
+                                "bid", beerId
+                        )
+                );
+                while(result.hasNext()){
+                    Record r = result.next();
+                    String user = r.get("u.username").asString();
+                    authors.add(user);
+                }
+                return authors;
+
+
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return authors;
     }
 
     public boolean addFollows(String u1, String u2) {
@@ -248,7 +312,30 @@ public class NeoDriver {
         return true;
     }
 
-    public boolean updateReview(String username, int beerId, String comm, int sc){
+    public boolean deleteHasInWishlist(String username, int beerId) {
+        try (Session session = driver.session()) {
+
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (u:User)-[:HAS_IN_WISHLIST]->(b:Beer)"+
+                          "WHERE u.username=$username and b.id=$bid "+
+                          "DELETE (r)",
+
+                        Values.parameters(
+                                "username", username,
+                                "bid", beerId
+                        )
+                );
+
+                return null;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateReview(Review review, String username, int beerId){
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
@@ -258,8 +345,8 @@ public class NeoDriver {
                         Values.parameters(
                                 "username", username,
                                 "bid", beerId,
-                                "text", comm,
-                                "score", sc
+                                "text", review.getComment(),
+                                "score", review.getScore()
                         )
                 );
 

@@ -6,6 +6,7 @@ public class DataSession {
     private static User userLogged = null;
     private static String IdUserLogged=null;
     private static String UsernameUserLogged=null;
+    private static int idBeerToShow;
 
     /*public static void setUserLogged(User userLogged){
         DataSession.userLogged = userLogged;
@@ -16,6 +17,15 @@ public class DataSession {
     public static String getUserLogged(){
         return UsernameUserLogged;
     }
+
+    public static void setIdBeerToShow(int idBeerToShow) {
+        DataSession.idBeerToShow = idBeerToShow;
+    }
+
+    public static int getIdBeerToShow() {
+        return idBeerToShow;
+    }
+
     /*public static User getUserLogged(){
         return userLogged;
     }*/
