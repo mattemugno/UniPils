@@ -1,8 +1,11 @@
 package it.unipi.lsmdb.bean;
 
+import org.neo4j.driver.Value;
+
 public class Beer {
 
     private int id;
+    private Value idbeer;
     private String name;
     private String state;
     private String country;
@@ -19,6 +22,13 @@ public class Beer {
 
     public Beer(int id,String name,String style,String brewery_name){
         this.id=id;
+        this.name=name;
+        this.style=style;
+        this.brewery_name=brewery_name;
+    }
+
+    public Beer(Value idbeer,String name,String style,String brewery_name){
+        this.idbeer=idbeer;
         this.name=name;
         this.style=style;
         this.brewery_name=brewery_name;
@@ -52,6 +62,10 @@ public class Beer {
 
     public int getId() {
         return id;
+    }
+
+    public int getIdbeer() {
+        return Integer.parseInt(String.valueOf(idbeer));
     }
 
     public void setId(int id) {
