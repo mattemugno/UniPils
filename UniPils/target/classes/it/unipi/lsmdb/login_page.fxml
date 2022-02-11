@@ -3,14 +3,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="811.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.LoginController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="811.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.LoginController">
    <children>
       <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
-      <Button fx:id="loginButton" layoutX="499.0" layoutY="380.0" mnemonicParsing="false" onAction="#onClickLogin" text="Log in" />
-      <PasswordField fx:id="pass" layoutX="449.0" layoutY="331.0" />
-      <TextField fx:id="user" layoutX="449.0" layoutY="288.0" />
-      <Label layoutX="376.0" layoutY="292.0" prefHeight="18.0" prefWidth="62.0" text="Username:" />
-      <Label layoutX="376.0" layoutY="334.0" prefHeight="18.0" prefWidth="62.0" text="Password:" />
+      <Button fx:id="loginButton" layoutX="515.0" layoutY="382.0" mnemonicParsing="false" onAction="#onClickLogin" text="Log in" />
+      <PasswordField fx:id="pass" layoutX="459.0" layoutY="331.0" />
+      <TextField fx:id="user" layoutX="459.0" layoutY="289.0" />
+      <Label layoutX="345.0" layoutY="292.0" prefHeight="18.0" prefWidth="87.0" text="Username:" />
+      <Label layoutX="345.0" layoutY="334.0" prefHeight="18.0" prefWidth="87.0" text="Password:" />
       <Button layoutX="440.0" layoutY="419.0" mnemonicParsing="false" onAction="#onClickRegistration" text="Not Registered? Sign up here" />
    </children>
 </Pane>

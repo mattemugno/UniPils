@@ -405,6 +405,35 @@ public class NeoDriver {
         return beers;
     }
 
+    public ArrayList<Beer> getBeersUser(String username){
+        ArrayList<Beer> beers= new ArrayList<>();
+
+        try(Session session= driver.session()){
+
+            session.readTransaction(tx->{
+                Result result = tx.run("MATCH (u:User)-[:PURCHASED]->(b:Beer)" +
+                                        "where u.username = $userId "+
+                                        "RETURN b.id, b.name, b.style, b.brewery_name", Values.parameters("userId", username));
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    int id = r.get("b.id").asInt();
+                    String beerName = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brewery_name = r.get("b.brewery_name").asString();
+                    Beer beer= new Beer(id, beerName, style, brewery_name);
+                    beers.add(beer);
+                }
+                return beers;
+            });
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
     //###########         COMPLEX QUERIES NEO4J            ##############
 
     public ArrayList<String> MostPurchasedBeers(){

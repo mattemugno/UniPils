@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -14,7 +15,8 @@ import java.util.ResourceBundle;
 public class MenuController implements Initializable {
 
     @FXML private Button loginButton;
-    @FXML private Label usernameLabel;
+    @FXML private Hyperlink usernameLabel;
+
 
     @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -27,7 +29,7 @@ public class MenuController implements Initializable {
         }
         else {
             //se non sono loggato
-            usernameLabel.setText("");
+            usernameLabel.setText("Welcome");
             loginButton.setOnAction(this::loginUser);
         }
     }
@@ -43,6 +45,13 @@ public class MenuController implements Initializable {
     private void loginUser(ActionEvent actionEvent){
         //vado soltanto alla schermata di login
         Utils.changeScene("login_page.fxml", actionEvent);
+    }
+
+    @FXML private void onClickProfile(ActionEvent actionEvent){
+        if (DataSession.getUserLogged() != null) {
+            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            Utils.changeScene("profile-page.fxml", ae);
+        }
     }
 
     @FXML private void onClickBeers(ActionEvent actionEvent){

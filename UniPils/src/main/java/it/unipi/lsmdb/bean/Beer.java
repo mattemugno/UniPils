@@ -17,6 +17,13 @@ public class Beer {
     private String brewery_types;
     private int view_count;
 
+    public Beer(int id,String name,String style,String brewery_name){
+        this.id=id;
+        this.name=name;
+        this.style=style;
+        this.brewery_name=brewery_name;
+    }
+
     public Beer(int id, String name, String state, String country, String style, int availability, int abv, int volume, int price, int brewery_id, String brewery_name, String brewery_city,String brewery_types, int view_count) {
         this.id=id;
         this.name=name;
