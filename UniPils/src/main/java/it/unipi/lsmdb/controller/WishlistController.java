@@ -50,7 +50,7 @@ public class WishlistController implements Initializable {
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
             TextArea title = new TextArea();
-            title.setText("Beer ID:  " + i.getIdbeer() + "     " + "Beer Name:  " + i.getName());
+            title.setText("Beer ID:  " + i.get_id() + "     " + "Beer Name:  " + i.getName());
             title.setFont(font);
             title.setDisable(true);
 
@@ -60,14 +60,14 @@ public class WishlistController implements Initializable {
             details.setDisable(true);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                DataSession.setIdBeerToShow(i.getIdbeer());
+                DataSession.setIdBeerToShow(i.get_id());
                 Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", event);
                 event.consume();
             });
 
             Button button= new Button();
             button.setText("REMOVE BEER");
-            button.setOnAction(e->removeBeer(e, username, i.getIdbeer())); //remove from wishlist
+            button.setOnAction(e->removeBeer(e, username, i.get_id())); //remove from wishlist
 
             beer.getChildren().addAll(button, title, details);
             container.getChildren().add(beer);

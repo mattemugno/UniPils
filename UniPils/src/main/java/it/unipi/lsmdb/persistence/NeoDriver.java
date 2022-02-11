@@ -538,7 +538,7 @@ public class NeoDriver {
                 while(result.hasNext()) {
                     Record r = result.next();
                     String name = r.get("b.name").asString();
-                    Value id = r.get("b.id");
+                    int id = r.get("b.id").asInt();
                     String brew = r.get("b.brewery_name").asString();
                     String style = r.get("b.style").asString();
                     Beer beer = new Beer(id,name,style,brew);
