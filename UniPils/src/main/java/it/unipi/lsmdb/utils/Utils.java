@@ -114,7 +114,7 @@ public class Utils {
         NeoDriver neo4j = NeoDriver.getInstance();
 
         if (MongoDriver.deleteBeer(beer)) {
-            if(neo4j.deleteBeer(beer.getId())) {
+            if(neo4j.deleteBeer(beer.get_id())) {
                 Utils.showInfoAlert("Beer succesfully deleted");
                 return true;
             }else{
@@ -126,8 +126,6 @@ public class Utils {
         showErrorAlert("Error in deleting beer");
         return false;
     }
-
-
 
     public static void showErrorAlert(String s){
         Alert alert = new Alert(Alert.AlertType.ERROR);
