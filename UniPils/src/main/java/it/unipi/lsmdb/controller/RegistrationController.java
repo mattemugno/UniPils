@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +33,7 @@ public class RegistrationController {
         String em = email.getText();
         String first = fName.getText();
         String last = lName.getText();
-        LocalDate date = dob.getValue();
+        LocalDateTime date = LocalDateTime.from(dob.getValue());
         boolean m = male.isSelected();
         boolean f = female.isSelected();
         String cell = cellular.getText();

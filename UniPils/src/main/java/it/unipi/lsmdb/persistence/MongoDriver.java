@@ -315,7 +315,7 @@ public class MongoDriver {
         }
     }
 
-    public static ArrayList<Beer> getBeersFromDocumentByFilter(String fieldName, String fieldValue){
+    public static ArrayList<Beer> getBeersByFilter(String fieldName, String fieldValue){
 
         openConnection("Beers");
 

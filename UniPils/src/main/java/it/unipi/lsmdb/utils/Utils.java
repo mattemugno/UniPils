@@ -92,7 +92,6 @@ public class Utils {
         return false;
     }
 
-
     public static boolean deleteUser(User user) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
