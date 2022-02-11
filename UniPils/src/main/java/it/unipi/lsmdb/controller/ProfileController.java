@@ -2,16 +2,15 @@ package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Review;
+import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -30,11 +29,33 @@ public class ProfileController implements Initializable {
     @FXML private AnchorPane userDataPane;
     @FXML private VBox beersInfoPane;
 
+    @FXML private Label userLabel;
+    @FXML private Label firstLabel;
+    @FXML private Label lastLabel;
+    @FXML private Label emailLabel;
+    @FXML private Label cellLabel;
+    @FXML private Label genderLabel;
+    @FXML private Label addressLabel;
+    @FXML private ScrollPane scroll;
+
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String usernameLogged = DataSession.getUserLogged();
+
+      /*  User user= MongoDriver.getUserFromUsername(usernameLogged);
+        Font font_u = Font.font("Comic Sans", FontWeight.BOLD,  25);
+
+        userLabel.setText(user.getUsername());
+        userLabel.setFont(font_u);
+        firstLabel.setText(user.getFirst());
+        lastLabel.setText(user.getLast());
+        emailLabel.setText(user.getEmail());
+        cellLabel.setText(user.getCell());
+        genderLabel.setText(user.getGender());
+        addressLabel.setText(user.getAddress());*/
+
         ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
 
         System.out.println(beers);
@@ -44,10 +65,11 @@ public class ProfileController implements Initializable {
             oneBeer.setStyle("-fx-border-style: solid inside;"
                     + "-fx-border-width: 1;" +"-fx-border-insets: 5;"
                     + "-fx-border-radius: 5;");
-            VBox boxBeer = new VBox(5);
+            VBox boxBeer = new VBox();
+            boxBeer.setMaxWidth(491);
             boxBeer.setPadding(new Insets(5,5,5,5));
 
-            HBox hb=new HBox(5);
+            HBox hb=new HBox();
 
             Label nameBeer = new Label();
             nameBeer.setText("Beer:  " + b.getName());
