@@ -40,7 +40,7 @@ public class ProfileBeerController implements Initializable {
     @FXML Label price;
     @FXML Label country;
     @FXML Label state;
-    String lastWishState="ADD TO WISHLIST";
+    @FXML ScrollPane scroll;
 
     @FXML
     @Override
@@ -73,9 +73,9 @@ public class ProfileBeerController implements Initializable {
 
         if (DataSession.getUserLogged() != null){
             String usernameLogged = DataSession.getUserLogged();
-            wishButton.setText(lastWishState);
-            if(Objects.equals(wishButton.getText(), "ADD TO WISHLIST"))
-                wishButton.setOnAction(e->addWishlist(e, usernameLogged, beer_id));
+            if(Objects.equals(wishButton.getText(), "ADD TO WISHLIST")) {
+                wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
+            }
             else
                 wishButton.setOnAction(e->deleteWishlist(e, usernameLogged, beer_id));
             //cartButton.setOnAction();
@@ -97,7 +97,6 @@ public class ProfileBeerController implements Initializable {
         NeoDriver neo4j = NeoDriver.getInstance();
         ArrayList<String> authors = neo4j.getAuthorReview(beer);
         ArrayList<Review> reviews= neo4j.getBeerReviews(beer);
-        System.out.println(reviews);
         for(int i=0,j=0;i< reviews.size() && j< authors.size(); i++, j++){
                 double space = 5;
                 VBox rev = new VBox(space);
@@ -130,8 +129,13 @@ public class ProfileBeerController implements Initializable {
     }
 
     private void writeReview(ActionEvent actionEvent, String usernameLogged, int beer) {
-        if(comment.getText() == null || score.getText() == null) {
+        if(comment.getText() == "" || score.getText() == "") {
             Utils.showErrorAlert("You need to compile both fields");
+            return;
+        }
+        int num = Integer.parseInt(score.getText());
+        if(num > 10 || num < 1 ){
+            Utils.showErrorAlert("You need to insert a valid score (0 < sc < 11)");
             return;
         }
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
@@ -140,7 +144,7 @@ public class ProfileBeerController implements Initializable {
         //comment.setText(writtenReview.getComment());
         //score.setText(String.valueOf(writtenReview.getScore()));
         revButton.setText("MODIFY REVIEW");
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     private void modifyReview(ActionEvent actionEvent, String usernameLogged, int beer) {
@@ -151,8 +155,7 @@ public class ProfileBeerController implements Initializable {
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.updateReview(review, usernameLogged, beer);
-        revButton.setText("POST REVIEW");
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     @FXML
@@ -160,8 +163,8 @@ public class ProfileBeerController implements Initializable {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addHasInWishlist(user, beer);
         Utils.showInfoAlert("Added to wishlist");
-        lastWishState="REMOVE FROM WISHLIST";
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+        wishButton.setText("REMOVE FROM WISHLIST");
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     @FXML
@@ -169,8 +172,13 @@ public class ProfileBeerController implements Initializable {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.deleteHasInWishlist(user, beer);
         Utils.showInfoAlert("Deleted from wishlist");
-        lastWishState="ADD TO WISHLIST";
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+        wishButton.setText("ADD TO WISHLIST");
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+    }
+
+    @FXML
+    private void scroll(){
+        scroll.setFitToWidth(true);
     }
 
 

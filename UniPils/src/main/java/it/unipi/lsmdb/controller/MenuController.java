@@ -58,6 +58,14 @@ public class MenuController implements Initializable {
         Utils.changeScene("profile-beer.fxml", actionEvent);
     }
 
+    @FXML
+    private void showWishlist(ActionEvent actionEvent){
+        if (DataSession.getUserLogged() != null)
+            Utils.changeScene("wishlist-page.fxml", actionEvent);
+        else
+            Utils.showErrorAlert("You need to login to access this area");
+    }
+
 }
 
 

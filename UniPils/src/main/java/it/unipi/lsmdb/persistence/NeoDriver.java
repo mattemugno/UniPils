@@ -136,7 +136,7 @@ public class NeoDriver {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (u:User)(b:Beer)"+
+                tx.run("MATCH (u:User),(b:Beer)"+
                           "WHERE u.username=$username and b.id=$bid "+
                           "MERGE (u)-[:POSTED]->(r:Review {comment:$text, score:$sc, timestamp:localdatetime()})-[:RELATED]->(b)",
                         Values.parameters(
@@ -316,7 +316,7 @@ public class NeoDriver {
         try (Session session = driver.session()) {
 
             session.writeTransaction((TransactionWork<Void>) tx -> {
-                tx.run("MATCH (u:User)-[:HAS_IN_WISHLIST]->(b:Beer)"+
+                tx.run("MATCH (u:User)-[r:HAS_IN_WISHLIST]->(b:Beer)"+
                           "WHERE u.username=$username and b.id=$bid "+
                           "DELETE (r)",
 
@@ -515,6 +515,38 @@ public class NeoDriver {
             });
 
         }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<Beer> getUserWishlist(String username){
+        ArrayList<Beer> beers = new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.writeTransaction(tx -> {
+                Result result=tx.run("MATCH (u:User)-[:HAS_IN_WISHLIST]->(b:Beer)"+
+                                "WHERE u.username=$username "+
+                                "RETURN b.id, b.name, b.brewery_name, b.style",
+
+                        Values.parameters(
+                                "username", username
+                        )
+                );
+                while(result.hasNext()) {
+                    Record r = result.next();
+                    String name = r.get("b.name").asString();
+                    int id = r.get("b.id").asInt();
+                    String brew = r.get("b.brewery_name").asString();
+                    String style = r.get("b.style").asString();
+                    Beer beer = new Beer(id,name,style,brew);
+                    beers.add(beer);
+                }
+                return beers;
+            });
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
