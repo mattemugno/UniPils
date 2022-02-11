@@ -3,8 +3,31 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="556.0" prefWidth="714.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.ProfileController">
-   <children>
-      <VBox fx:id="profilePage" layoutX="233.0" layoutY="126.0" prefHeight="360.0" prefWidth="333.0" />
-   </children>
-</AnchorPane>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Separator?>
+<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="887.0" fx:controller="it.unipi.lsmdb.controller.ProfileController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <AnchorPane fx:id="menuPane" minHeight="0.0" minWidth="0.0" prefHeight="672.0" prefWidth="262.0">
+         <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
+      </AnchorPane>
+      <SplitPane fx:id="rightContainer" dividerPositions="0.07417974322396577" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+         <items>
+            <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <TextField fx:id="searchBar" layoutX="215.0" layoutY="9.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="userDataPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+               </children>
+            </AnchorPane>
+            <VBox fx:id="beersInfoPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </items>
+</SplitPane>
