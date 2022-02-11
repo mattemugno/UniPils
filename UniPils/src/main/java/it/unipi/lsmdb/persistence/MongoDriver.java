@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
@@ -350,6 +349,25 @@ public class MongoDriver {
         }
     }
 
+    public static Beer getBeersFromId(int idBeerToShow) {
+        openConnection("Beers");
+        ArrayList<Document> results = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("_id", idBeerToShow)).iterator()){
+            while(cursor.hasNext()){
+                Document user = cursor.next();
+                if (user == null) return null;
+                else results.add(user);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        //return getBeanFromDocuments(results);
+        return null;
+    }
+
     //#############  AGGREGATION ###########
 
     public static ArrayList<User> getBeerOfTheMonth(){
@@ -474,6 +492,7 @@ public class MongoDriver {
         closeConnection();
         return getBeanFromDocuments(results);
     }
+
 }
 
 

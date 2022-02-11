@@ -22,7 +22,7 @@ public class BeersController {
     @FXML private Button addBeer;
 
     @FXML private void onClickViewBeers(ActionEvent actionEvent){
-        NeoDriver neo4j = NeoDriver.getInstance();
+        /*NeoDriver neo4j = NeoDriver.getInstance();
         String username ="1160birgerKLEINER";
         String u1 = username;
         String u2 = "3967leviWEBB";
@@ -32,7 +32,7 @@ public class BeersController {
         Review review = new Review("gggg",8);
         Beer beer = new Beer(0000, "moretti","","ita", "chiara", 10,4,50, 2, 777777, "birrificio", "santacruz","",0);
         neo4j.findBeer("American IPA");
-        System.out.println(neo4j.SuggestedUsers(u1));
+        System.out.println(neo4j.SuggestedUsers(u1));*/
         //System.out.println(Arrays.toString(listBeers.toArray()));
 
     }
