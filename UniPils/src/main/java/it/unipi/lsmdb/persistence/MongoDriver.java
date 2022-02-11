@@ -57,43 +57,9 @@ public class MongoDriver {
         }
     }
 
-    private static ArrayList<User> getBeanFromDocuments(ArrayList<Document> results){
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        ArrayList<User> users = new ArrayList<>();
-        try {
-            for (Document doc : results) {
-                User user = objectMapper.readValue(doc.toJson(), User.class);
-                users.add(user);
-            }
-            return users;
-
-        }catch(Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static ArrayList<User> getBeersFromUsername(String username){
-        List<Document> results;
-
-        openConnection("User");
-        results=Arrays.asList(new Document("$unwind",
-                        new Document("path", "$orders")),
-                new Document("$unwind",
-                        new Document("path", "$orders.order_list")),
-                new Document("$match",
-                        new Document("login.username", "silversnake781")),
-                new Document("$project",
-                        new Document("orders.order_list", 1L)));
-
-        ArrayList<Document> res= new ArrayList<>(results);
-        closeConnection();
-        return getBeanFromDocuments(res);
-    }
-
     //#############         CRUD OPERATIONS         ##############
+
+    // CRUD USERS //
 
     public static boolean addUser(User u){
         openConnection("Users");
@@ -119,7 +85,7 @@ public class MongoDriver {
             Document doc_dob = new Document();
                 doc_dob.append("date", u.getDob());
                 LocalDate lt = LocalDate.now();
-                doc_dob.append("age", calculateAge(u.getDob(), lt));
+                doc_dob.append("age", calculateAge(u.getDob().toLocalDate(), lt));
             doc.append("dob", doc_dob);
 
             doc.append("cell", u.getCell());
@@ -141,22 +107,29 @@ public class MongoDriver {
         return true;
     }
 
-    public static ArrayList<User> getUser(String username){
+    public static User getUserFromUsername(String username){
         openConnection("Users");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         ArrayList<Document> results = new ArrayList<>();
 
         try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
             while(cursor.hasNext()){
-                Document user = cursor.next();
-                if (user == null) return null;
-                else results.add(user);
+                Document doc = cursor.next();
+                System.out.println(doc.toJson());
+                results.add(doc);
             }
+
+            User user = objectMapper.readValue(results.get(0).toJson(), User.class);
+            System.out.println(user.toString());
+
+            closeConnection();
+            return user;
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
-
-        System.out.println(results);
-        return getBeanFromDocuments(results);
     }
 
     public static boolean deleteUser(User u){
@@ -196,6 +169,8 @@ public class MongoDriver {
         return true;
     }
 
+    // CRUD ORDER
+
     public static boolean addOrder(User u, Order o){
         openConnection("Users");
         System.out.println(u.getUsername());
@@ -229,11 +204,13 @@ public class MongoDriver {
         return true;
     }
 
+    // CRUD BEER
+
     public static boolean addBeer(Beer b){
         openConnection("Beers");
         try{
             Document doc= new Document();
-            doc.append("_id",b.getId());
+            doc.append("_id",b.get_id());
             doc.append("name", b.getName());
             doc.append("state",b.getName());
             doc.append("country",b.getCountry());
@@ -266,7 +243,7 @@ public class MongoDriver {
     public static boolean deleteBeer(Beer b){
         openConnection("Beers");
         try{
-            collection.deleteOne(Filters.eq("_id", b.getId()));
+            collection.deleteOne(Filters.eq("_id", b.get_id()));
         }catch(Exception ex){
             closeConnection();
             return false;
@@ -314,6 +291,56 @@ public class MongoDriver {
         }
     }
 
+    public static Beer getBeerById(int id){
+        openConnection("Beers");
+        Beer beer;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ArrayList<Document> results = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("_id", id)).iterator()){
+            while(cursor.hasNext()){
+                Document doc = cursor.next();
+                results.add(doc);
+            }
+            beer = objectMapper.readValue(results.get(0).toJson(), Beer.class);
+            System.out.println(beer.toString());
+            closeConnection();
+            return beer;
+        } catch (Exception e){
+            e.printStackTrace();
+            closeConnection();
+            return null;
+        }
+    }
+
+    public static ArrayList<Beer> getBeersByFilter(String fieldName, String fieldValue){
+
+        openConnection("Beers");
+
+        ArrayList<Document> r;
+        r = collection.find(eq(fieldName, fieldValue)).into(new ArrayList<>());
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        ArrayList<Beer> beers = new ArrayList<>();
+
+        try{
+            for (Document doc: r){
+                Beer beer = objectMapper.readValue(doc.toJson(), Beer.class);
+                System.out.println(beer.toString());
+                beers.add(beer);
+            }
+
+            return beers;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static int getBreweryId(String name){
         ArrayList<Document> result;
         int maxId=0;
@@ -349,28 +376,9 @@ public class MongoDriver {
         }
     }
 
-    public static Beer getBeersFromId(int idBeerToShow) {
-        openConnection("Beers");
-        ArrayList<Document> results = new ArrayList<>();
-
-        try (MongoCursor<Document> cursor = collection.find(eq("_id", idBeerToShow)).iterator()){
-            while(cursor.hasNext()){
-                Document user = cursor.next();
-                if (user == null) return null;
-                else results.add(user);
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        System.out.println(results);
-        //return getBeanFromDocuments(results);
-        return null;
-    }
-
     //#############  AGGREGATION ###########
 
-    public static ArrayList<User> getBeerOfTheMonth(){
+    public static ArrayList<Document> getBeerOfTheMonth(){
 
         openConnection("Users");
 
@@ -390,7 +398,7 @@ public class MongoDriver {
                 first("beer_name", "$orders.order_list.beer_name"));
         Bson sort = sort(descending("total_purchased"));
         Bson limitResults = limit(20);
-        Bson projectFields = project(fields(excludeId(),
+        Bson projectFields = project(fields(
                 include("beer_name"),
                 computed("TotalPurchased", "$total_purchased")));
 
@@ -402,10 +410,10 @@ public class MongoDriver {
         }
 
         closeConnection();
-        return getBeanFromDocuments(results);
+        return results;
     }
 
-    public static ArrayList<User> getCheapestBeerByStyle(String style){
+    public static ArrayList<Document> getCheapestBeersByStyle(String style){
 
         openConnection("Beers");
 
@@ -426,12 +434,11 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
-        return getBeanFromDocuments(results);
+        return results;
     }
 
-    public static ArrayList<User> getMostPopularEachState(){
+    public static ArrayList<Document> getMostPopularEachState(){
 
         openConnection("Beers");
 
@@ -463,10 +470,10 @@ public class MongoDriver {
 
         System.out.println(results);
         closeConnection();
-        return getBeanFromDocuments(results);
+        return results;
     }
 
-    public static ArrayList<User> getBuyers(){
+    public static ArrayList<Document> getBuyers(){
 
         openConnection("Users");
 
@@ -490,7 +497,7 @@ public class MongoDriver {
 
         System.out.println(results);
         closeConnection();
-        return getBeanFromDocuments(results);
+        return results;
     }
 
 }

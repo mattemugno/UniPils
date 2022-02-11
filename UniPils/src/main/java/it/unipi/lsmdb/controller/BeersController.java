@@ -42,4 +42,8 @@ public class BeersController {
         Utils.changeScene("registration-beer.fxml", ae);
 
     }
+
+    @FXML private void onClickTest(ActionEvent actionEvent){
+        MongoDriver.getUserFromUsername("matteo");
+    }
 }

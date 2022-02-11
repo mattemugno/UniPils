@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,6 +22,23 @@ import java.time.Period;
 public class Utils {
 
     static public void changeScene(String fxmlFile, ActionEvent event) {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(fxmlFile));
+        Scene scene = null;
+        try {
+            scene = new Scene(fxmlLoader.load(), 1200, 800);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static public void changeScene(String fxmlFile, MouseEvent event) {
 
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(fxmlFile));
         Scene scene = null;
@@ -92,7 +110,6 @@ public class Utils {
         return false;
     }
 
-
     public static boolean deleteUser(User user) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
@@ -114,7 +131,7 @@ public class Utils {
         NeoDriver neo4j = NeoDriver.getInstance();
 
         if (MongoDriver.deleteBeer(beer)) {
-            if(neo4j.deleteBeer(beer.getId())) {
+            if(neo4j.deleteBeer(beer.get_id())) {
                 Utils.showInfoAlert("Beer succesfully deleted");
                 return true;
             }else{
@@ -126,8 +143,6 @@ public class Utils {
         showErrorAlert("Error in deleting beer");
         return false;
     }
-
-
 
     public static void showErrorAlert(String s){
         Alert alert = new Alert(Alert.AlertType.ERROR);
