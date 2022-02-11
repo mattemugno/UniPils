@@ -1,8 +1,12 @@
 package it.unipi.lsmdb.bean;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Map;
 
 public class User {
 
@@ -12,14 +16,14 @@ public class User {
     private String email;
     private String username;
     private String password;
-    private LocalDate dob;
+    private LocalDateTime dob;
     private String cell;
     private ArrayList<Order> orders;
     private ArrayList<Payment> payments;
     private String address;
 
     public User(String gender, String first, String last, String email, String username, String password,
-                LocalDate dob, String cell){
+                LocalDateTime dob, String cell){
         this.first=first;
         this.last=last;
         this.username=username;
@@ -30,11 +34,13 @@ public class User {
         this.cell=cell;
     }
 
+    public User(){};
+
     public String getGender(){
         return gender;
     }
 
-    public LocalDate getDob() {
+    public LocalDateTime getDob() {
         return dob;
     }
 
@@ -74,7 +80,7 @@ public class User {
         this.cell = cell;
     }
 
-    public void setDob(LocalDate dob) {
+    public void setDob(LocalDateTime dob) {
         this.dob = dob;
     }
 
@@ -116,5 +122,45 @@ public class User {
 
     public void setLast(String last) {
         this.last = last;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "gender='" + gender + '\'' +
+                ", first='" + first + '\'' +
+                ", last='" + last + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", dob=" + dob +
+                ", cell='" + cell + '\'' +
+                ", orders=" + orders +
+                ", payments=" + payments +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("name")
+    private void unpackNestedName(Map<String, Object> name) {
+        this.first = (String) name.get("first");
+        this.last = (String) name.get("last");
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("login")
+    private void unpackNestedLogin(Map<String, Object> login) {
+        this.username = (String) login.get("username");
+        this.password = (String) login.get("password");
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("dob")
+    private void unpackNestedDob(Map<String, Object> dob) {
+        Map<String, Object> date = (Map<String, Object>) dob.get("date");
+        String dobString = (String) date.get("$date");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.dob = LocalDateTime.parse(dobString.replace("T", " ").replace("Z", ""), format);
     }
 }

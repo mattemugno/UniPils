@@ -1,11 +1,12 @@
 package it.unipi.lsmdb.bean;
 
-import org.neo4j.driver.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Map;
 
 public class Beer {
 
-    private int id;
-    private Value idbeer;
+    private int _id;
     private String name;
     private String state;
     private String country;
@@ -21,21 +22,14 @@ public class Beer {
     private int view_count;
 
     public Beer(int id,String name,String style,String brewery_name){
-        this.id=id;
-        this.name=name;
-        this.style=style;
-        this.brewery_name=brewery_name;
-    }
-
-    public Beer(Value idbeer,String name,String style,String brewery_name){
-        this.idbeer=idbeer;
+        this._id=id;
         this.name=name;
         this.style=style;
         this.brewery_name=brewery_name;
     }
 
     public Beer(int id, String name, String state, String country, String style, int availability, int abv, int volume, int price, int brewery_id, String brewery_name, String brewery_city,String brewery_types, int view_count) {
-        this.id=id;
+        this._id=id;
         this.name=name;
         this.state=state;
         this.country=country;
@@ -51,6 +45,9 @@ public class Beer {
         this.view_count=view_count;
     }
 
+    public Beer(){
+
+    }
 
     public int getBrewery_id() {
         return brewery_id;
@@ -60,16 +57,12 @@ public class Beer {
         this.brewery_id = brewery_id;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public int getIdbeer() {
-        return Integer.parseInt(String.valueOf(idbeer));
+    public int get_id() {
+        return _id;
     }
 
     public void setId(int id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getName() {
@@ -163,4 +156,33 @@ public class Beer {
     public String getBrewery_types(){return brewery_types; }
 
     public void setBrewery_types(String brewery_types){this.brewery_types=brewery_types;}
+
+    @Override
+    public String toString() {
+        return "Beer{" +
+                "id=" + _id +
+                ", name='" + name + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", style='" + style + '\'' +
+                ", availability=" + availability +
+                ", abv=" + abv +
+                ", volume=" + volume +
+                ", price=" + price +
+                ", brewery_id=" + brewery_id +
+                ", brewery_name='" + brewery_name + '\'' +
+                ", brewery_city='" + brewery_city + '\'' +
+                ", brewery_types='" + brewery_types + '\'' +
+                ", view_count=" + view_count +
+                '}';
+    }
+
+    @SuppressWarnings("unchecked")
+    @JsonProperty("Brewery")
+    private void unpackNestedBrewery(Map<String, Object> brewery) {
+        this.brewery_id = (Integer) brewery.get("id");
+        this.brewery_name = (String) brewery.get("name");
+        this.brewery_city = (String) brewery.get("city");
+        this.brewery_types = (String) brewery.get("types");
+    }
 }

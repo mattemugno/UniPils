@@ -113,7 +113,7 @@ public class NeoDriver {
                 tx.run("MERGE (b:Beer {name:$beerName, id:$beerId, style:$sty, brewery_name:$breweryName, brewery_id: $breweryId})",
                         Values.parameters(
                                 "beerName", beer.getName(),
-                                "beerId", beer.getId(),
+                                "beerId", beer.get_id(),
                                 "sty", beer.getStyle(),
                                 "breweryName", beer.getBrewery_name(),
                                 "breweryId", beer.getBrewery_id()

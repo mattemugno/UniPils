@@ -7,8 +7,8 @@ module it.unipi.lsmdb {
     requires org.mongodb.bson;
     requires org.neo4j.driver;
     requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.datatype.jsr310;
 
-    opens it.unipi.lsmdb to javafx.fxml;
     opens it.unipi.lsmdb.bean to com.fasterxml.jackson.databind;
     exports it.unipi.lsmdb;
     exports it.unipi.lsmdb.controller;
