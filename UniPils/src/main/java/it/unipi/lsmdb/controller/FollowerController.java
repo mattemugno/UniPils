@@ -47,10 +47,15 @@ public class FollowerController implements Initializable {
                 btnDelete.setText("delete follow");
                 btnDelete.setPadding(new Insets(5, 5, 5, 5));
                 btnDelete.setFont(font);
-                btnDelete.setOnAction(actionEvent -> {
-                    if(neo4j.deleteFollows(follow,usernameLogged))
-                        Utils.changeScene("follower-page.fxml", actionEvent);
-                });
+                btnDelete.setVisible(false);
+
+                if (DataSession.getUserView() == null){
+                    btnDelete.setVisible(true);
+                    btnDelete.setOnAction(actionEvent -> {
+                        if (neo4j.deleteFollows(follow, usernameLogged))
+                            Utils.changeScene("follower-page.fxml", actionEvent);
+                    });
+                }
 
                 hb.getChildren().addAll(userFollow, btnDelete);
                 followerInfoPane.getChildren().add(hb);

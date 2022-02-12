@@ -133,17 +133,14 @@ public class ProfileController implements Initializable {
     }
 
     @FXML private void onClickFollower(ActionEvent actionEvent){
-        if(DataSession.getUserView()==null) {
-            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-            Utils.changeScene("follower-page.fxml", ae);
-        }
+        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+        Utils.changeScene("follower-page.fxml", ae);
     }
 
     @FXML private void onClickFollowing(ActionEvent actionEvent){
-        if(DataSession.getUserView()==null) {
-            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-            Utils.changeScene("following-page.fxml", ae);
-        }
+        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+        Utils.changeScene("following-page.fxml", ae);
+
     }
 
 
