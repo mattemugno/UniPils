@@ -31,6 +31,9 @@ public class User {
         this.gender=gender;
         this.dob=dob;
         this.cell=cell;
+        this.orders = new ArrayList<>();
+        this.payments = new ArrayList<>();
+        this.address = new ArrayList<>();
     }
 
     public User(){};

@@ -189,6 +189,9 @@ public class MongoDriver {
 
             closeConnection();
             System.out.println(ordersByUsername);
+            User user = getUserFromUsername(username);
+            user.setOrders(ordersByUsername);
+            System.out.println(user);
             return ordersByUsername;
         } catch (Exception e){
             e.printStackTrace();
