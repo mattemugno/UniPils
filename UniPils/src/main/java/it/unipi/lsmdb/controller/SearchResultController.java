@@ -127,7 +127,7 @@ public class SearchResultController  {
             details.setFont(font);
 
             user.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                DataSession.setUserLogged(i.getUsername());
+                DataSession.setUserView(i.getUsername());
                 Utils.changeScene("/it/unipi/lsmdb/profile-user.fxml", event);
                 event.consume();
             });
