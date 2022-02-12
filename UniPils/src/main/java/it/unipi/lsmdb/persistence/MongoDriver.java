@@ -8,11 +8,15 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
+import it.unipi.lsmdb.bean.OrderList;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.config.InfoConfig;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -83,7 +87,7 @@ public class MongoDriver {
             doc.append("login", doc_login);
 
             Document doc_dob = new Document();
-                doc_dob.append("date", u.getDob());
+                doc_dob.append("date", u.getDob().toString());
                 LocalDate lt = LocalDate.now();
                 doc_dob.append("age", calculateAge(u.getDob().toLocalDate(), lt));
             doc.append("dob", doc_dob);
@@ -126,6 +130,66 @@ public class MongoDriver {
 
             closeConnection();
             return user;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static ArrayList<Order> getOrderListFromUsername(String username){
+        openConnection("Users");
+
+        ArrayList<Order> ordersByUsername = new ArrayList<>();
+        ArrayList<Document> results = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
+            while(cursor.hasNext()){
+                Document doc = cursor.next();
+                results.add(doc);
+            }
+
+            JSONObject object = (JSONObject) new JSONParser().parse(results.get(0).toJson());
+            JSONArray orders_list = (JSONArray) object.get("orders");
+
+            for (int i = 0; i < orders_list.size(); i++){
+                // take each order
+                JSONObject takeOrder = (JSONObject) orders_list.get(i);
+                double feedback;
+
+                // initialize order object
+                Order order = new Order();
+                order.setIdOrder(((Long) takeOrder.get("id_order")).intValue());
+                order.setDeliveryDate((String) takeOrder.get("delivery_date"));
+                if (takeOrder.get("feedback") instanceof Long)
+                    feedback = (Long) takeOrder.get("feedback");
+                else feedback = (Double) takeOrder.get("feedback");
+                order.setFeedback(feedback);
+                order.setTotalCost(((Long) takeOrder.get("total_cost")).intValue());
+                JSONObject date = (JSONObject) new JSONParser().parse(takeOrder.get("confirmation_date").toString());
+                order.setConfirmationDate((String) date.get("$date"));
+
+                //get list of beers
+                JSONArray beer_list = (JSONArray) takeOrder.get("order_list");
+
+                for (int n = 0; n < beer_list.size(); n++){
+                    // get type of beer
+                    JSONObject item = (JSONObject) beer_list.get(n);
+
+                    // initialize orderList object
+                    OrderList beerType = new OrderList();
+                    beerType.setBeerId(((Long) item.get("beer_id")).intValue());
+                    beerType.setQuantity(((Long) item.get("quantity")).intValue());
+                    beerType.setBeerName((String) item.get("beer_name"));
+                    beerType.setBeerPrice(((Long) item.get("beer_price")).intValue());
+
+                    order.setOrderList(beerType);
+                }
+                ordersByUsername.add(order);
+            }
+
+            closeConnection();
+            System.out.println(ordersByUsername);
+            return ordersByUsername;
         } catch (Exception e){
             e.printStackTrace();
             return null;

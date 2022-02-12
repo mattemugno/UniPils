@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -64,6 +65,11 @@ public class MenuController implements Initializable {
             Utils.changeScene("wishlist-page.fxml", actionEvent);
         else
             Utils.showErrorAlert("You need to login to access this area");
+    }
+
+    @FXML
+    private void OnlickDebug(){
+        MongoDriver.getOrderListFromUsername("1739irisGIRAUD");
     }
 
 }

@@ -14,6 +14,9 @@ public class OrderList {
         this.quantity=quantity;
     }
 
+    public OrderList(){
+    }
+
     public int getBeerId(){
         return beerId;
     }
@@ -44,5 +47,15 @@ public class OrderList {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString() {
+        return "OrderList{" +
+                "beerId=" + beerId +
+                ", beerName='" + beerName + '\'' +
+                ", beerPrice=" + beerPrice +
+                ", quantity=" + quantity +
+                '}';
     }
 }
