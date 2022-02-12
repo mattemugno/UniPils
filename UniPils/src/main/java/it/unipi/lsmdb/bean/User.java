@@ -36,6 +36,13 @@ public class User {
 
     public User(){};
 
+    public User(String uname, String pass, String f, String l) {
+        this.first=f;
+        this.last=l;
+        this.username=uname;
+        this.password=pass;
+    }
+
     public String getGender(){
         return gender;
     }

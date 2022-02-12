@@ -20,6 +20,7 @@ public class MenuController implements Initializable {
 
     @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         if (DataSession.getUserLogged() != null){
             //se sono loggato
             String usernameLogged = DataSession.getUserLogged();
