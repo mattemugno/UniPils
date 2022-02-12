@@ -220,6 +220,33 @@ public class NeoDriver {
         return authors;
     }
 
+    public ArrayList<Review> getReviewsUser(String username,int beerId){
+       ArrayList<Review> reviews= new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result = tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer)"+
+                                "WHERE u.username=$user and b.id=$beerId "+
+                                "RETURN r.comment, r.score, r.timestamp,b.id",
+                        Values.parameters(
+                                "user",username,
+                                "beerId",beerId
+                        )
+                );
+                while(result.hasNext()){
+                    Record r = result.next();
+                    reviews.add(new Review(r.get("r.comment").asString(),r.get("r.score").asInt(),r.get("r.timestamp").asLocalDateTime(),r.get("b.id").asInt()));
+                }
+               return reviews;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return reviews;
+    }
+
     public boolean addFollows(String u1, String u2) {
         try (Session session = driver.session()) {
 
@@ -243,6 +270,59 @@ public class NeoDriver {
         closeConnection();
         return true;
     }
+
+    public ArrayList<String> getFollowers(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                        "WHERE u2.username=$un "+
+                                        "RETURN u1.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
+    public ArrayList<String> getFollowing(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                "WHERE u1.username=$un "+
+                                "RETURN u2.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
 
     public boolean deleteFollows(String u1, String u2) {
         try (Session session = driver.session()) {

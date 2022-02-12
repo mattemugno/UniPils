@@ -14,6 +14,7 @@ public class Review {
     private LocalDateTime timestamp;
     private Value sc;
     public Value ts;
+    public int beerId;
 
 
     public Review(String comment, int score){
@@ -21,11 +22,12 @@ public class Review {
         this.score = score;
     }
 
-    /*public Review(String comment, int scoreRev, LocalDateTime timestamp){
+    public Review(String comment, int scoreRev, LocalDateTime timestamp,int beerId){
         this.comment = comment;
         this.scoreRev = scoreRev;
         this.timestamp = timestamp;
-    }*/
+        this.beerId=beerId;
+    }
 
     public Review(String comment, Value sc, Value ts) {
         this.comment = comment;
