@@ -64,12 +64,19 @@ public class AdminController implements Initializable {
     private void showAnalyticOne(ActionEvent actionEvent){
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
         ArrayList<Document> docs = MongoDriver.getBuyers();
+        Document d = docs.get(0);
 
-        for(Document doc : docs) {
-            Label results = new Label();
-            results.setText("Total All-Time Buyers:  " + doc + "     " + "Avg num orders per user:  " );
-            results.setFont(font);
-        }
+        int field_one = d.getInteger("numberOfBuyers");
+        double field_two = d.getDouble("AvgOrders");
+
+        Label results = new Label();
+        results.setText("Total All-Time Buyers:  " + field_one + "     " + "Avg num orders per user:  " + field_two );
+        results.setFont(font);
+        container.getChildren().add(results);
+        container.prefHeight(703.0);
+        System.out.println(results);
+        Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", actionEvent);
+
     }
 
     @FXML

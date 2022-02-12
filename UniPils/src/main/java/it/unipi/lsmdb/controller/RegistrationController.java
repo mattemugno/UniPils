@@ -68,11 +68,6 @@ public class RegistrationController {
         NeoDriver neo4j = NeoDriver.getInstance();
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
 
-
-        if(!neo4j.addUser(user) || !MongoDriver.addUser(user)) {
-            Utils.showErrorAlert("User not inserted");
-            return;
-        }
         Utils.addUser(user);
         //Utils.showInfoAlert("User inserted successfully");
         DataSession.setUserLogged(user.getUsername());

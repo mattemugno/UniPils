@@ -73,7 +73,13 @@ public class MenuController implements Initializable {
     private void OnlickDebug(){
         MongoDriver.getUserFromUsername("2578alexOLIVIER");
     }
+
+    @FXML
+    private void showCart(ActionEvent ae){
+        Utils.changeScene("admin-page.fxml", ae);
+    }
 }
+
 
 
 
