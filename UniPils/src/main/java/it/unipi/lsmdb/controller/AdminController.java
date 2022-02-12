@@ -73,7 +73,7 @@ public class AdminController implements Initializable {
         results.setText("Total All-Time Buyers:  " + field_one + "     " + "Avg num orders per user:  " + field_two );
         results.setFont(font);
         container.getChildren().add(results);
-        container.prefHeight(703.0);
+        //container.prefHeight(703.0);
         System.out.println(results);
         Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", actionEvent);
 

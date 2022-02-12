@@ -6,22 +6,16 @@ import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class SearchResultController  {
 
@@ -50,7 +44,7 @@ public class SearchResultController  {
             ArrayList<User> users = neo4j.getUsername(search);
             printUsers(users);
         }
-        else if(Objects.equals(value, "Beer_name")){
+        else if(Objects.equals(value, "Beer Name")){
             ArrayList<Beer> beer = neo4j.getBeerByName(search);
             printBeers(beer);
         }

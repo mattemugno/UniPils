@@ -639,7 +639,7 @@ public class NeoDriver {
 
             session.readTransaction( tx -> {
                 Result result=tx.run("MATCH (u:User) WHERE u.username CONTAINS $pattern " +
-                                "RETURN u.username, u.password, u.first_name, u.last_name",
+                                "RETURN u.username, u.password, u.first_name, u.last_name LIMIT 30",
                         Values.parameters(
                                 "pattern", username
                         )
