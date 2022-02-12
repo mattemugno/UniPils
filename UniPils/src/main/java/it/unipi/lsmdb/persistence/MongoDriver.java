@@ -490,9 +490,10 @@ public class MongoDriver {
         Bson matchStyle = match(eq("style", style));
         Bson groupPrice = group("$price", push("beer_name", "$name"));
         Bson sort = sort(ascending("_id"));
-        Bson limit = limit(20);
+
         Bson projectFields = project(
-                fields(excludeId(), computed("price", "$_id"), computed("Beer Name", "$beer_name"))
+                fields(excludeId(), computed("price", "$_id"),
+                        computed("Beer Name", 10))
         );
 
         try {
@@ -501,6 +502,7 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
+        System.out.println(results);
         closeConnection();
         return results;
     }
@@ -535,7 +537,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }
