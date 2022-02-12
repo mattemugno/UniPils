@@ -40,7 +40,7 @@ public class MenuController implements Initializable {
     private void logoutUser(ActionEvent actionEvent){
         //cancello i dati di sessione e faccio il resfresh della scena
         DataSession.logoutSession();
-        Utils.changeScene("menu-page.fxml", actionEvent);
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML
@@ -57,8 +57,8 @@ public class MenuController implements Initializable {
         }
     }
 
-    @FXML private void onClickBeers(ActionEvent actionEvent){
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+    @FXML private void onClickHomePage(ActionEvent actionEvent){
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML
