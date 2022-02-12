@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

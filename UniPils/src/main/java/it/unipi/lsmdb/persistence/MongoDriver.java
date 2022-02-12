@@ -196,10 +196,10 @@ public class MongoDriver {
         }
     }
 
-    public static boolean deleteUser(User u){
+    public static boolean deleteUser(String u){
         openConnection("Users");
         try{
-            collection.deleteOne(Filters.eq("username", u.getUsername()));
+            collection.deleteOne(Filters.eq("username", u));
         }catch(Exception ex){
             closeConnection();
             return false;
@@ -211,7 +211,7 @@ public class MongoDriver {
     public static boolean updateUser(User u){
         openConnection("Users");
         try{
-            boolean res=deleteUser(u);
+            boolean res=deleteUser(u.getUsername());
             if(!res)
             {
                 System.out.println("A problem has occurred in modify user");

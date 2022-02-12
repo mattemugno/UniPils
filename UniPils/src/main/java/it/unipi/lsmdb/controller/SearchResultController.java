@@ -3,6 +3,7 @@ package it.unipi.lsmdb.controller;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.collections.FXCollections;
@@ -111,12 +112,18 @@ public class SearchResultController  {
                     + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
+            if(DataSession.getUserLogged()== "admin") {
+                Button cancel = new Button();
+                cancel.setText("DELETE USER");
+                cancel.setOnAction(e -> deleteUser(e, i.getUsername()));
+            }
+
             Label title = new Label();
             title.setText("Username:  " + i.getUsername() );
             title.setFont(font);
 
             Label details = new Label();
-            details.setText("First Name:  " + i.getFirst() + "     " + "Last Name:  " + i.getLast());
+            details.setText("First Name:  " + i.getFirst() + "   " + "Last Name:  " + i.getLast());
             details.setFont(font);
 
             user.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -128,6 +135,15 @@ public class SearchResultController  {
             user.getChildren().addAll(title, details);
             vbox.getChildren().add(user);
         }
+    }
+
+    private void deleteUser(ActionEvent e, String username) {
+        NeoDriver neo4j = NeoDriver.getInstance();
+        neo4j.deleteUser(username);
+        MongoDriver.deleteUser(username);
+        Utils.showInfoAlert("User " + username + " deleted from both DB");
+        Utils.changeScene("/it/unipi/lsmdb/search-result.fxml", e);
+        //show();
     }
 
     @FXML
