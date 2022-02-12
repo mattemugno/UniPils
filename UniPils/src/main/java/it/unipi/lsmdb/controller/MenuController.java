@@ -71,9 +71,8 @@ public class MenuController implements Initializable {
 
     @FXML
     private void OnlickDebug(){
-        MongoDriver.getOrderListFromUsername("1739irisGIRAUD");
+        MongoDriver.getUserFromUsername("2578alexOLIVIER");
     }
-
 }
 
 

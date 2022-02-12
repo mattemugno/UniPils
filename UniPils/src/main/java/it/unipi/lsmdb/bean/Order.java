@@ -81,14 +81,4 @@ public class Order {
                 ", confirmationDate=" + confirmation_date +
                 '}';
     }
-/*
-    @JsonProperty("orders")
-    private void unpackNestedDob(Map<String, Object> orders) {
-        this.id_order = (Integer) orders.get("id_order");
-        this.orderList = (ArrayList<OrderList>) orders.get("orders_list");
-        this.delivery_date = (String) orders.get("delivery_date");
-        this.feedback = (Double) orders.get("feedback");
-        this.total_cost = (Integer) orders.get("total_cost");
-        this.confirmation_date = (String) orders.get("confirmation_date");
-    }*/
 }

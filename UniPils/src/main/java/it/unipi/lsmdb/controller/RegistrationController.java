@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +28,7 @@ public class RegistrationController {
     @FXML private CheckBox male;
     @FXML private CheckBox female;
     @FXML private TextField cellular;
-    @FXML private DatePicker dob;// = new DatePicker(LocalDate.now());
+    @FXML private DatePicker dob;
 
     @FXML
     private void register(ActionEvent actionEvent) {
@@ -36,10 +37,9 @@ public class RegistrationController {
         String em = email.getText();
         String first = fName.getText();
         String last = lName.getText();
-        //1953-05-27T03:24:37.024
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-        LocalDateTime date = dob.getValue().atTime(LocalTime.from(Instant.now()));
-        System.out.println(date);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"", Locale.US);
+        String toFormatter = (dob.getValue()).atTime(LocalTime.now()).format(dtf);
+        LocalDateTime date = LocalDateTime.parse(toFormatter, dtf);
         boolean m = male.isSelected();
         boolean f = female.isSelected();
         String cell = cellular.getText();
@@ -67,6 +67,7 @@ public class RegistrationController {
 
         NeoDriver neo4j = NeoDriver.getInstance();
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
+
 
         if(!neo4j.addUser(user) || !MongoDriver.addUser(user)) {
             Utils.showErrorAlert("User not inserted");

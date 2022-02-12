@@ -43,7 +43,4 @@ public class BeersController {
 
     }
 
-    @FXML private void onClickTest(ActionEvent actionEvent){
-        MongoDriver.getUserFromUsername("matteo");
-    }
 }
