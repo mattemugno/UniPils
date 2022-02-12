@@ -108,7 +108,7 @@ public class Utils {
             if(!neo4j.addBeer(b))
             {
                 // if mongo is not ok, remove the previously added recipe
-                MongoDriver.deleteBeer(b);
+                MongoDriver.deleteBeer(b.get_id());
                 showErrorAlert("Error in adding beer");
                 return false;
             }
@@ -154,7 +154,7 @@ public class Utils {
     public static boolean deleteBeer(Beer beer) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
-        if (MongoDriver.deleteBeer(beer)) {
+        if (MongoDriver.deleteBeer(beer.get_id())) {
             if(neo4j.deleteBeer(beer.get_id())) {
                 Utils.showInfoAlert("Beer succesfully deleted");
                 return true;

@@ -20,6 +20,7 @@ import javafx.scene.text.FontWeight;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ProfileController implements Initializable {
@@ -49,6 +50,12 @@ public class ProfileController implements Initializable {
             usernameLogged=DataSession.getUserLogged();
         else
             usernameLogged=DataSession.getUserView();
+
+        /*if(Objects.equals(usernameLogged, "admin")){
+            Button cancel = new Button();
+            cancel.setText("DELETE BEER");
+            cancel.setOnAction(e -> deleteUser(e, beer_id));
+        }*/
 
         User user= MongoDriver.getUserFromUsername(usernameLogged);
         Font font_u = Font.font("Comic Sans", FontWeight.BOLD,  25);
