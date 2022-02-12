@@ -562,7 +562,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }
