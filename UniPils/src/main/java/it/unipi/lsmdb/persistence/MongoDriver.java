@@ -304,10 +304,10 @@ public class MongoDriver {
         return true;
     }
 
-    public static boolean deleteBeer(Beer b){
+    public static boolean deleteBeer(int b){
         openConnection("Beers");
         try{
-            collection.deleteOne(Filters.eq("_id", b.get_id()));
+            collection.deleteOne(Filters.eq("_id", b));
         }catch(Exception ex){
             closeConnection();
             return false;
@@ -319,7 +319,7 @@ public class MongoDriver {
     public static boolean updateBeer(Beer b){
         openConnection("Beers");
         try{
-            boolean res=deleteBeer(b);
+            boolean res=deleteBeer(b.get_id());
             if(!res)
             {
                 System.out.println("A problem has occurred in modify beer");

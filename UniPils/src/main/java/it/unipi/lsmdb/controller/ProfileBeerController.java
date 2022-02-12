@@ -46,7 +46,9 @@ public class ProfileBeerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //manca da fare la barra di ricerca tramite query su neo4j che setta l'id della birra desiderata
-        //carico info birra in tutte le label definite
+        //manca da sistemare il cambio bottone ADD/REMOVE wish
+        //manca da vietare l'inserimento di una seconda recensione sulla stessa birra da parte dello stesso utente
+        //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
@@ -57,9 +59,15 @@ public class ProfileBeerController implements Initializable {
         style.setText("Style: " + beer.getStyle());
         abv.setText("ABV: " + beer.getAbv() + " %");
         price.setText("Price: " + beer.getPrice() + " USD");
-        vol.setText("Vol. " + beer.getVolume() + " cl");
+        vol.setText("Vol. :" + beer.getVolume() + " cl");
         country.setText("Country: " + beer.getCountry());
         state.setText("State: " + beer.getState());
+
+        if(Objects.equals(DataSession.getUserLogged(), "admin")) {
+            Button cancel = new Button();
+            cancel.setText("DELETE BEER");
+            cancel.setOnAction(e -> deleteBeer(e, beer_id));
+        }
 
         showBeerReviews(beer_id);
 
@@ -77,7 +85,7 @@ public class ProfileBeerController implements Initializable {
                 revButton.setOnAction(e->modifyReview(e,usernameLogged,beer_id));
         }
         else
-        { //rendi i bottoni invisibili
+        {
             wishButton.setVisible(false);
             revButton.setVisible(false);
             cartButton.setVisible(false);
@@ -85,17 +93,20 @@ public class ProfileBeerController implements Initializable {
     }
 
     private void showBeerReviews(int beer) {
+
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
         NeoDriver neo4j = NeoDriver.getInstance();
         ArrayList<String> authors = neo4j.getAuthorReview(beer);
         ArrayList<Review> reviews= neo4j.getBeerReviews(beer);
-        for(int i=0,j=0;i< reviews.size() && j< authors.size(); i++, j++){
+
+        for(int i=0, j=0 ; i< reviews.size() && j< authors.size() ; i++, j++){
                 double space = 5;
                 VBox rev = new VBox(space);
                 rev.setMaxWidth(491);
                 rev.setStyle("-fx-border-style: solid inside;"
                         + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                         + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
+
                 Label author = new Label();
                 author.setText("Publisher:  " + authors.get(j));
                 author.setFont(font);
@@ -119,7 +130,7 @@ public class ProfileBeerController implements Initializable {
     }
 
     private void writeReview(ActionEvent actionEvent, String usernameLogged, int beer) {
-        if(comment.getText() == "" || score.getText() == "") {
+        if(Objects.equals(comment.getText(), "") || Objects.equals(score.getText(), "")) {
             Utils.showErrorAlert("You need to compile both fields");
             return;
         }
@@ -154,6 +165,7 @@ public class ProfileBeerController implements Initializable {
         neo4j.addHasInWishlist(user, beer);
         Utils.showInfoAlert("Added to wishlist");
         wishButton.setText("REMOVE FROM WISHLIST");
+        //revSection.prefHeight(227.1);
         Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
@@ -163,12 +175,22 @@ public class ProfileBeerController implements Initializable {
         neo4j.deleteHasInWishlist(user, beer);
         Utils.showInfoAlert("Deleted from wishlist");
         wishButton.setText("ADD TO WISHLIST");
+        //revSection.prefHeight(227.1);
         Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     @FXML
     private void scroll(){
         scroll.setFitToWidth(true);
+    }
+
+    @FXML
+    public static void deleteBeer(ActionEvent ae, int beerId){
+        NeoDriver neo4j = NeoDriver.getInstance();
+        neo4j.deleteBeer(beerId);
+        MongoDriver.deleteBeer(beerId);
+        Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", ae);
     }
 
 

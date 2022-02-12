@@ -1,5 +1,6 @@
 package it.unipi.lsmdb.controller;
 
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -7,13 +8,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import org.bson.Document;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class AdminController implements Initializable {
@@ -55,6 +61,18 @@ public class AdminController implements Initializable {
     }
 
     @FXML
+    private void showAnalyticOne(ActionEvent actionEvent){
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
+        ArrayList<Document> docs = MongoDriver.getBuyers();
+
+        for(Document doc : docs) {
+            Label results = new Label();
+            results.setText("Total All-Time Buyers:  " + doc + "     " + "Avg num orders per user:  " );
+            results.setFont(font);
+        }
+    }
+
+    @FXML
     private void showAnalyticTwo(ActionEvent actionEvent){
 
     }
@@ -66,11 +84,6 @@ public class AdminController implements Initializable {
 
     @FXML
     private void showAnalyticFour(ActionEvent actionEvent){
-
-    }
-
-    @FXML
-    private void showAnalyticOne(ActionEvent actionEvent){
 
     }
 
