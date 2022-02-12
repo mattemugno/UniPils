@@ -43,7 +43,12 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        String usernameLogged = DataSession.getUserLogged();
+        String usernameLogged;
+
+        if(DataSession.getUserView()==null)
+            usernameLogged=DataSession.getUserLogged();
+        else
+            usernameLogged=DataSession.getUserView();
 
       /*  User user= MongoDriver.getUserFromUsername(usernameLogged);
         Font font_u = Font.font("Comic Sans", FontWeight.BOLD,  25);
@@ -116,13 +121,17 @@ public class ProfileController implements Initializable {
     }
 
     @FXML private void onClickFollower(ActionEvent actionEvent){
-        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("follower-page.fxml", ae);
+        if(DataSession.getUserView()==null) {
+            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            Utils.changeScene("follower-page.fxml", ae);
+        }
     }
 
     @FXML private void onClickFollowing(ActionEvent actionEvent){
-        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("following-page.fxml", ae);
+        if(DataSession.getUserView()==null) {
+            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            Utils.changeScene("following-page.fxml", ae);
+        }
     }
 
 

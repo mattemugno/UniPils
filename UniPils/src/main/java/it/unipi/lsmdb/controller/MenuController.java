@@ -50,6 +50,7 @@ public class MenuController implements Initializable {
     @FXML private void onClickProfile(ActionEvent actionEvent){
         if (DataSession.getUserLogged() != null) {
             ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            DataSession.setUserView(null);
             Utils.changeScene("profile-user.fxml", ae);
         }
     }

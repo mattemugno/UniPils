@@ -27,7 +27,7 @@
                                     <Font size="24.0" />
                                 </font>
                             </Label>
-                            <Label fx:id="totalFollowing" layoutX="100.0" layoutY="4.0">
+                            <Label fx:id="totalFollowing" layoutX="110.0" layoutY="4.0">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
