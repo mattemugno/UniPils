@@ -43,4 +43,6 @@ public class BeersController {
 
     }
 
+    @FXML private void onClickBeers(ActionEvent actionEvent){//MongoDriver.getUserFromUsername("matteo");
+    }
 }

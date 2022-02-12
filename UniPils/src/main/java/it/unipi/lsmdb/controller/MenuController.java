@@ -57,8 +57,8 @@ public class MenuController implements Initializable {
         }
     }
 
-    @FXML private void onClickBeers(ActionEvent actionEvent){
-        Utils.changeScene("profile-beer.fxml", actionEvent);
+    @FXML private void onClickHomePage(ActionEvent actionEvent){
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML

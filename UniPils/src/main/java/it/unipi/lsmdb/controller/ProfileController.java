@@ -50,7 +50,7 @@ public class ProfileController implements Initializable {
         else
             usernameLogged=DataSession.getUserView();
 
-      /*  User user= MongoDriver.getUserFromUsername(usernameLogged);
+        User user= MongoDriver.getUserFromUsername(usernameLogged);
         Font font_u = Font.font("Comic Sans", FontWeight.BOLD,  25);
 
         userLabel.setText(user.getUsername());
@@ -60,7 +60,7 @@ public class ProfileController implements Initializable {
         emailLabel.setText(user.getEmail());
         cellLabel.setText(user.getCell());
         genderLabel.setText(user.getGender());
-        addressLabel.setText(user.getAddress());*/
+        //addressLabel.setText(user.getAddress());
 
         ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
 
@@ -78,11 +78,11 @@ public class ProfileController implements Initializable {
             HBox hb=new HBox();
 
             Label nameBeer = new Label();
-            nameBeer.setText("Beer:  " + b.getName());
+            nameBeer.setText("Beer:  ");
             nameBeer.setFont(font);
 
             Button btn=new Button();
-            btn.setText("See more details");
+            btn.setText(b.getName());
             btn.setPadding(new Insets(5,5,5,5));
             btn.setFont(font);
             btn.setOnAction(actionEvent -> {

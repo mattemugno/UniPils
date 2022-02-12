@@ -49,15 +49,13 @@ public class WishlistController implements Initializable {
                     + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
-            TextArea title = new TextArea();
+            Label title = new Label();
             title.setText("Beer ID:  " + i.get_id() + "     " + "Beer Name:  " + i.getName());
             title.setFont(font);
-            title.setDisable(true);
 
-            TextArea details = new TextArea();
+            Label details = new Label();
             details.setText("Brewery Name:  " + i.getBrewery_name() + "     " + "Beer Style:  " + i.getStyle());
             details.setFont(font);
-            details.setDisable(true);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 DataSession.setIdBeerToShow(i.get_id());

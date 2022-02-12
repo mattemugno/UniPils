@@ -87,7 +87,7 @@ public class Utils {
             if(!neo4j.addUser(u))
             {
                 // if mongo is not ok, remove the previously added recipe
-                MongoDriver.deleteUser(u);
+                MongoDriver.deleteUser(u.getUsername());
                 showErrorAlert("Error in adding user");
                 return false;
             }
@@ -137,7 +137,7 @@ public class Utils {
     public static boolean deleteUser(User user) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
-        if (MongoDriver.deleteUser(user)) {
+        if (MongoDriver.deleteUser(user.getUsername())) {
             if(neo4j.deleteUser(user.getUsername())) {
                 Utils.showInfoAlert("User succesfully deleted");
                 return true;

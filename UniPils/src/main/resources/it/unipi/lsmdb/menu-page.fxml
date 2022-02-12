@@ -17,22 +17,17 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="65.0" layoutY="197.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="88.0" text="Cart">
+      <Button layoutX="65.0" layoutY="158.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="88.0" text="Cart">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="65.0" layoutY="158.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="88.0" text="Friends">
+      <Button layoutX="65.0" layoutY="117.0" mnemonicParsing="false" onAction="#onClickHomePage" prefHeight="32.0" prefWidth="100.0" text="Homepage">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="65.0" layoutY="117.0" mnemonicParsing="false" onAction="#onClickBeers" prefHeight="32.0" prefWidth="88.0" text="Beers">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Button>
-      <Button layoutX="65.0" layoutY="238.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
+      <Button layoutX="65.0" layoutY="197.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
