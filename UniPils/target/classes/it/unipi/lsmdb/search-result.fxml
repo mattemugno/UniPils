@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="677.0" prefWidth="799.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.SearchResultController">
+    <children>
+        <SplitPane dividerPositions="0.29797979797979796" prefHeight="677.0" prefWidth="799.0">
+            <items>
+                <AnchorPane fx:id="sx" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
+               <Button onAction="#goHome" layoutX="27.0" layoutY="179.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="181.0" text="RETURN TO HOMEPAGE" />
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                    <children>
+                        <ScrollPane fx:id="container" layoutX="-3.0" layoutY="55.0" prefHeight="624.0" prefWidth="564.0">
+                            <content>
+                                <VBox fx:id="vbox" prefHeight="582.0" prefWidth="558.0" />
+                            </content>
+                        </ScrollPane>
+                        <Label fx:id="results" layoutX="94.0" layoutY="13.0" prefHeight="32.0" prefWidth="325.0" text="Search results for:  " textAlignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>
