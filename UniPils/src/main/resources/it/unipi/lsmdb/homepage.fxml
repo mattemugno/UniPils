@@ -3,13 +3,10 @@
 <!--
   Copyright (c) 2015, 2019, Gluon and/or its affiliates.
   All rights reserved. Use is subject to license terms.
-
   This file is available and licensed under the following license:
-
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions
   are met:
-
   - Redistributions of source code must retain the above copyright
     notice, this list of conditions and the following disclaimer.
   - Redistributions in binary form must reproduce the above copyright
@@ -18,7 +15,6 @@
   - Neither the name of Oracle Corporation nor the names of its
     contributors may be used to endorse or promote products derived
     from this software without specific prior written permission.
-
   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -36,11 +32,11 @@
 <?import javafx.scene.layout.*?>
 
 <VBox prefHeight="561.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.HomeController">
-  <children>
-    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="418.0" prefWidth="706.0" VBox.vgrow="ALWAYS">
-      <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
-      <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="770.0">
-      </AnchorPane>
-    </AnchorPane>
-  </children>
+    <children>
+        <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="418.0" prefWidth="706.0" VBox.vgrow="ALWAYS">
+            <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
+            <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="770.0">
+            </AnchorPane>
+        </AnchorPane>
+    </children>
 </VBox>

@@ -68,7 +68,6 @@ public class RegistrationController {
         NeoDriver neo4j = NeoDriver.getInstance();
         User user = new User(gen, first, last, em, uName, pwd, date, cell);
 
-
         Utils.addUser(user);
         //Utils.showInfoAlert("User inserted successfully");
         DataSession.setUserLogged(user.getUsername());
