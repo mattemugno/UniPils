@@ -16,7 +16,7 @@
                   <TextField fx:id="searchBar" layoutX="215.0" layoutY="9.0" />
                </children>
             </AnchorPane>
-            <ScrollPane fx:id="scroll">
+            <ScrollPane fx:id="scroll" prefHeight="201.0" prefWidth="618.0">
                <content>
                   <AnchorPane fx:id="beerInfoPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
@@ -39,10 +39,9 @@
                         <TextField fx:id="score" layoutX="360.0" layoutY="197.0" prefHeight="31.0" prefWidth="59.0" />
                         <Label layoutX="360.0" layoutY="176.0" prefHeight="21.0" prefWidth="59.0" text="SCORE:" />
                         <Label layoutX="37.0" layoutY="166.0" prefHeight="21.0" prefWidth="59.0" text="TEXT:" />
-                        <VBox fx:id="revSection" layoutX="63.0" layoutY="306.0" prefHeight="339.0" prefWidth="491.0">
-                  </VBox>
+                              <VBox fx:id="revSection" layoutX="63.0" layoutY="306.0" prefHeight="227.0" prefWidth="491.0">
+                              </VBox>
                         <Separator layoutX="19.0" layoutY="294.0" prefHeight="3.0" prefWidth="573.0" />
-                        <ScrollBar layoutX="582.0" layoutY="306.0" onScroll="#scroll" orientation="VERTICAL" prefHeight="339.0" prefWidth="18.0" />
                      </children>
                   </AnchorPane>
                </content>

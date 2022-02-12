@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.util.Objects;
+
 public class LoginController {
 
     @FXML private TextField user;
@@ -32,6 +34,11 @@ public class LoginController {
             }
 
             DataSession.setUserLogged(uName);
+            String u = DataSession.getUserLogged();
+
+            if(Objects.equals(u, "admin"))
+                Utils.changeScene("admin-page.fxml", actionEvent);
+
             Utils.changeScene("homepage.fxml", actionEvent);
 
     }

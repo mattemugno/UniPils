@@ -96,26 +96,24 @@ public class ProfileBeerController implements Initializable {
                 rev.setStyle("-fx-border-style: solid inside;"
                         + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                         + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
-                TextArea author = new TextArea();
+                Label author = new Label();
                 author.setText("Publisher:  " + authors.get(j));
                 author.setFont(font);
-                //author.setStyle("-fx-text-inner-color: black;");
-                author.setDisable(true);
-                TextArea comment = new TextArea();
+
+                Label comment = new Label();
                 comment.setText("Text:  " + reviews.get(i).getComment());
                 comment.setFont(font);
-                comment.setDisable(true);
-                TextField score = new TextField();
+
+                Label score = new Label();
                 score.setText("Score:  " + reviews.get(i).getSc());
                 score.setFont(font);
-                score.setDisable(true);
-                TextField ts = new TextField();
+
+                Label ts = new Label();
                 ts.setText("Publication date:  " + reviews.get(i).getTs());
                 ts.setFont(font);
-                ts.setDisable(true);
+
                 rev.getChildren().addAll(author,comment, score, ts); //attacco le label alla sezione della singola review
                 revSection.getChildren().add(rev); //attacco la singola review al vbox globale
-                //VBox.setVgrow(child, Priority.ALWAYS);
             }
 
     }
