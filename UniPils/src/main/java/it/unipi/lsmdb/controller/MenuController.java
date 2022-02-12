@@ -21,6 +21,7 @@ public class MenuController implements Initializable {
 
     @Override @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         if (DataSession.getUserLogged() != null){
             //se sono loggato
             String usernameLogged = DataSession.getUserLogged();
@@ -51,6 +52,7 @@ public class MenuController implements Initializable {
     @FXML private void onClickProfile(ActionEvent actionEvent){
         if (DataSession.getUserLogged() != null) {
             ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            DataSession.setUserView(null);
             Utils.changeScene("profile-user.fxml", ae);
         }
     }

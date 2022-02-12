@@ -271,6 +271,59 @@ public class NeoDriver {
         return true;
     }
 
+    public ArrayList<String> getFollowers(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                        "WHERE u2.username=$un "+
+                                        "RETURN u1.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
+    public ArrayList<String> getFollowing(String username){
+        ArrayList<String> followers= new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                "WHERE u1.username=$un "+
+                                "RETURN u2.username AS user",
+                        Values.parameters(
+                                "un", username
+                        )
+                );
+
+                while(result.hasNext()){
+                    Record r = result.next();
+                    followers.add(r.get("user").asString());
+                }
+                return followers;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return followers;
+    }
+
+
     public boolean deleteFollows(String u1, String u2) {
         try (Session session = driver.session()) {
 
@@ -574,6 +627,155 @@ public class NeoDriver {
                 return beers;
             });
         } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<User> getUsername(String username){
+
+        ArrayList<User> users = new ArrayList<>();
+
+        try (Session session = driver.session()) {
+
+            session.readTransaction( tx -> {
+                Result result=tx.run("MATCH (u:User) WHERE u.username CONTAINS $pattern " +
+                                "RETURN u.username, u.password, u.first_name, u.last_name",
+                        Values.parameters(
+                                "pattern", username
+                        )
+                );
+                while(result.hasNext()){
+                    Record r = result.next();
+                    String uname = r.get("u.username").asString();
+                    String pass = r.get("u.password").asString();
+                    String f = r.get("u.first_name").asString();
+                    String l = r.get("u.last_name").asString();
+                    User us = new User(uname,pass,f,l);
+                    users.add(us);
+                }
+                return users;
+            });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+
+        return users;
+    }
+
+    public ArrayList<Beer> getBeerByName(String pattern){
+        ArrayList<Beer> beers= new ArrayList<>();
+
+        try(Session session= driver.session()){
+
+            session.readTransaction(tx->{
+                Result result = tx.run("MATCH (b:Beer)" +
+                        "where b.name CONTAINS $pattern "+
+                        "RETURN b.id, b.name, b.style, b.brewery_name LIMIT 30", Values.parameters("pattern", pattern));
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    int id = r.get("b.id").asInt();
+                    String beerName = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brewery_name = r.get("b.brewery_name").asString();
+                    Beer b= new Beer(id, beerName, style, brewery_name);
+                    beers.add(b);
+                }
+                return beers;
+            });
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<Beer> getBeerByStyle(String pattern){
+        ArrayList<Beer> beers= new ArrayList<>();
+
+        try(Session session= driver.session()){
+
+            session.readTransaction(tx->{
+                Result result = tx.run("MATCH (b:Beer)" +
+                        "where b.style CONTAINS $pattern "+
+                        "RETURN b.id, b.name, b.style, b.brewery_name LIMIT 30", Values.parameters("pattern", pattern));
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    int id = r.get("b.id").asInt();
+                    String beerName = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brewery_name = r.get("b.brewery_name").asString();
+                    Beer b= new Beer(id, beerName, style, brewery_name);
+                    beers.add(b);
+                }
+                return beers;
+            });
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<Beer> getBeerByBrew(String pattern){
+        ArrayList<Beer> beers= new ArrayList<>();
+
+        try(Session session= driver.session()){
+
+            session.readTransaction(tx->{
+                Result result = tx.run("MATCH (b:Beer)" +
+                        "where b.brewery_name CONTAINS $pattern "+
+                        "RETURN b.id, b.name, b.style, b.brewery_name LIMIT 30", Values.parameters("pattern", pattern));
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    int id = r.get("b.id").asInt();
+                    String beerName = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brewery_name = r.get("b.brewery_name").asString();
+                    Beer b= new Beer(id, beerName, style, brewery_name);
+                    beers.add(b);
+                }
+                return beers;
+            });
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+        return beers;
+    }
+
+    public ArrayList<Beer> getBeerById(int id_beer){
+        ArrayList<Beer> beers= new ArrayList<>();
+
+        try(Session session= driver.session()){
+
+            session.readTransaction(tx->{
+                Result result = tx.run("MATCH (b:Beer)" +
+                        "where b.id=$pattern "+
+                        "RETURN b.id, b.name, b.style, b.brewery_name LIMIT 30", Values.parameters("pattern", id_beer));
+
+                while(result.hasNext()){
+                    Record r= result.next();
+                    int id = r.get("b.id").asInt();
+                    String beerName = r.get("b.name").asString();
+                    String style = r.get("b.style").asString();
+                    String brewery_name = r.get("b.brewery_name").asString();
+                    Beer b= new Beer(id, beerName, style, brewery_name);
+                    beers.add(b);
+                }
+                return beers;
+            });
+
+        }catch(Exception ex){
             ex.printStackTrace();
             return null;
         }

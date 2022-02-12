@@ -47,27 +47,19 @@ public class ProfileBeerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //manca da fare la barra di ricerca tramite query su neo4j che setta l'id della birra desiderata
         //carico info birra in tutte le label definite
-        //int beer_id = DataSession.getIdBeerToShow();
-        //Beer beer = MongoDriver.getBeersFromId(beer_id);
+        int beer_id = DataSession.getIdBeerToShow();
+        Beer beer = MongoDriver.getBeerById(beer_id);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
-        int beer_id=288497;
-        beerName.setText("This Land Lager");
+
+        beerName.setText(beer.getName());
         beerName.setFont(font);
-        brewName.setText("Brewery:  " + "Marshall Brewing Company");
-        style.setText("Style: " + "German Helles");
-        abv.setText("ABV: " + 4.8 + " %");
-        price.setText("Price: " + 10 + " USD");
-        vol.setText("Vol. " + 66 + " cl");
-        country.setText("Country: " + "US");
-        state.setText("State: " + "OK");
-        /*beerName.setText(beer.getName());
-        brewName.setText(beer.getBrewery_name());
-        style.setText(beer.getStyle());
-        abv.setText(beer.getAbv() + " %");
-        price.setText(beer.getPrice() + " USD");
-        vol.setText(beer.getVolume() + " cl");
-        country.setText(beer.getCountry());
-        state.setText(beer.getState());*/
+        brewName.setText("Brewery:  " + beer.getBrewery_name());
+        style.setText("Style: " + beer.getStyle());
+        abv.setText("ABV: " + beer.getAbv() + " %");
+        price.setText("Price: " + beer.getPrice() + " USD");
+        vol.setText("Vol. " + beer.getVolume() + " cl");
+        country.setText("Country: " + beer.getCountry());
+        state.setText("State: " + beer.getState());
 
         showBeerReviews(beer_id);
 

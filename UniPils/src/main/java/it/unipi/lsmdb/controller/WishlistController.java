@@ -78,6 +78,7 @@ public class WishlistController implements Initializable {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.deleteHasInWishlist(user, beer);
         Utils.showInfoAlert("Beer deleted");
+        Utils.changeScene("/it/unipi/lsmdb/wishlist-page.fxml", e);
         printBeers(user);
     }
 

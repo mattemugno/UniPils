@@ -5,6 +5,7 @@ import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
 import it.unipi.lsmdb.bean.OrderList;
 import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.controller.SearchResultController;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import javafx.event.ActionEvent;
@@ -12,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -47,6 +49,28 @@ public class Utils {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static public void changeScene(String fxmlFile, KeyEvent event, String search, String value) {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource(fxmlFile));
+        Scene scene = null;
+        try {
+
+            scene = new Scene(fxmlLoader.load(), 1200, 800);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            SearchResultController controller = fxmlLoader.getController();
+            controller.initData(search, value);
+
+            stage.setScene(scene);
+
             stage.show();
 
         } catch (IOException e) {

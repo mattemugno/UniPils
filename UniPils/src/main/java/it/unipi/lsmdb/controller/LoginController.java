@@ -32,7 +32,7 @@ public class LoginController {
             }
 
             DataSession.setUserLogged(uName);
-            Utils.changeScene("menu-page.fxml", actionEvent);
+            Utils.changeScene("homepage.fxml", actionEvent);
 
     }
 
