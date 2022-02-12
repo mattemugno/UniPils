@@ -27,7 +27,12 @@ public class FollowerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String usernameLogged = DataSession.getUserLogged();
-        ArrayList<String> followers = neo4j.getFollowers(usernameLogged);
+        ArrayList<String> followers;
+
+        if(DataSession.getUserView()==null)
+            followers= neo4j.getFollowers(usernameLogged);
+        else
+            followers= neo4j.getFollowers(DataSession.getUserView());
 
         int count=0;
         Font font = Font.font("Comic Sans", FontWeight.BOLD, 18);
