@@ -22,9 +22,15 @@
                      <children>
                         <Button fx:id="wishButton" layoutX="477.0" layoutY="14.0" mnemonicParsing="false" text="ADD TO WISHLIST" />
                         <Button fx:id="cartButton" layoutX="488.0" layoutY="52.0" mnemonicParsing="false" text="ADD TO CART" />
-                        <Button fx:id="revButton" graphicTextGap="3.0" layoutX="463.0" layoutY="207.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="POST REVIEW" />                  <Label fx:id="beerName" layoutX="7.0" layoutY="4.0" prefHeight="31.0" prefWidth="318.0" text="BEER NAME">
+                        <Button fx:id="revButton" graphicTextGap="3.0" layoutX="463.0" layoutY="207.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="128.0" text="POST REVIEW" />
+                        <Label fx:id="beerName" layoutX="7.0" layoutY="4.0" prefHeight="31.0" prefWidth="318.0" text="BEER NAME">
                            <font>
                               <Font size="24.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="scoreAVG" layoutX="250.0" layoutY="8.0" prefHeight="31.0" prefWidth="318.0" text="AVG SCORE" >
+                           <font>
+                              <Font size="18.0" />
                            </font>
                         </Label>
                         <Label fx:id="brewName" layoutX="14.0" layoutY="42.0" prefHeight="21.0" prefWidth="235.0" text="BREWERY NAME" />

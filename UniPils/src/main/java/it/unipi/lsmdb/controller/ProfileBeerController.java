@@ -31,6 +31,7 @@ public class ProfileBeerController implements Initializable {
     @FXML private VBox revSection;
     @FXML private AnchorPane beerInfoPane;
     @FXML TextField score;
+    @FXML Label scoreAVG;
     @FXML TextArea comment;
     @FXML Label beerName;
     @FXML Label brewName;
