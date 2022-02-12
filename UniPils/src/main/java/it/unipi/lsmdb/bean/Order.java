@@ -1,74 +1,94 @@
 package it.unipi.lsmdb.bean;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Order {
-    private int idOrder;
-    private ArrayList<OrderList> orderList;
-    private LocalDate deliveryDate;
-    private Float feedback;
-    private Float totalCost;
-    private LocalDate confirmationDate;
+    private int id_order;
+    private ArrayList<OrderList> orderList = new ArrayList<>();
+    private String delivery_date;
+    private double feedback;
+    private int total_cost;
+    private String confirmation_date;
 
     public Order(){
-
     }
 
-    public Order(int idOrder,ArrayList<OrderList> orderList,LocalDate deliveryDate,Float feedback,Float totalCost,LocalDate confirmationDate){
-        this.idOrder=idOrder;
+    public Order(int idOrder,ArrayList<OrderList> orderList,String deliveryDate,double feedback,int totalCost,String confirmationDate){
+        this.id_order=idOrder;
         this.orderList=orderList;
-        this.deliveryDate=deliveryDate;
+        this.delivery_date=deliveryDate;
         this.feedback=feedback;
-        this.totalCost=totalCost;
-        this.confirmationDate=confirmationDate;
+        this.total_cost=totalCost;
+        this.confirmation_date=confirmationDate;
     }
 
     public int getIdOrder(){
-        return idOrder;
+        return id_order;
     }
 
     public ArrayList<OrderList> getOrderList(){
         return orderList;
     }
 
-    public LocalDate getDeliveryDate(){
-        return deliveryDate;
+    public String getDeliveryDate(){
+        return delivery_date;
     }
 
-    public Float getFeedback() {
+    public double getFeedback() {
         return feedback;
     }
 
-    public Float getTotalCost() {
-        return totalCost;
+    public int getTotalCost() {
+        return total_cost;
     }
 
-    public LocalDate getConfirmationDate() {
-        return confirmationDate;
+    public String getConfirmationDate() {
+        return confirmation_date;
     }
 
     public void setIdOrder(int idOrder) {
-        this.idOrder = idOrder;
+        this.id_order = idOrder;
     }
 
-    public void setOrderList(ArrayList<OrderList> orderList) {
-        this.orderList = orderList;
+    public void setOrderList(OrderList orderList) {
+        this.orderList.add(orderList);
     }
 
-    public void setDeliveryDate(LocalDate deliveryDate) {
-        this.deliveryDate = deliveryDate;
+    public void setDeliveryDate(String deliveryDate) {
+        this.delivery_date = deliveryDate;
     }
 
-    public void setFeedback(Float feedback) {
+    public void setFeedback(double feedback) {
         this.feedback = feedback;
     }
 
-    public void setTotalCost(Float totalCost) {
-        this.totalCost = totalCost;
+    public void setTotalCost(int totalCost) {
+        this.total_cost = totalCost;
     }
 
-    public void setConfirmationDate(LocalDate confirmationDate) {
-        this.confirmationDate = confirmationDate;
+    public void setConfirmationDate(String confirmationDate) {
+        this.confirmation_date = confirmationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "idOrder=" + id_order +
+                ", orderList=" + orderList +
+                ", deliveryDate=" + delivery_date +
+                ", feedback=" + feedback +
+                ", totalCost=" + total_cost +
+                ", confirmationDate=" + confirmation_date +
+                '}';
+    }
+/*
+    @JsonProperty("orders")
+    private void unpackNestedDob(Map<String, Object> orders) {
+        this.id_order = (Integer) orders.get("id_order");
+        this.orderList = (ArrayList<OrderList>) orders.get("orders_list");
+        this.delivery_date = (String) orders.get("delivery_date");
+        this.feedback = (Double) orders.get("feedback");
+        this.total_cost = (Integer) orders.get("total_cost");
+        this.confirmation_date = (String) orders.get("confirmation_date");
+    }*/
 }

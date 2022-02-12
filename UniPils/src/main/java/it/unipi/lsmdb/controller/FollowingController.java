@@ -35,9 +35,13 @@ public class FollowingController implements Initializable {
             for (String follow : followers) {
                 HBox hb = new HBox();
 
-                Label userFollow = new Label();
+                Button userFollow = new Button();
                 userFollow.setText(follow);
                 userFollow.setFont(font);
+                userFollow.setOnAction(actionEvent -> {
+                    DataSession.setUserView(follow);
+                    Utils.changeScene("profile-user.fxml", actionEvent);
+                });
 
                 Button btnDelete = new Button();
                 btnDelete.setText("delete follow");

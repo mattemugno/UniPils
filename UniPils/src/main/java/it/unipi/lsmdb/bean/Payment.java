@@ -10,6 +10,10 @@ public class Payment {
         this.CVV=CVV;
         this.expDate=expDate;
     }
+
+    public Payment(){
+    }
+
     public String getCardNumber(){
         return cardNumber;
     }

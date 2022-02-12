@@ -46,7 +46,6 @@ public class Beer {
     }
 
     public Beer(){
-
     }
 
     public int getBrewery_id() {

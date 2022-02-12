@@ -9,8 +9,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,13 +36,16 @@ public class RegistrationController {
         String em = email.getText();
         String first = fName.getText();
         String last = lName.getText();
-        LocalDateTime date = LocalDateTime.from(dob.getValue());
+        //1953-05-27T03:24:37.024
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        LocalDateTime date = dob.getValue().atTime(LocalTime.from(Instant.now()));
+        System.out.println(date);
         boolean m = male.isSelected();
         boolean f = female.isSelected();
         String cell = cellular.getText();
         String gen;
 
-        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("")||((!m)&&(!f))||(cell.equals(""))||(date == null)) {
+        if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("") || !m && !f || cell.equals("")) {
             Utils.showErrorAlert("Fill in all fields");
             return;
         }
@@ -77,6 +83,4 @@ public class RegistrationController {
         ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
         Utils.changeScene("menu-page.fxml", ae);
     }
-
-
 }

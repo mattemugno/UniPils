@@ -1,4 +1,5 @@
 module it.unipi.lsmdb {
+
     requires javafx.controls;
     requires javafx.fxml;
     requires java.xml;
@@ -8,6 +9,8 @@ module it.unipi.lsmdb {
     requires org.neo4j.driver;
     requires com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires org.json;
+    requires json.simple;
 
     opens it.unipi.lsmdb.bean to com.fasterxml.jackson.databind;
     exports it.unipi.lsmdb;

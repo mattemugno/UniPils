@@ -2,7 +2,6 @@ package it.unipi.lsmdb.bean;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class User {
     private String cell;
     private ArrayList<Order> orders;
     private ArrayList<Payment> payments;
-    private String address;
+    private ArrayList<String> address;
 
     public User(String gender, String first, String last, String email, String username, String password,
                 LocalDateTime dob, String cell){
@@ -63,7 +62,7 @@ public class User {
         return payments;
     }
 
-    public String getAddress() {
+    public ArrayList<String> getAddress() {
         return address;
     }
 
@@ -79,7 +78,7 @@ public class User {
         this.email = email;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(ArrayList<String> address) {
         this.address = address;
     }
 
@@ -165,9 +164,10 @@ public class User {
     @SuppressWarnings("unchecked")
     @JsonProperty("dob")
     private void unpackNestedDob(Map<String, Object> dob) {
-        Map<String, Object> date = (Map<String, Object>) dob.get("date");
-        String dobString = (String) date.get("$date");
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        this.dob = LocalDateTime.parse(dobString.replace("T", " ").replace("Z", ""), format);
+        //Map<String, Object> date = (Map<String, Object>) dob.get("date");
+        String dobString = (String) dob.get("date");
+        String date = dobString.replace("T", " ").replace("Z", "");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        this.dob = LocalDateTime.parse(date, format);
     }
 }

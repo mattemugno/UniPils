@@ -56,10 +56,8 @@ public class MenuController implements Initializable {
         }
     }
 
-    @FXML private void onClickBeers(ActionEvent actionEvent){
-
-        Utils.changeScene("admin-page.fxml", actionEvent);
-        //Utils.changeScene("profile-beer.fxml", actionEvent);
+    @FXML private void onClickHomePage(ActionEvent actionEvent){
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML
@@ -68,6 +66,11 @@ public class MenuController implements Initializable {
             Utils.changeScene("wishlist-page.fxml", actionEvent);
         else
             Utils.showErrorAlert("You need to login to access this area");
+    }
+
+    @FXML
+    private void OnlickDebug(){
+        MongoDriver.getOrderListFromUsername("1739irisGIRAUD");
     }
 
 }
