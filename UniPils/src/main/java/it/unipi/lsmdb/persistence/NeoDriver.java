@@ -297,7 +297,7 @@ public class NeoDriver {
         return followers;
     }
 
-    public ArrayList<String> getFollower(String username,String follow){
+    public ArrayList<String> getFollower(String username, String follow){
         ArrayList<String> res=new ArrayList<String>();
         try (Session session = driver.session()) {
 
@@ -324,8 +324,6 @@ public class NeoDriver {
         return res;
     }
 
-
-
     public ArrayList<String> getFollowing(String username){
         ArrayList<String> followers= new ArrayList<>();
         try (Session session = driver.session()) {
@@ -351,7 +349,6 @@ public class NeoDriver {
         }
         return followers;
     }
-
 
     public boolean deleteFollows(String u1, String u2) {
         try (Session session = driver.session()) {

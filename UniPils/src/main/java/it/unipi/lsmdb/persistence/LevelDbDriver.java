@@ -26,21 +26,24 @@ public class LevelDbDriver {
         Options options = new Options();
         options.createIfMissing(true);
         try{
-            factory.destroy(new File("unipils"), options);
             db = factory.open(new File("unipils"), options);
+            System.out.println("DB " + db + " opened.");
         }
         catch (IOException ioe) { closeDB(); }
     }
 
-    public void put(String key, String value)
+    /*public void put(String key, String value)
     {
         db.put(bytes(key), bytes(value));
     }
+    */
 
     public void put(String key, int value)
     {
         db.put(bytes(key), bytes(String.valueOf(value)));
         System.out.println("KEY: " + key + ", VALUE: " + value);
+        closeDB();
+        System.out.println("DB " + db + " closed.");
     }
 
     public String getString(String key)
@@ -61,11 +64,13 @@ public class LevelDbDriver {
             List<String> keys = Lists.newArrayList();
             for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
+                System.out.println(key);
                 if (!key.startsWith(prefix)) {
                     break;
                 }
                 keys.add(key.substring(prefix.length()));
             }
+            closeDB();
             return keys;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -109,7 +114,9 @@ public class LevelDbDriver {
 
     public void deleteValue(String key)
     {
+        System.out.println("KEY DELETE VALUE: " + key);
         db.delete(bytes(key));
+        closeDB();
     }
 
     public int splitKeys(String key){

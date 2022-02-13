@@ -5,6 +5,7 @@ import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.utils.Utils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -30,14 +31,15 @@ public class CartController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         String username = DataSession.getUserLogged();
         title.setText(username + " 's Cart");
-        printBeersFromLevel(username);
+        printBeersCart(username);
     }
 
-    private void printBeersFromLevel(String username) {
+    private void printBeersCart(String username) {
 
         Font font = Font.font("Comic Sans", FontWeight.BOLD, 18);
+
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        List<String> keyList = new ArrayList<>();
+        List<String> keyList;
         ArrayList<Beer> beer_cart = new ArrayList<>();
 
         keyList = levelDbDriver.findKeysByPrefix(username);
@@ -73,7 +75,7 @@ public class CartController implements Initializable {
             Button button = new Button();
             button.setText("REMOVE BEER");
             button.setOnAction(e -> {
-                if(deleteFromLevel(username, item.get_id()))
+                if(deleteItemFromCart(username, item.get_id(), e))
                     Utils.showInfoAlert("Beer removed successfully");
                 else Utils.showErrorAlert("Beer not removed");
             }); //remove from wishlist
@@ -83,13 +85,14 @@ public class CartController implements Initializable {
         }
     }
 
-    private boolean deleteFromLevel(String username, int beer_id){
+    private boolean deleteItemFromCart(String username, int beer_id, ActionEvent actionEvent){
 
         try {
             LevelDbDriver levelDbDriver = new LevelDbDriver();
-            String keyPrefix = username + ":" + beer_id;
-            String key = levelDbDriver.findKeysByPrefix(keyPrefix).get(0);
+
+            String key = username + ":" + beer_id + ":" + "quantity";
             levelDbDriver.deleteValue(key);
+            Utils.changeScene("cart-page.fxml", actionEvent);
             return true;
         }catch (Exception e){
             e.printStackTrace();
