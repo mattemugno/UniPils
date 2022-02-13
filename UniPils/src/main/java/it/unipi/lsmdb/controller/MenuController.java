@@ -69,6 +69,7 @@ public class MenuController implements Initializable {
             Utils.showErrorAlert("You need to login to access this area");
     }
 
+
     @FXML
     private void OnlickDebug(){
         MongoDriver.getGenderDistribution();
@@ -76,7 +77,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void showCart(ActionEvent ae){
-        Utils.changeScene("admin-page.fxml", ae);
+        Utils.changeScene("cart-page.fxml", ae);
     }
 }
 

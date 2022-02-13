@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.unipi.lsmdb.CartController"
+            prefHeight="400.0" prefWidth="600.0">
+    <children>
+        <SplitPane dividerPositions="0.29797979797979796" layoutX="-5.0" layoutY="-3.0" prefHeight="677.0" prefWidth="726.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="100.0" >
+                    <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="600.0">
+                    <children>
+                        <Label fx:id="title" layoutX="6.0" layoutY="14.0" prefHeight="35.0" prefWidth="453.0" text="'s Cart">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                        <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="624.0" prefWidth="564.0">
+                            <content>
+                                <VBox fx:id="cartInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
+                                    <children>
+
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+
+</AnchorPane>
