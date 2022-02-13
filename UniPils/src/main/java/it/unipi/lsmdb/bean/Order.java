@@ -63,7 +63,7 @@ public class Order {
     }
 
     public void setTotalCost(int totalCost) {
-        this.total_cost = totalCost;
+        this.total_cost += totalCost;
     }
 
     public void setConfirmationDate(String confirmationDate) {

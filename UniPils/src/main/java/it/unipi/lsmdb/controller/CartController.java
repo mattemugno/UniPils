@@ -1,6 +1,8 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.Beer;
+import it.unipi.lsmdb.bean.Order;
+import it.unipi.lsmdb.bean.OrderList;
 import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
@@ -16,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -95,6 +98,46 @@ public class CartController implements Initializable {
             Utils.changeScene("cart-page.fxml", actionEvent);
             return true;
         }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean confirmOrder(){
+
+        String username = DataSession.getUserLogged();
+
+        LevelDbDriver levelDbDriver = new LevelDbDriver();
+        List<String> keys = levelDbDriver.findKeysByPrefix(username);
+
+        Order order = new Order();
+        order.setIdOrder(1);
+        order.setConfirmationDate(LocalDateTime.now().toString());
+        order.setFeedback(3);
+
+        try {
+            for (String key: keys){
+
+                int beer_id = levelDbDriver.splitKeys(key);
+                key = username + ":" + beer_id + ":" + "quantity";
+                Beer beer = MongoDriver.getBeerById(beer_id);
+
+                int quantity = levelDbDriver.getInt(key);
+                String beer_name = beer.getName();
+                int price = beer.getPrice();
+
+                order.setTotalCost(price*quantity);
+
+                OrderList orderList = new OrderList(beer_id, beer_name, price, quantity);
+
+                order.setOrderList(orderList);
+
+            }
+
+            MongoDriver.addOrder(username, order);
+            return true;
+
+        } catch (Exception e){
             e.printStackTrace();
             return false;
         }
