@@ -136,6 +136,92 @@ public class MongoDriver {
         }
     }
 
+    public static boolean deleteUser(String u){
+        openConnection("Users");
+        try{
+            collection.deleteOne(Filters.eq("username", u));
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    public static boolean updateUser(User u){
+        openConnection("Users");
+        try{
+            boolean res=deleteUser(u.getUsername());
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify user");
+                return false;
+            }
+
+            res= addUser(u);
+            if(!res)
+            {
+                System.out.println("A problem has occurred in modify user");
+                return false;
+            }
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
+    // CRUD ORDER
+
+    public static boolean addOrder(String username, Order order){
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+
+        try{
+            Document doc = new Document();
+
+            doc.append("id_order",order.getIdOrder());
+                for (OrderList item: order.getOrderList()){
+                    Document docList = new Document();
+                    docList.append("beer_id", item.getBeerId());
+                    docList.append("beer_name", item.getBeerName());
+                    docList.append("beer_price", item.getBeerPrice());
+                    docList.append("beer_quantity", item.getQuantity());
+
+                    doc.append("order_list", docList);
+                }
+
+            doc.append("delivery-date",order.getDeliveryDate());
+            doc.append("feedback",order.getFeedback());
+            doc.append("total_cost",order.getTotalCost());
+            doc.append("confirmation_date",order.getConfirmationDate());
+
+            Bson filter = Filters.eq("username", username); //get the parent-document
+            Bson setUpdate;
+
+            User user = MongoDriver.getUserFromUsername(username);
+
+            if(user.getOrders() != null && user.getOrders().size() > 0)
+                setUpdate = Updates.push("orders", doc);
+
+            else {
+                results.add(doc);
+                setUpdate = Updates.set("orders", results);
+            }
+
+            collection.updateOne(filter, setUpdate);
+
+        }catch(Exception ex){
+            closeConnection();
+            return false;
+        }
+        closeConnection();
+        return true;
+    }
+
     public static ArrayList<Order> getOrderListFromUsername(String username){
         openConnection("Users");
 
@@ -197,92 +283,6 @@ public class MongoDriver {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static boolean deleteUser(String u){
-        openConnection("Users");
-        try{
-            collection.deleteOne(Filters.eq("username", u));
-        }catch(Exception ex){
-            closeConnection();
-            return false;
-        }
-        closeConnection();
-        return true;
-    }
-
-    public static boolean updateUser(User u){
-        openConnection("Users");
-        try{
-            boolean res=deleteUser(u.getUsername());
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify user");
-                return false;
-            }
-
-            res= addUser(u);
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify user");
-                return false;
-            }
-
-        }catch(Exception ex){
-            closeConnection();
-            return false;
-        }
-        closeConnection();
-        return true;
-    }
-
-    // CRUD ORDER
-
-    public static boolean addOrder(String username, Order order, ArrayList<OrderList> orderList){
-        openConnection("Users");
-
-        ArrayList<Document> results = new ArrayList<>();
-
-        try{
-            Document doc = new Document();
-
-            doc.append("id_order",order.getIdOrder());
-                for (OrderList item: orderList){
-                    Document docList = new Document();
-                    docList.append("beer_id", item.getBeerId());
-                    docList.append("beer_name", item.getBeerName());
-                    docList.append("beer_price", item.getBeerPrice());
-                    docList.append("beer_quantity", item.getQuantity());
-
-                    doc.append("order_list", docList);
-                }
-
-            doc.append("delivery-date",order.getDeliveryDate());
-            doc.append("feedback",order.getFeedback());
-            doc.append("total_cost",order.getTotalCost());
-            doc.append("confirmation_date",order.getConfirmationDate());
-
-            Bson filter = Filters.eq("username", username); //get the parent-document
-            Bson setUpdate;
-
-            User user = MongoDriver.getUserFromUsername(username);
-
-            if(user.getOrders() != null && user.getOrders().size() > 0)
-                setUpdate = Updates.push("orders", doc);
-
-            else {
-                results.add(doc);
-                setUpdate = Updates.set("orders", results);
-            }
-
-            collection.updateOne(filter, setUpdate);
-
-        }catch(Exception ex){
-            closeConnection();
-            return false;
-        }
-        closeConnection();
-        return true;
     }
 
     // CRUD BEER

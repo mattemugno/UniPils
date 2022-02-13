@@ -16,7 +16,6 @@ import java.io.IOException;
 public class LevelDbDriver {
 
     public LevelDbDriver(){
-        openDB();
     }
 
     private DB db = null;
@@ -40,31 +39,37 @@ public class LevelDbDriver {
 
     public void put(String key, int value)
     {
+        openDB();
         db.put(bytes(key), bytes(String.valueOf(value)));
-        System.out.println("KEY: " + key + ", VALUE: " + value);
-        closeDB();
         System.out.println("DB " + db + " closed.");
+        closeDB();
     }
 
+    /*
     public String getString(String key)
     {
+        openDB();
         byte[] bytes = db.get(bytes(key));
         return (bytes == null ? null : asString(bytes));
-    }
+        closeDB();
+    }*/
 
     public int getInt(String key)
     {
+        openDB();
         byte[] bytes = db.get(bytes(key));
-        return (bytes == null ? null : ByteBuffer.wrap(bytes).getInt());
+        int quantity = (bytes == null ? null : ByteBuffer.wrap(bytes).getInt());
+        closeDB();
+        return quantity;
     }
 
     public List<String> findKeysByPrefix(String prefix)
     {
+        openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> keys = Lists.newArrayList();
             for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
-                System.out.println(key);
                 if (!key.startsWith(prefix)) {
                     break;
                 }
@@ -73,12 +78,14 @@ public class LevelDbDriver {
             closeDB();
             return keys;
         } catch (IOException e) {
+            closeDB();
             throw new RuntimeException(e);
         }
     }
 
     public List<String> findValuesByPrefix(String prefix)
     {
+        openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> values = Lists.newArrayList();
             for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
@@ -88,6 +95,7 @@ public class LevelDbDriver {
                 }
                 values.add(asString(iterator.peekNext().getValue()));
             }
+            closeDB();
             return values;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -96,6 +104,7 @@ public class LevelDbDriver {
 
     public HashMap<String, String> findByPrefix(String prefix)
     {
+        openDB();
         try (DBIterator iterator = db.iterator()) {
             HashMap<String, String> entries = new HashMap<>();
             for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
@@ -114,7 +123,7 @@ public class LevelDbDriver {
 
     public void deleteValue(String key)
     {
-        System.out.println("KEY DELETE VALUE: " + key);
+        openDB();
         db.delete(bytes(key));
         closeDB();
     }

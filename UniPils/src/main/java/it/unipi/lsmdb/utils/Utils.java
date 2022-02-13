@@ -124,7 +124,7 @@ public class Utils {
     public static boolean addOrder(User user, Order order){
 
         NeoDriver neo4j = NeoDriver.getInstance();
-        if(MongoDriver.addOrder(user.getUsername(), order, order.getOrderList())){
+        if(MongoDriver.addOrder(user.getUsername(), order)){
             for (OrderList ol : order.getOrderList()) {
                 neo4j.addPurchased(user.getUsername(), ol.getBeerId());
             }
