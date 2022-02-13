@@ -7,10 +7,8 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="it.unipi.lsmdb.controller.CartController"
-            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane fx:controller="it.unipi.lsmdb.controller.CartController"
+            prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <SplitPane dividerPositions="0.29797979797979796" layoutX="-5.0" layoutY="-3.0" prefHeight="677.0" prefWidth="726.0">
             <items>

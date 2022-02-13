@@ -2,6 +2,7 @@ package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
@@ -83,6 +84,16 @@ public class WishlistController implements Initializable {
     @FXML
     private void addToCart(ActionEvent actionEvent){
         Utils.showInfoAlert("All beers added to cart");
+
+        String username = DataSession.getUserLogged();
+        ArrayList<Beer> beer_list = NeoDriver.getInstance().getUserWishlist(username);
+
+        for (Beer beer: beer_list){
+            int id = beer.get_id();
+            String key = username + ":" + id + ":" + "quantity";
+            LevelDbDriver levelDbDriver = new LevelDbDriver();
+            levelDbDriver.put(key, 1);
+        }
     }
 
 

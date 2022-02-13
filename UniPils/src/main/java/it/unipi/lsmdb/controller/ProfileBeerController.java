@@ -211,9 +211,13 @@ public class ProfileBeerController implements Initializable {
         LevelDbDriver levelDbDriver = new LevelDbDriver();
         String key = username + ":" + beer_id + ":" + "quantity";
         int value = 1;
-        levelDbDriver.put(key, value);
-
-        Utils.changeScene("/it/unipi/lsmdb/cart-beer.fxml", actionEvent);
+        try {
+            levelDbDriver.put(key, value);
+            Utils.showInfoAlert("Added to cart");
+        } catch (Exception e){
+            e.printStackTrace();
+            Utils.showErrorAlert("Unable to add item to cart");
+        }
     }
 
 }
