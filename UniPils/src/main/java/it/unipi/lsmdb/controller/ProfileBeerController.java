@@ -162,7 +162,7 @@ public class ProfileBeerController implements Initializable {
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.updateReview(review, usernameLogged, beer);
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+        //Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     @FXML
@@ -172,8 +172,8 @@ public class ProfileBeerController implements Initializable {
         neo4j.addHasInWishlist(user, beer);
         Utils.showInfoAlert("Added to wishlist");
         wishButton.setText("REMOVE FROM WISHLIST");
-        //revSection.prefHeight(227.1);
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+        revSection.prefHeight(227.1);
+        //qui dovresti refreshare la pagina
     }
 
     @FXML
@@ -182,8 +182,8 @@ public class ProfileBeerController implements Initializable {
         neo4j.deleteHasInWishlist(user, beer);
         Utils.showInfoAlert("Deleted from wishlist");
         wishButton.setText("ADD TO WISHLIST");
-        //revSection.prefHeight(227.1);
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+        revSection.prefHeight(227.1);
+        //Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
     }
 
     @FXML

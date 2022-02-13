@@ -37,9 +37,9 @@ public class LoginController {
             String u = DataSession.getUserLogged();
 
             if(Objects.equals(u, "admin"))
-                Utils.changeScene("admin-page.fxml", actionEvent);
-
-            Utils.changeScene("homepage.fxml", actionEvent);
+                Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", actionEvent);
+            else
+                Utils.changeScene("homepage.fxml", actionEvent);
 
     }
 

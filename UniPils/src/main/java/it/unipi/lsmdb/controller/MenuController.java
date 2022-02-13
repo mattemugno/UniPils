@@ -17,6 +17,8 @@ public class MenuController implements Initializable {
 
     @FXML private Button loginButton;
     @FXML private Hyperlink usernameLabel;
+    @FXML private Button buttonWish;
+    @FXML private Button buttonCart;
 
 
     @Override @FXML
@@ -24,10 +26,16 @@ public class MenuController implements Initializable {
 
         if (DataSession.getUserLogged() != null){
             //se sono loggato
-            String usernameLogged = DataSession.getUserLogged();
-            usernameLabel.setText(usernameLogged);
-            loginButton.setText("Logout");
-            loginButton.setOnAction(this::logoutUser);
+            if(!DataSession.getUserLogged().equals("admin")) {
+                String usernameLogged = DataSession.getUserLogged();
+                usernameLabel.setText(usernameLogged);
+                loginButton.setText("Logout");
+                loginButton.setOnAction(this::logoutUser);
+            }
+            else{
+                buttonCart.setVisible(false);
+                buttonWish.setVisible(false);
+            }
         }
         else {
             //se non sono loggato

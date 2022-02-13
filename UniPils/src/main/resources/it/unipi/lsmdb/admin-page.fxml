@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<AnchorPane fx:controller="it.unipi.lsmdb.controller.AdminController" fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="837.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="702.0" prefWidth="837.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.AdminController">
     <children>
         <Label layoutX="294.0" layoutY="68.0" prefHeight="51.0" prefWidth="250.0" text="ADMIN PANEL">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
-        <Button onAction="#showAnalyticOne" layoutX="309.0" layoutY="142.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgNumOrders" />
-        <Button onAction="#showAnalyticTwo" layoutX="309.0" layoutY="184.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgOrderPrice" />
-        <Button onAction="#showAnalyticThree" layoutX="309.0" layoutY="229.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgAge" />
-        <Button onAction="#showAnalyticFour" layoutX="310.0" layoutY="270.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="218.0" text="Analytic #genderDistribution" />
-        <Button onAction="#insertBeer" layoutX="362.0" layoutY="320.0" mnemonicParsing="false" text="Add new beer" />
+        <Button layoutX="309.0" layoutY="142.0" mnemonicParsing="false" onAction="#showAnalyticOne" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgNumOrders" />
+        <Button layoutX="309.0" layoutY="184.0" mnemonicParsing="false" onAction="#showAnalyticTwo" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgOrderPrice" />
+        <Button layoutX="309.0" layoutY="229.0" mnemonicParsing="false" onAction="#showAnalyticThree" prefHeight="31.0" prefWidth="218.0" text="Analytic #avgAge" />
+        <Button layoutX="310.0" layoutY="270.0" mnemonicParsing="false" onAction="#showAnalyticFour" prefHeight="31.0" prefWidth="218.0" text="Analytic #genderDistribution" />
+        <Button layoutX="362.0" layoutY="320.0" mnemonicParsing="false" onAction="#insertBeer" text="Add new beer" />
+      <Label fx:id="a1" layoutX="63.0" layoutY="433.0" prefHeight="18.0" prefWidth="659.0" />
+      <Label fx:id="a2" layoutX="63.0" layoutY="487.0" prefHeight="18.0" prefWidth="659.0" />
+      <Label fx:id="a3" layoutX="70.0" layoutY="548.0" prefHeight="18.0" prefWidth="659.0" />
+      <Label fx:id="a4" layoutX="63.0" layoutY="614.0" prefHeight="18.0" prefWidth="659.0" />
+      <Button fx:id="home" onAction="#goBack" layoutX="97.0" layoutY="82.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" text="HOMEPAGE" />
     </children>
 </AnchorPane>

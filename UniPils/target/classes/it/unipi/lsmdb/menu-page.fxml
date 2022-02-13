@@ -16,7 +16,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="65.0" layoutY="200.0" mnemonicParsing="false" onAction="#showCart" prefHeight="32.0" prefWidth="88.0" text="Cart">
+      <Button fx:id="buttonCart" layoutX="65.0" layoutY="200.0" mnemonicParsing="false" onAction="#showCart" prefHeight="32.0" prefWidth="88.0" text="Cart">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -26,7 +26,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="65.0" layoutY="254.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
+      <Button fx:id="buttonWish" layoutX="65.0" layoutY="254.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
