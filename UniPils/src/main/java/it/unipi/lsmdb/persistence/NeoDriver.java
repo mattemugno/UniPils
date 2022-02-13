@@ -989,4 +989,30 @@ public class NeoDriver {
         return beers;
     }
 
+    public ArrayList<Double> getAVGScore(int beerID){
+        ArrayList<Double> avg=new ArrayList<>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u:User)-[:POSTED]-(r:Review)-[:RELATED]->(b:Beer) "+
+                                "WHERE b.id=$bid "+
+                                "RETURN  avg(r.score) AS mean",
+                        Values.parameters(
+                                "bid", beerID
+                        )
+                );
+                while(result.hasNext()){
+                    Record r = result.next();
+                    avg.add(r.get("mean").asDouble());
+                }
+
+                return avg;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return avg;
+    }
+
 }
