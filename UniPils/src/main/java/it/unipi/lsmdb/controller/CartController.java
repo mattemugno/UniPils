@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -29,6 +30,7 @@ public class CartController implements Initializable {
     Label title;
     @FXML
     VBox cartInfoPane;
+    @FXML Button submit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -83,7 +85,12 @@ public class CartController implements Initializable {
                 else Utils.showErrorAlert("Beer not removed");
             }); //remove from wishlist
 
-            beer.getChildren().addAll(button, title, details);
+            Label quantity = new Label();
+            quantity.setText("Quantity: ");
+
+            TextField q = new TextField();
+
+            beer.getChildren().addAll(quantity,q,button, title, details);
             cartInfoPane.getChildren().add(beer);
         }
     }
@@ -103,6 +110,7 @@ public class CartController implements Initializable {
         }
     }
 
+    @FXML
     private boolean confirmOrder(){
 
         String username = DataSession.getUserLogged();
