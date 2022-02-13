@@ -29,20 +29,32 @@
                     </Label>
                     <ScrollPane layoutY="43.0" prefHeight="203.0" prefWidth="623.0">
                         <content>
-                            <VBox prefHeight="200.0" prefWidth="622.0" />
+                            <VBox fx:id="beersMonth" prefHeight="200.0" prefWidth="622.0" />
                         </content>
                     </ScrollPane>
-                    <Label layoutX="8.0" layoutY="25.0" prefHeight="21.0" prefWidth="144.0" text="Beers of the month:" />
+                    <Label layoutX="8.0" layoutY="25.0" prefHeight="21.0" prefWidth="144.0" text="BEERS OF THE MONTH:">
+                        <font>
+                            <Font name="System Bold" size="14.0" />
+                        </font>
+                    </Label>
                     <ScrollPane layoutY="263.0" prefHeight="203.0" prefWidth="623.0">
                         <content>
-                            <VBox prefHeight="200.0" prefWidth="623.0" />
+                            <VBox fx:id="activeUsers" prefHeight="200.0" prefWidth="623.0" />
                         </content>
                     </ScrollPane>
-                    <Label layoutY="246.0" prefHeight="21.0" prefWidth="122.0" text="Most active users:" />
-                    <Label layoutY="464.0" prefHeight="21.0" prefWidth="234.0" text="Most popular beers for each state:" />
+                    <Label layoutY="246.0" prefHeight="21.0" prefWidth="122.0" text="MOST ACTIVE USERS:">
+                        <font>
+                            <Font name="System Bold" size="14.0" />
+                        </font>
+                    </Label>
+                    <Label layoutY="464.0" prefHeight="21.0" prefWidth="234.0" text="MOST PURCHASED BEERS:">
+                        <font>
+                            <Font name="System Bold" size="15.0" />
+                        </font>
+                    </Label>
                     <ScrollPane layoutY="485.0" prefHeight="200.0" prefWidth="623.0">
                         <content>
-                            <VBox prefHeight="200.0" prefWidth="621.0" />
+                            <VBox fx:id="mostPurchased" prefHeight="200.0" prefWidth="621.0" />
                         </content>
                     </ScrollPane>
                 </children>
