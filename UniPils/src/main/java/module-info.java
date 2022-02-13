@@ -11,6 +11,9 @@ module it.unipi.lsmdb {
     requires com.fasterxml.jackson.datatype.jsr310;
     requires org.json;
     requires json.simple;
+    requires leveldb;
+    requires guava;
+    requires leveldb.api;
 
     opens it.unipi.lsmdb.bean to com.fasterxml.jackson.databind;
     exports it.unipi.lsmdb;
