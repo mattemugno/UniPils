@@ -26,21 +26,16 @@ public class MenuController implements Initializable {
 
         if (DataSession.getUserLogged() != null){
             //se sono loggato
-            if(!DataSession.getUserLogged().equals("admin")) {
-                String usernameLogged = DataSession.getUserLogged();
-                usernameLabel.setText(usernameLogged);
-                loginButton.setText("Logout");
-                loginButton.setOnAction(this::logoutUser);
-            }
-            else{ //admin case
-                String usernameLogged = DataSession.getUserLogged();
+            if(DataSession.getUserLogged().equals("admin")){
+                //admin case
                 buttonCart.setVisible(false);
                 buttonWish.setVisible(false);
-                usernameLabel.setText(usernameLogged);
                 usernameLabel.setDisable(true);
-                loginButton.setText("Logout");
-                loginButton.setOnAction(this::logoutUser);
             }
+            String usernameLogged = DataSession.getUserLogged();
+            usernameLabel.setText(usernameLogged);
+            loginButton.setText("Logout");
+            loginButton.setOnAction(this::logoutUser);
         }
         else {
             //se non sono loggato
