@@ -821,15 +821,16 @@ public class NeoDriver {
 
             session.readTransaction( tx -> {
                 Result result=tx.run("MATCH path=(u:User)-[p:PURCHASED]-(b:Beer)"+
-                                "RETURN b.name AS beer_name, COUNT(p) AS total_purchased "+
+                                "RETURN b.id AS beer_id, b.name AS beer_name, COUNT(p) AS total_purchased "+
                                 "ORDER BY total_purchased DESC LIMIT 10"
                 );
 
                 while(result.hasNext()){
                     Record r= result.next();
+                    int beer_id = r.get("beer_id").asInt();
                     String beer_name = r.get("beer_name").asString();
                     String tot = String.valueOf(r.get("total_purchased"));
-                    String row = beer_name + " " + tot;
+                    String row = beer_id + "  " + beer_name + " --> " + tot + " orders ";
                     beers.add(row);
                 }
                 return beers;
@@ -857,7 +858,7 @@ public class NeoDriver {
                     Record r= result.next();
                     String user = r.get("u.username").asString();
                     String tot = String.valueOf(r.get("num_interactions"));
-                    String row = user + " " + tot;
+                    String row = user + " " + " --> " + tot + " number of interactions with UniPils";
                     users.add(row);
                 }
                 return users;

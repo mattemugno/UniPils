@@ -36,11 +36,9 @@ public class AdminController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         ChoiceBox choiceBox = new ChoiceBox();
-        choiceBox.setLayoutX(37.0);
-        choiceBox.setLayoutY(149.0);
         choiceBox.setItems(FXCollections.observableArrayList(
                 "Beer Name", "Username", "Brewery Name", "Beer Style", "Beer Id"));
-        choiceBox.setValue("Beer_name");
+        choiceBox.setValue("Beer Name");
 
         TextField textField = new TextField();
         textField.setPromptText("Search here!");

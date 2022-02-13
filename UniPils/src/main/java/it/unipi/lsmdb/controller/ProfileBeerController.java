@@ -19,6 +19,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.net.URL;
+import java.security.cert.PolicyNode;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -29,7 +30,7 @@ public class ProfileBeerController implements Initializable {
     @FXML private Button wishButton;
     @FXML private Button revButton;
     @FXML private Button cartButton;
-    @FXML private VBox revSection;
+    @FXML VBox revSection;
     @FXML private AnchorPane beerInfoPane;
     @FXML TextField score;
     @FXML TextArea comment;
@@ -68,6 +69,9 @@ public class ProfileBeerController implements Initializable {
             Button cancel = new Button();
             cancel.setText("DELETE BEER");
             cancel.setOnAction(e -> deleteBeer(e, beer_id));
+            cancel.setLayoutX(499.0);
+            cancel.setLayoutY(100.0);
+            beerInfoPane.getChildren().add(cancel);
         }
 
         showBeerReviews(beer_id);
@@ -98,6 +102,7 @@ public class ProfileBeerController implements Initializable {
         }
     }
 
+    @FXML
     private void showBeerReviews(int beer) {
 
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
@@ -197,7 +202,7 @@ public class ProfileBeerController implements Initializable {
         neo4j.deleteBeer(beerId);
         MongoDriver.deleteBeer(beerId);
         Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", ae);
+        Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", ae);
     }
 
     @FXML
