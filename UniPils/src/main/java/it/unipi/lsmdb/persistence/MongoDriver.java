@@ -238,27 +238,41 @@ public class MongoDriver {
 
     // CRUD ORDER
 
-    public static boolean addOrder(User u, Order o){
+    public static boolean addOrder(String username, Order order, ArrayList<OrderList> orderList){
         openConnection("Users");
-        System.out.println(u.getUsername());
+
+        ArrayList<Document> results = new ArrayList<>();
+
         try{
             Document doc = new Document();
 
-            doc.append("id_order",o.getIdOrder());
-            doc.append("order_list",Arrays.asList(o.getOrderList()));
-            doc.append("delivery-date",o.getDeliveryDate());
-            doc.append("feedback",o.getFeedback());
-            doc.append("total_cost",o.getTotalCost());
-            doc.append("confirmation_date",o.getConfirmationDate());
+            doc.append("id_order",order.getIdOrder());
+                for (OrderList item: orderList){
+                    Document docList = new Document();
+                    docList.append("beer_id", item.getBeerId());
+                    docList.append("beer_name", item.getBeerName());
+                    docList.append("beer_price", item.getBeerPrice());
+                    docList.append("beer_quantity", item.getQuantity());
 
-            Bson filter = Filters.eq("username", u.getUsername()); //get the parent-document
+                    doc.append("order_list", docList);
+                }
+
+            doc.append("delivery-date",order.getDeliveryDate());
+            doc.append("feedback",order.getFeedback());
+            doc.append("total_cost",order.getTotalCost());
+            doc.append("confirmation_date",order.getConfirmationDate());
+
+            Bson filter = Filters.eq("username", username); //get the parent-document
             Bson setUpdate;
-            if(u.getOrders() != null && u.getOrders().size() > 0)
+
+            User user = MongoDriver.getUserFromUsername(username);
+
+            if(user.getOrders() != null && user.getOrders().size() > 0)
                 setUpdate = Updates.push("orders", doc);
+
             else {
-                ArrayList<Document> orderList = new ArrayList<>();
-                orderList.add(doc);
-                setUpdate = Updates.set("orders", orderList);
+                results.add(doc);
+                setUpdate = Updates.set("orders", results);
             }
 
             collection.updateOne(filter, setUpdate);
@@ -490,9 +504,10 @@ public class MongoDriver {
         Bson matchStyle = match(eq("style", style));
         Bson groupPrice = group("$price", push("beer_name", "$name"));
         Bson sort = sort(ascending("_id"));
-        Bson limit = limit(20);
+
         Bson projectFields = project(
-                fields(excludeId(), computed("price", "$_id"), computed("Beer Name", "$beer_name"))
+                fields(excludeId(), computed("price", "$_id"),
+                        computed("Beer Name", 10))
         );
 
         try {
@@ -501,6 +516,7 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
+        System.out.println(results);
         closeConnection();
         return results;
     }
@@ -535,7 +551,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }
@@ -566,6 +581,77 @@ public class MongoDriver {
         return results;
     }
 
+    //############ QUERY ADMIN #############
+
+    public static ArrayList<Document> getAvgOrderPrice(){
+
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson unwindOrders = unwind("$orders");
+        Bson match = match(exists("orders", true));
+        Bson group = group("$null", avg("avg_cost", "$orders.total_cost"));
+        Bson projectFields = project(fields(excludeId(),
+                computed("AvgOrderPrice", "$avg_cost")));
+
+        try {
+            collection.aggregate(Arrays.asList(unwindOrders, match, group, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return results;
+    }
+
+    public static ArrayList<Document> getAvgAge(){
+
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson group = group("$null", avg("avg_age", "$dob.age"));
+        Bson projectFields = project(fields(excludeId(),
+                computed("AvgAge", "$avg_age")));
+
+        try {
+            collection.aggregate(Arrays.asList(group, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return results;
+    }
+
+    public static ArrayList<Document> getGenderDistribution(){
+
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson group = group("$gender", sum("total", 1));
+        Bson projectFields = project(fields(excludeId(),
+                computed("Gender", "$_id"),
+                computed("Total", "$total"))
+        );
+
+        try {
+            collection.aggregate(Arrays.asList(group, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(results);
+        closeConnection();
+        return results;
+    }
 }
 
 

@@ -297,6 +297,35 @@ public class NeoDriver {
         return followers;
     }
 
+    public ArrayList<String> getFollower(String username,String follow){
+        ArrayList<String> res=new ArrayList<String>();
+        try (Session session = driver.session()) {
+
+            session.readTransaction(tx -> {
+                Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
+                                "WHERE u1.username=$un1 and u2.username=$un2  "+
+                                "RETURN u1.username AS user",
+                        Values.parameters(
+                                "un1", username,
+                                            "un2",follow
+                        )
+                );
+                if(result.hasNext()){
+                    Record r=result.next();
+                    res.add(r.get("ser").asString());
+                }
+
+                return res;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return res;
+    }
+
+
+
     public ArrayList<String> getFollowing(String username){
         ArrayList<String> followers= new ArrayList<>();
         try (Session session = driver.session()) {
