@@ -41,7 +41,6 @@ public class LevelDbDriver {
     {
         openDB();
         db.put(bytes(key), bytes(String.valueOf(value)));
-        System.out.println("DB " + db + " closed.");
         closeDB();
     }
 
