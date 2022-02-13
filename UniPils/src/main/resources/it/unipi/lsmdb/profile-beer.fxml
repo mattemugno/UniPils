@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.ProfileBeerController">
+<SplitPane fx:id="all" dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="887.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.ProfileBeerController">
    <items>
       <AnchorPane fx:id="menuPane" minHeight="0.0" minWidth="0.0" prefHeight="672.0" prefWidth="262.0">
          <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />

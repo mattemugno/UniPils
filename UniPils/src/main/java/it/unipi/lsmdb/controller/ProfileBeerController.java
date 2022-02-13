@@ -10,6 +10,7 @@ import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -17,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.security.cert.PolicyNode;
@@ -26,6 +28,8 @@ import java.util.ResourceBundle;
 
 public class ProfileBeerController implements Initializable {
 
+    Stage stage;
+    Scene scene;
     @FXML private TextField searchBar;
     @FXML private Button wishButton;
     @FXML private Button revButton;
@@ -43,13 +47,12 @@ public class ProfileBeerController implements Initializable {
     @FXML Label country;
     @FXML Label state;
     @FXML ScrollPane scroll;
+    @FXML SplitPane all;
 
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //manca da fare la barra di ricerca tramite query su neo4j che setta l'id della birra desiderata
         //manca da sistemare il cambio bottone ADD/REMOVE wish
-        //manca da vietare l'inserimento di una seconda recensione sulla stessa birra da parte dello stesso utente
         //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
@@ -61,7 +64,7 @@ public class ProfileBeerController implements Initializable {
         style.setText("Style: " + beer.getStyle());
         abv.setText("ABV: " + beer.getAbv() + " %");
         price.setText("Price: " + beer.getPrice() + " USD");
-        vol.setText("Vol. :" + beer.getVolume() + " cl");
+        vol.setText("Volume: " + beer.getVolume() + " cl");
         country.setText("Country: " + beer.getCountry());
         state.setText("State: " + beer.getState());
 
@@ -83,12 +86,10 @@ public class ProfileBeerController implements Initializable {
                 cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id));
             }
 
-            if(Objects.equals(wishButton.getText(), "ADD TO WISHLIST")) {
-                wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
-            }
-            else
-                wishButton.setOnAction(e->deleteWishlist(e, usernameLogged, beer_id));
+            wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
+
             //cartButton.setOnAction();
+
             if(Objects.equals(revButton.getText(), "POST REVIEW"))
                 revButton.setOnAction(e->writeReview(e, usernameLogged, beer_id));
             else
@@ -176,24 +177,7 @@ public class ProfileBeerController implements Initializable {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addHasInWishlist(user, beer);
         Utils.showInfoAlert("Added to wishlist");
-        wishButton.setText("REMOVE FROM WISHLIST");
-        revSection.prefHeight(227.1);
-        //qui dovresti refreshare la pagina
-    }
-
-    @FXML
-    private void deleteWishlist(ActionEvent actionEvent, String user, int beer) {
-        NeoDriver neo4j = NeoDriver.getInstance();
-        neo4j.deleteHasInWishlist(user, beer);
-        Utils.showInfoAlert("Deleted from wishlist");
-        wishButton.setText("ADD TO WISHLIST");
-        revSection.prefHeight(227.1);
-        //Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
-    }
-
-    @FXML
-    private void scroll(){
-        scroll.setFitToWidth(true);
+        wishButton.setDisable(true);
     }
 
     @FXML
