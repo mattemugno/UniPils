@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import org.iq80.leveldb.*;
 import static org.iq80.leveldb.impl.Iq80DBFactory.*;
 
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,10 +38,16 @@ public class LevelDbDriver {
         db.put(bytes(key), bytes(String.valueOf(value)));
     }
 
-    public String get(String key)
+    public String getString(String key)
     {
         byte[] bytes = db.get(bytes(key));
         return (bytes == null ? null : asString(bytes));
+    }
+
+    public int getInt(String key)
+    {
+        byte[] bytes = db.get(bytes(key));
+        return (bytes == null ? null : ByteBuffer.wrap(bytes).getInt());
     }
 
     public List<String> findKeysByPrefix(String prefix)
