@@ -32,15 +32,11 @@
                                     <Font size="24.0" />
                                 </font>
                             </Label>
-                            <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="624.0" prefWidth="564.0">
-                                <content>
-                                    <VBox fx:id="followerInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
-                                        <children>
+                            <VBox fx:id="followerInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
+                                <children>
 
-                                        </children>
-                                    </VBox>
-                                </content>
-                            </ScrollPane>
+                                </children>
+                            </VBox>
                         </AnchorPane>
                     </content>
                 </ScrollPane>

@@ -38,8 +38,8 @@ public class LoginController {
 
             if(Objects.equals(u, "admin"))
                 Utils.changeScene("admin-page.fxml", actionEvent);
-            else
-                Utils.changeScene("homepage.fxml", actionEvent);
+
+            Utils.changeScene("homepage.fxml", actionEvent);
 
     }
 

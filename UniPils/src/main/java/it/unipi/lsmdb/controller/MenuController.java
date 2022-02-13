@@ -72,7 +72,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void OnlickDebug(){
-        MongoDriver.getGenderDistribution();
+        MongoDriver.getUserFromUsername("2578alexOLIVIER");
     }
 
     @FXML

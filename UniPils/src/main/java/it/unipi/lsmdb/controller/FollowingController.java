@@ -27,11 +27,7 @@ public class FollowingController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         String usernameLogged = DataSession.getUserLogged();
-        ArrayList<String> followers;
-        if(DataSession.getUserView()==null)
-            followers = neo4j.getFollowing(usernameLogged);
-        else
-            followers = neo4j.getFollowing(DataSession.getUserView());
+        ArrayList<String> followers = neo4j.getFollowing(usernameLogged);
 
         int count=0;
         Font font = Font.font("Comic Sans", FontWeight.BOLD, 18);
@@ -51,15 +47,10 @@ public class FollowingController implements Initializable {
                 btnDelete.setText("delete follow");
                 btnDelete.setPadding(new Insets(5, 5, 5, 5));
                 btnDelete.setFont(font);
-                btnDelete.setVisible(false);
-
-                if (DataSession.getUserView() == null) {
-                    btnDelete.setVisible(true);
-                    btnDelete.setOnAction(actionEvent -> {
-                        if (neo4j.deleteFollows(usernameLogged, follow))
-                            Utils.changeScene("following-page.fxml", actionEvent);
-                    });
-                }
+                btnDelete.setOnAction(actionEvent -> {
+                    if(neo4j.deleteFollows(usernameLogged,follow))
+                        Utils.changeScene("following-page.fxml", actionEvent);
+                });
 
                 hb.getChildren().addAll(userFollow, btnDelete);
                 followingInfoPane.getChildren().add(hb);

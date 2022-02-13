@@ -39,7 +39,7 @@ public class ProfileController implements Initializable {
     @FXML private Label genderLabel;
     @FXML private Label addressLabel;
     @FXML private ScrollPane scroll;
-    @FXML private Button addDelButton;
+
 
 
     @Override
@@ -69,34 +69,10 @@ public class ProfileController implements Initializable {
         genderLabel.setText(user.getGender());
         //addressLabel.setText(user.getAddress());
 
-        if(DataSession.getUserView()!=null){
-            if(neo4j.getFollower(DataSession.getUserLogged(),DataSession.getUserView()).isEmpty()){
-                addDelButton.setText("Add follower");
-                addDelButton.setOnAction(actionEvent -> {
-                    if(neo4j.addFollows(DataSession.getUserLogged(),DataSession.getUserView())){
-                        Utils.changeScene("profile-user.fxml", actionEvent);
-                    }
-                });
-
-            }else{
-                addDelButton.setText("Delete follower");
-                addDelButton.setOnAction(actionEvent -> {
-                    if(neo4j.deleteFollows(DataSession.getUserLogged(),DataSession.getUserView())){
-                        Utils.changeScene("profile-user.fxml", actionEvent);
-                    }
-
-                });
-            }
-        }else{
-            addDelButton.setVisible(false);
-        }
-
         ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
 
         System.out.println(beers);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
-
-
         for (Beer b : beers) {
             AnchorPane oneBeer = new AnchorPane();
             oneBeer.setStyle("-fx-border-style: solid inside;"
@@ -157,14 +133,17 @@ public class ProfileController implements Initializable {
     }
 
     @FXML private void onClickFollower(ActionEvent actionEvent){
-        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("follower-page.fxml", ae);
+        if(DataSession.getUserView()==null) {
+            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            Utils.changeScene("follower-page.fxml", ae);
+        }
     }
 
     @FXML private void onClickFollowing(ActionEvent actionEvent){
-        ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("following-page.fxml", ae);
-
+        if(DataSession.getUserView()==null) {
+            ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
+            Utils.changeScene("following-page.fxml", ae);
+        }
     }
 
 

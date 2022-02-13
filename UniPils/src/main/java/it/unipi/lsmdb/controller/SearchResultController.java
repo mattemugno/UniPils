@@ -122,7 +122,7 @@ public class SearchResultController  {
 
             user.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                 DataSession.setUserView(i.getUsername());
-                Utils.changeScene("profile-user.fxml", event);
+                Utils.changeScene("/it/unipi/lsmdb/profile-user.fxml", event);
                 event.consume();
             });
 
