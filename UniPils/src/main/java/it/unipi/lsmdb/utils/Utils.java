@@ -121,11 +121,12 @@ public class Utils {
             return false;
     }
 
-    public static boolean addOrder(User u, Order o){
+    public static boolean addOrder(User user, Order order){
+
         NeoDriver neo4j = NeoDriver.getInstance();
-        if(MongoDriver.addOrder(u,o)) {
-            for (OrderList ol : o.getOrderList()) {
-                neo4j.addPurchased(u.getUsername(), ol.getBeerId());
+        if(MongoDriver.addOrder(user.getUsername(), order, order.getOrderList())){
+            for (OrderList ol : order.getOrderList()) {
+                neo4j.addPurchased(user.getUsername(), ol.getBeerId());
             }
             Utils.showInfoAlert("Order succesfully added");
             return true;
