@@ -70,6 +70,9 @@ public class ProfileBeerController implements Initializable {
         state.setText("State: " + beer.getState());
 
         if(Objects.equals(DataSession.getUserLogged(), "admin")) {
+            wishButton.setVisible(false);
+            revButton.setVisible(false);
+            cartButton.setVisible(false);
             Button cancel = new Button();
             cancel.setText("DELETE BEER");
             cancel.setOnAction(e -> deleteBeer(e, beer_id));
@@ -78,7 +81,7 @@ public class ProfileBeerController implements Initializable {
             beerInfoPane.getChildren().add(cancel);
         }
 
-        showBeerReviews(beer_id);
+        showBeerReviews(beer_id, DataSession.getUserLogged());
 
         if (DataSession.getUserLogged() != null){
             String usernameLogged = DataSession.getUserLogged();
@@ -98,6 +101,7 @@ public class ProfileBeerController implements Initializable {
         }
         else
         {
+            Utils.showInfoAlert("Log in/Sign in to have all interactions with beer");
             wishButton.setVisible(false);
             revButton.setVisible(false);
             cartButton.setVisible(false);
@@ -105,7 +109,7 @@ public class ProfileBeerController implements Initializable {
     }
 
     @FXML
-    private void showBeerReviews(int beer) {
+    private void showBeerReviews(int beer, String user) {
 
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
         NeoDriver neo4j = NeoDriver.getInstance();
@@ -120,6 +124,13 @@ public class ProfileBeerController implements Initializable {
                         + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                         + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
+                if(Objects.equals(user, "admin")){
+                    Button del = new Button();
+                    del.setText("DELETE REVIEW");
+                    int finalJ = j;
+                    del.setOnAction(e->delReview(e, beer, authors.get(finalJ)));
+                    rev.getChildren().add(del);
+                }
                 Label author = new Label();
                 author.setText("Publisher:  " + authors.get(j));
                 author.setFont(font);
@@ -139,6 +150,10 @@ public class ProfileBeerController implements Initializable {
                 rev.getChildren().addAll(author,comment, score, ts); //attacco le label alla sezione della singola review
                 vbox.getChildren().add(rev); //attacco la singola review al vbox globale
             }
+
+    }
+
+    private void delReview(ActionEvent e, int beer, String s) {
 
     }
 

@@ -6,32 +6,27 @@
 
 <AnchorPane prefHeight="345.0" prefWidth="243.0" style="-fx-background-color: burlywood,peachpuff; -fx-background-radius: 20, 20; -fx-padding: 10 15 15 10;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.MenuController">
    <children>
-      <Hyperlink fx:id="usernameLabel" alignment="CENTER" onAction="#onClickProfile" prefHeight="40.0" prefWidth="219.0" text="Username" underline="true">
+      <Hyperlink fx:id="usernameLabel" alignment="CENTER" layoutX="12.0" onAction="#onClickProfile" prefHeight="40.0" prefWidth="219.0" text="Username" underline="true">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Hyperlink>
-      <Button fx:id="loginButton" layoutX="65.0" layoutY="110.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="88.0" text="Login">
+      <Button fx:id="loginButton" layoutX="78.0" layoutY="73.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="88.0" text="Login">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="buttonCart" layoutX="65.0" layoutY="200.0" mnemonicParsing="false" onAction="#showCart" prefHeight="32.0" prefWidth="88.0" text="Cart">
+      <Button fx:id="buttonCart" layoutX="78.0" layoutY="201.0" mnemonicParsing="false" onAction="#showCart" prefHeight="32.0" prefWidth="88.0" text="Cart">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button layoutX="59.0" layoutY="156.0" mnemonicParsing="false" onAction="#onClickHomePage" prefHeight="32.0" prefWidth="100.0" text="Homepage">
+      <Button layoutX="72.0" layoutY="141.0" mnemonicParsing="false" onAction="#onClickHomePage" prefHeight="32.0" prefWidth="100.0" text="Homepage">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="buttonWish" layoutX="65.0" layoutY="254.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
-         <font>
-            <Font name="System Bold" size="15.0" />
-         </font>
-      </Button>
-      <Button fx:id="loginButton1" layoutX="65.0" layoutY="68.0" mnemonicParsing="false" onAction="#OnlickDebug" prefHeight="32.0" prefWidth="88.0" text="Debug">
+      <Button fx:id="buttonWish" layoutX="78.0" layoutY="264.0" mnemonicParsing="false" onAction="#showWishlist" prefHeight="32.0" prefWidth="88.0" text="Wishlist">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
