@@ -39,7 +39,7 @@ public class WishlistController implements Initializable {
     }
 
     private void printBeers(String username) {
-        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  14);
         NeoDriver neo4j = NeoDriver.getInstance();
         ArrayList<Beer> beers = neo4j.getUserWishlist(username);
         for (Beer i : beers) {
@@ -51,11 +51,11 @@ public class WishlistController implements Initializable {
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
             Label title = new Label();
-            title.setText("Beer ID:  " + i.get_id() + "     " + "Beer Name:  " + i.getName());
+            title.setText("*Beer ID*:  " + i.get_id() + "  " + "*Beer Name*:  " + i.getName());
             title.setFont(font);
 
             Label details = new Label();
-            details.setText("Brewery Name:  " + i.getBrewery_name() + "     " + "Beer Style:  " + i.getStyle());
+            details.setText("*Brewery Name*:  " + i.getBrewery_name() + "  " + "*Beer Style*:  " + i.getStyle());
             details.setFont(font);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

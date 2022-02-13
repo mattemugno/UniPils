@@ -85,7 +85,10 @@ public class MenuController implements Initializable {
 
     @FXML
     private void showCart(ActionEvent ae){
-        Utils.changeScene("cart-page.fxml", ae);
+        if (DataSession.getUserLogged() != null)
+            Utils.changeScene("cart-page.fxml", ae);
+        else
+            Utils.showErrorAlert("You need to login to access this area");
     }
 }
 
