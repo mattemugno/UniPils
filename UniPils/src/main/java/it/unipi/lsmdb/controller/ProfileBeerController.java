@@ -74,6 +74,11 @@ public class ProfileBeerController implements Initializable {
 
         if (DataSession.getUserLogged() != null){
             String usernameLogged = DataSession.getUserLogged();
+
+            if (Objects.equals(cartButton.getText(), "ADD TO CART")){
+                cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id));
+            }
+
             if(Objects.equals(wishButton.getText(), "ADD TO WISHLIST")) {
                 wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
             }
@@ -172,16 +177,6 @@ public class ProfileBeerController implements Initializable {
     }
 
     @FXML
-    private void addToCart(ActionEvent actionEvent, String username, int beer_id){
-        LevelDbDriver levelDbDriver = new LevelDbDriver();
-        String key = username + ":" + beer_id + ":" + "quantity";
-        int value = 1;
-        levelDbDriver.put(key, value);
-
-        Utils.changeScene("/it/unipi/lsmdb/cart-beer.fxml", actionEvent);
-    }
-
-    @FXML
     private void deleteWishlist(ActionEvent actionEvent, String user, int beer) {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.deleteHasInWishlist(user, beer);
@@ -203,6 +198,17 @@ public class ProfileBeerController implements Initializable {
         MongoDriver.deleteBeer(beerId);
         Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
         Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", ae);
+    }
+
+    @FXML
+    public void addToCart(ActionEvent actionEvent, String username, int beer_id) {
+
+        LevelDbDriver levelDbDriver = new LevelDbDriver();
+        String key = username + ":" + beer_id + ":" + "quantity";
+        int value = 1;
+        levelDbDriver.put(key, value);
+
+        Utils.changeScene("/it/unipi/lsmdb/cart-beer.fxml", actionEvent);
     }
 
 }

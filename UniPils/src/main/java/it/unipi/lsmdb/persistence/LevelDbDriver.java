@@ -15,6 +15,10 @@ import java.io.IOException;
 
 public class LevelDbDriver {
 
+    public LevelDbDriver(){
+        openDB();
+    }
+
     private DB db = null;
 
     private void openDB()
@@ -36,6 +40,7 @@ public class LevelDbDriver {
     public void put(String key, int value)
     {
         db.put(bytes(key), bytes(String.valueOf(value)));
+        System.out.println("KEY: " + key + ", VALUE: " + value);
     }
 
     public String getString(String key)
