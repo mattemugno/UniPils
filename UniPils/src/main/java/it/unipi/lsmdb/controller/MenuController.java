@@ -32,9 +32,14 @@ public class MenuController implements Initializable {
                 loginButton.setText("Logout");
                 loginButton.setOnAction(this::logoutUser);
             }
-            else{
+            else{ //admin case
+                String usernameLogged = DataSession.getUserLogged();
                 buttonCart.setVisible(false);
                 buttonWish.setVisible(false);
+                usernameLabel.setText(usernameLogged);
+                usernameLabel.setDisable(true);
+                loginButton.setText("Logout");
+                loginButton.setOnAction(this::logoutUser);
             }
         }
         else {
