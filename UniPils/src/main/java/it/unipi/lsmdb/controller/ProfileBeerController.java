@@ -48,6 +48,7 @@ public class ProfileBeerController implements Initializable {
     @FXML Label state;
     @FXML ScrollPane scroll;
     @FXML SplitPane all;
+    @FXML VBox vbox;
 
     @FXML
     @Override
@@ -136,7 +137,7 @@ public class ProfileBeerController implements Initializable {
                 ts.setFont(font);
 
                 rev.getChildren().addAll(author,comment, score, ts); //attacco le label alla sezione della singola review
-                revSection.getChildren().add(rev); //attacco la singola review al vbox globale
+                vbox.getChildren().add(rev); //attacco la singola review al vbox globale
             }
 
     }

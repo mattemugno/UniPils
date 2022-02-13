@@ -16,8 +16,6 @@
                   <TextField fx:id="searchBar" layoutX="215.0" layoutY="9.0" />
                </children>
             </AnchorPane>
-            <ScrollPane fx:id="scroll" prefHeight="201.0" prefWidth="618.0">
-               <content>
                   <AnchorPane fx:id="beerInfoPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <children>
                         <Button fx:id="wishButton" layoutX="477.0" layoutY="14.0" mnemonicParsing="false" text="ADD TO WISHLIST" />
@@ -39,13 +37,13 @@
                         <TextField fx:id="score" layoutX="360.0" layoutY="197.0" prefHeight="31.0" prefWidth="59.0" />
                         <Label layoutX="360.0" layoutY="176.0" prefHeight="21.0" prefWidth="59.0" text="SCORE:" />
                         <Label layoutX="37.0" layoutY="166.0" prefHeight="21.0" prefWidth="59.0" text="TEXT:" />
-                              <VBox fx:id="revSection" layoutX="63.0" layoutY="306.0" prefHeight="227.0" prefWidth="491.0">
-                              </VBox>
                         <Separator layoutX="19.0" layoutY="294.0" prefHeight="3.0" prefWidth="573.0" />
+                  <ScrollPane layoutX="14.0" layoutY="322.0" prefHeight="319.0" prefWidth="598.0">
+                     <content>
+                        <VBox fx:id="vbox" prefHeight="303.0" prefWidth="598.0" />
+                     </content></ScrollPane>
                      </children>
                   </AnchorPane>
-               </content>
-            </ScrollPane>
          </items>
       </SplitPane>
    </items>
