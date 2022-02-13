@@ -264,10 +264,8 @@ public class NeoDriver {
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            closeConnection();
             return false;
         }
-        closeConnection();
         return true;
     }
 
@@ -298,7 +296,7 @@ public class NeoDriver {
     }
 
     public ArrayList<String> getFollower(String username,String follow){
-        ArrayList<String> res=new ArrayList<String>();
+        ArrayList<String> res=new ArrayList<>();
         try (Session session = driver.session()) {
 
             session.readTransaction(tx -> {
@@ -312,7 +310,7 @@ public class NeoDriver {
                 );
                 if(result.hasNext()){
                     Record r=result.next();
-                    res.add(r.get("ser").asString());
+                    res.add(r.get("user").asString());
                 }
 
                 return res;
@@ -670,7 +668,7 @@ public class NeoDriver {
 
             session.readTransaction( tx -> {
                 Result result=tx.run("MATCH (u:User) WHERE u.username CONTAINS $pattern " +
-                                "RETURN u.username, u.password, u.first_name, u.last_name",
+                                "RETURN u.username, u.password, u.first_name, u.last_name LIMIT 30",
                         Values.parameters(
                                 "pattern", username
                         )

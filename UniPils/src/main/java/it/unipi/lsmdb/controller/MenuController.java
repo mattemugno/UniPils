@@ -48,7 +48,7 @@ public class MenuController implements Initializable {
     private void logoutUser(ActionEvent actionEvent){
         //cancello i dati di sessione e faccio il resfresh della scena
         DataSession.logoutSession();
-        Utils.changeScene("menu-page.fxml", actionEvent);
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML
