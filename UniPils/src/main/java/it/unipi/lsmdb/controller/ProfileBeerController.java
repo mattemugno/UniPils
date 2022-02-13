@@ -49,6 +49,9 @@ public class ProfileBeerController implements Initializable {
     @FXML ScrollPane scroll;
     @FXML SplitPane all;
     @FXML VBox vbox;
+    @FXML Label AVGscore;
+
+    NeoDriver neo4j = NeoDriver.getInstance();
 
     @FXML
     @Override
@@ -68,6 +71,13 @@ public class ProfileBeerController implements Initializable {
         vol.setText("Volume: " + beer.getVolume() + " cl");
         country.setText("Country: " + beer.getCountry());
         state.setText("State: " + beer.getState());
+
+       /* ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());  //AVG SCORE
+        if(!avg.isEmpty()){
+            AVGscore.setText("AVG score: "+avg.get(0).toString());
+        }else{
+            AVGscore.setText("No score yet");
+        }*/
 
         if(Objects.equals(DataSession.getUserLogged(), "admin")) {
             wishButton.setVisible(false);
