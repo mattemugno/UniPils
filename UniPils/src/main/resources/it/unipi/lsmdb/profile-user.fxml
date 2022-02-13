@@ -27,6 +27,7 @@
                   <AnchorPane fx:id="beersPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                      <Button fx:id="followerButton" layoutX="450.0" layoutY="14.0" mnemonicParsing="false" onAction="#onClickFollower" text="Follower" />
                      <Button fx:id="followingButton" layoutX="450.0" layoutY="52.0" mnemonicParsing="false" onAction="#onClickFollowing" text="Following" />
+                     <Button fx:id="addDelButton" layoutX="450.0" layoutY="80.0" mnemonicParsing="false" onAction="#onClickFollowing" text="" />
                      <Label fx:id="userLabel" layoutX="7.0" layoutY="4.0" prefHeight="31.0" prefWidth="318.0" text="Username">
                         <font>
                            <Font size="24.0" />
@@ -38,11 +39,15 @@
                      <Label fx:id="cellLabel" layoutX="14.0" layoutY="94.0" prefHeight="21.0" prefWidth="86.0" text="Cell number" />
                      <Label fx:id="genderLabel" layoutX="14.0" layoutY="120.0" prefHeight="21.0" prefWidth="92.0" text="Gender" />
                      <Label fx:id="addressLabel" layoutX="114.0" layoutY="120.0" prefHeight="21.0" prefWidth="72.0" text="Address" />
-                     <VBox fx:id="beersInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
-                        <children>
+                     <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="624.0" prefWidth="564.0">
+                        <content>
+                           <VBox fx:id="beersInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
+                              <children>
 
-                        </children>
-                     </VBox>
+                              </children>
+                           </VBox>
+                        </content>
+                     </ScrollPane>
                   </AnchorPane>
                </content>
             </ScrollPane>
