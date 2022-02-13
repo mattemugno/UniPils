@@ -27,7 +27,7 @@
                                 </VBox>
                             </content>
                         </ScrollPane>
-                  <Button layoutX="348.0" layoutY="36.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="112.0" text="SUBMIT ORDER" />
+                  <Button fx:id="submit" onAction="#confirmOrder" layoutX="348.0" layoutY="36.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="112.0" text="SUBMIT ORDER" />
                     </children>
                 </AnchorPane>
             </items>

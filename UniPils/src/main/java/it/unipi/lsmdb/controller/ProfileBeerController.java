@@ -163,8 +163,12 @@ public class ProfileBeerController implements Initializable {
 
     }
 
-    private void delReview(ActionEvent e, int beer, String s) {
-
+    @FXML
+    private void delReview( ActionEvent e, int beer, String user) {
+        NeoDriver neo4j = NeoDriver.getInstance();
+        neo4j.deleteReview(user, beer);
+        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", e);
+        showBeerReviews(beer,user);
     }
 
     private void writeReview(ActionEvent actionEvent, String usernameLogged, int beer) {
