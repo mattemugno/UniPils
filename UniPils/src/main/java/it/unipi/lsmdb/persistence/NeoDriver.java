@@ -897,15 +897,15 @@ public class NeoDriver {
         return beers;
     }
 
-    //!!!!!!!!!!NON TORNA!!!!!!!!!!!!!!!!!
-    //non sono sicuro se la query è nella sua versione piu aggiornata
     public boolean MostInteractedBreweries(){
         try (Session session = driver.session()) {
 
             session.readTransaction((TransactionWork<Void>) tx -> {
-                Result result=tx.run("MATCH (u:User)-[r]->(b:Beer)<-[related:RELATED]-(review:Review)-[:POSTED]-(u:User)"+
-                        "RETURN b.brewery_id, b.brewery_name, u.username, (COUNT(r) + COUNT(related)) AS num_interactions "+
-                        "ORDER BY num_interactions DESC LIMIT 10"
+                Result result=tx.run("MATCH (u:User)-[r]->(b:Beer)<-[related:RELATED]-(review:Review)-[:POSTED]-(u:User)\n" +
+                        "RETURN b.brewery_id, b.brewery_name, u.username,\n" +
+                        "(COUNT(r) + COUNT(related)) AS num_interactions\n" +
+                        "ORDER BY num_interactions DESC\n" +
+                        "LIMIT 10"
                 );
 
                 return null;
@@ -917,7 +917,6 @@ public class NeoDriver {
         return true;
     }
 
-    //!!!!!!!!!!!!!NON TORNA!!!!!!!!!!!!!!!
     public ArrayList<String> SuggestedUsers(String username){
 
         ArrayList<String> users= new ArrayList<>();
@@ -925,11 +924,13 @@ public class NeoDriver {
         try (Session session = driver.session()) {
 
             session.readTransaction( tx -> {
-                Result result=tx.run("MATCH (u1:User{username:$username})-[:FOLLOWS]->(u2:User)<-[:FOLLOWS]-(u3:User), "+
-                        " (u1:User{username:$username})-[p:PURCHASED]->(b:Beer)<-[:PURCHASED]-(u3:User)"+
-                        "WHERE NOT EXISTS ((u1)-[:FOLLOWS]-(u3))"+
-                        "RETURN DISTINCT u3.username, COUNT(DISTINCT u2) AS common_friends, COUNT(DISTINCT b) as common_beers "+
-                        "ORDER BY common_friends, common_beers DESC LIMIT 10",
+                Result result=tx.run("MATCH (u1:User{username: $username})-[:FOLLOWS]->(u2:User)<-[:FOLLOWS]-(u3:User)\n" +
+                                "WHERE NOT EXISTS ((u1)-[:FOLLOWS]-(u3))\n" +
+                                "RETURN DISTINCT u3.username as suggest_friend LIMIT 10\n" +
+                                "UNION\n" +
+                                "MATCH (u4:User{username: $username})-[:PURCHASED]->(b:Beer)<-[:PURCHASED]-(u5:User)\n" +
+                                "WHERE NOT EXISTS ((u4)-[:FOLLOWS]-(u5))\n" +
+                                "RETURN DISTINCT u5.username as suggest_friend LIMIT 10;",
                         Values.parameters(
                                 "username", username
                         )
@@ -958,17 +959,19 @@ public class NeoDriver {
         try (Session session = driver.session()) {
 
             session.readTransaction( tx -> {
-                Result result=tx.run("MATCH (u1:User {username:$username})-[:FOLLOWS]-(u2:User)-[:PURCHASED]->(b:Beer)"+
-                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(b:Beer)) "+
-                                "RETURN b.id as beerId, b.name as beerName "+
-                                "UNION "+
-                                "CALL{ "+
-                                "MATCH (u:User {username:$username })-[:PURCHASED]->(b:Beer) "+
-                                "RETURN u AS u1, b.style AS style, COUNT(b.style) as total "+
-                                "ORDER BY total DESC LIMIT 1} "+
-                                "WITH style,u1 MATCH (bb:Beer)"+
-                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(bb:Beer)) and bb.style=style "+
-                                "RETURN bb.id as beerId, bb.name as beerName",
+                Result result=tx.run("MATCH (u1:User {username: $username})-[:FOLLOWS]-(u2:User)-[:PURCHASED]->(b:Beer)\n" +
+                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(b:Beer))\n" +
+                                "RETURN b.id as beerId, b.name as beerName LIMIT 10\n" +
+                                "UNION\n" +
+                                "CALL{\n" +
+                                "    MATCH (u:User {username: $username})-[:PURCHASED]->(b:Beer)\n" +
+                                "    RETURN u AS u1, b.style AS style, COUNT(b.style) as total\n" +
+                                "    ORDER BY total DESC\n" +
+                                "    LIMIT 1}\n" +
+                                "WITH style,u1\n" +
+                                "MATCH (bb:Beer)\n" +
+                                "WHERE NOT EXISTS ((u1)-[:PURCHASED]->(bb:Beer)) and bb.style=style\n" +
+                                "RETURN bb.id as beerId, bb.name as beerName LIMIT 10;\n",
                         Values.parameters(
                                 "username", username
                         )
