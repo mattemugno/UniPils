@@ -3,6 +3,7 @@ package it.unipi.lsmdb.controller;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Review;
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
@@ -161,12 +162,23 @@ public class ProfileBeerController implements Initializable {
 
     @FXML
     private void addWishlist(ActionEvent actionEvent, String user, int beer) {
+
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addHasInWishlist(user, beer);
         Utils.showInfoAlert("Added to wishlist");
         wishButton.setText("REMOVE FROM WISHLIST");
         //revSection.prefHeight(227.1);
         Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+    }
+
+    @FXML
+    private void addToCart(ActionEvent actionEvent, String username, int beer_id){
+        LevelDbDriver levelDbDriver = new LevelDbDriver();
+        String key = username + ":" + beer_id + ":" + "quantity";
+        int value = 1;
+        levelDbDriver.put(key, value);
+
+        Utils.changeScene("/it/unipi/lsmdb/cart-beer.fxml", actionEvent);
     }
 
     @FXML
@@ -192,6 +204,5 @@ public class ProfileBeerController implements Initializable {
         Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
         Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", ae);
     }
-
 
 }

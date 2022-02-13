@@ -107,6 +107,11 @@ public class LevelDbDriver {
         db.delete(bytes(key));
     }
 
+    public int splitKeys(String key){
+        String beer_id = key.split(":")[1];
+        return Integer.parseInt(beer_id);
+    }
+
     private void closeDB()
     {
         try {
