@@ -77,6 +77,14 @@ public class MenuController implements Initializable {
             Utils.showErrorAlert("You need to login to access this area");
     }
 
+    @FXML
+    private void showTrends(ActionEvent actionEvent){
+        if (DataSession.getUserLogged() != null)
+            Utils.changeScene("trends-page.fxml", actionEvent);
+        else
+            Utils.showErrorAlert("You need to login to access this area");
+    }
+
 
     @FXML
     private void OnlickDebug(){

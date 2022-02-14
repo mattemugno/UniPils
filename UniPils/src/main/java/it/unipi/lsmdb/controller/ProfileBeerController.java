@@ -27,47 +27,26 @@ public class ProfileBeerController implements Initializable {
 
     Stage stage;
     Scene scene;
-    @FXML
-    VBox revSection;
-    @FXML
-    TextField score;
-    @FXML
-    TextArea comment;
-    @FXML
-    Label beerName;
-    @FXML
-    Label brewName;
-    @FXML
-    Label abv;
-    @FXML
-    Label vol;
-    @FXML
-    Label style;
-    @FXML
-    Label price;
-    @FXML
-    Label country;
-    @FXML
-    Label state;
-    @FXML
-    ScrollPane scroll;
-    @FXML
-    SplitPane all;
-    @FXML
-    VBox vbox;
-    @FXML
-    Label AVGscore;
-    NeoDriver neo4j = NeoDriver.getInstance();
-    @FXML
-    private TextField searchBar;
-    @FXML
-    private Button wishButton;
-    @FXML
-    private Button revButton;
-    @FXML
-    private Button cartButton;
-    @FXML
-    private AnchorPane beerInfoPane;
+    @FXML private TextField searchBar;
+    @FXML private Button wishButton;
+    @FXML private Button revButton;
+    @FXML private Button cartButton;
+    @FXML VBox revSection;
+    @FXML private AnchorPane beerInfoPane;
+    @FXML TextField score;
+    @FXML TextArea comment;
+    @FXML Label beerName;
+    @FXML Label brewName;
+    @FXML Label abv;
+    @FXML Label vol;
+    @FXML Label style;
+    @FXML Label price;
+    @FXML Label country;
+    @FXML Label state;
+    @FXML ScrollPane scroll;
+    @FXML SplitPane all;
+    @FXML VBox vbox;
+    @FXML Label AVGscore;
 
     @FXML
     public static void deleteBeer(ActionEvent ae, int beerId) {
@@ -85,7 +64,8 @@ public class ProfileBeerController implements Initializable {
         //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
-        Font font = Font.font("Comic Sans", FontWeight.BOLD, 25);
+        MongoDriver.updateBeer(beer);
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
 
         beerName.setText(beer.getName());
         beerName.setFont(font);
@@ -97,10 +77,10 @@ public class ProfileBeerController implements Initializable {
         country.setText("Country: " + beer.getCountry());
         state.setText("State: " + beer.getState());
 
-        ArrayList<Double> avg = neo4j.getAVGScore(beer.get_id());
-        if (!avg.isEmpty()) {
-            AVGscore.setText("AVG score: " + avg.get(0).toString());
-        } else {
+        ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());
+        if(!(avg.get(0)==null)){
+            AVGscore.setText("AVG score: "+avg.get(0).toString());
+        }else{
             AVGscore.setText("No score yet");
         }
 

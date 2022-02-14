@@ -24,11 +24,13 @@ public class FollowingController implements Initializable {
     @FXML private VBox followingInfoPane;
     @FXML private Label totalFollowing;
     @FXML private Button showMore;
+    @FXML private VBox suggestedFriends;
     private int skip=0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         printFollowingUser();
+        printSuggestedFriends();
 
        // totalFollowing.setText(String.valueOf(count));
     }
@@ -88,6 +90,29 @@ public class FollowingController implements Initializable {
         Button showMore = new Button("Show more");
         showMore.setOnAction(actionEvent -> showMore());
         followingInfoPane.getChildren().add(showMore);
+    }
+
+    @FXML public void printSuggestedFriends(){
+        ArrayList<String> suggFriends=neo4j.SuggestedUsers(DataSession.getUserLogged());
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
+        Label labTitle=new Label("Suggested follower: ");
+        labTitle.setFont(font);
+        suggestedFriends.getChildren().add(labTitle);
+        if(!(suggFriends==null)){
+            for(String sugg:suggFriends) {
+                Button btn = new Button();
+                btn.setText(sugg);
+                btn.setOnAction(actionEvent -> {
+                    DataSession.setUserView(sugg);
+                    Utils.changeScene("profile-user.fxml", actionEvent);
+                });
+                suggestedFriends.getChildren().add(btn);
+            }
+        }else{
+            Label label=new Label("No suggested follower");
+            suggestedFriends.getChildren().add(label);
+        }
+
     }
 
 }

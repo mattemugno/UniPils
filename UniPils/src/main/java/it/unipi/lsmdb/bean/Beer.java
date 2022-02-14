@@ -20,6 +20,7 @@ public class Beer {
     private String brewery_city;
     private String brewery_types;
     private int view_count;
+    private int tot_purchased;
 
     public Beer(int id,String name){
         this._id=id;
@@ -31,6 +32,12 @@ public class Beer {
         this.name=name;
         this.style=style;
         this.brewery_name=brewery_name;
+    }
+
+    public Beer(int id, String name, int tot_purchased){
+        this._id = id;
+        this.name=name;
+        this.tot_purchased=tot_purchased;
     }
 
     public Beer(int id, String name, String state, String country, String style, int availability, int abv, int volume, int price, int brewery_id, String brewery_name, String brewery_city,String brewery_types, int view_count) {
@@ -160,6 +167,14 @@ public class Beer {
     public String getBrewery_types(){return brewery_types; }
 
     public void setBrewery_types(String brewery_types){this.brewery_types=brewery_types;}
+
+    public int getTot_purchased() {
+        return tot_purchased;
+    }
+
+    public void setTot_purchased(int tot_purchased) {
+        this.tot_purchased = tot_purchased;
+    }
 
     @Override
     public String toString() {
