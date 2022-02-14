@@ -615,7 +615,7 @@ public class NeoDriver {
                 Result result = tx.run("MATCH (u:User)-[:PURCHASED]->(b:Beer)" +
                                         "where u.username = $userId "+
                                         "RETURN b.id, b.name, b.style, b.brewery_name "+
-                                        "order by user asc "+
+                                        "order by u asc "+
                                         "skip $toSkip "+
                                         "LIMIT  2 ",
                         Values.parameters("userId", username,"toSkip",skip));

@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.CartController">
+<AnchorPane prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.CartController">
     <children>
-        <SplitPane dividerPositions="0.29797979797979796" layoutX="-5.0" layoutY="-3.0" prefHeight="677.0" prefWidth="726.0">
+        <SplitPane dividerPositions="0.21452420701168615" layoutX="-5.0" layoutY="-3.0" prefHeight="720.0" prefWidth="1200.0">
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="300.0" prefWidth="100.0">
                     <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="600.0">
                     <children>
-                        <Label fx:id="title" layoutX="6.0" layoutY="14.0" prefHeight="35.0" prefWidth="453.0" text="'s Cart">
+                        <Label fx:id="title" layoutX="6.0" layoutY="14.0" prefHeight="45.0" prefWidth="551.0" text="'s Cart">
                             <font>
                                 <Font name="System Bold" size="24.0" />
                             </font>
                         </Label>
-                        <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="624.0" prefWidth="564.0">
+                        <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="570.0" prefWidth="659.0">
                             <content>
-                                <VBox fx:id="cartInfoPane" layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
-                                    <children>
-
-                                    </children>
-                                </VBox>
+                                <VBox fx:id="cartInfoPane" layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0" />
                             </content>
                         </ScrollPane>
-                  <Button fx:id="submit" onAction="#confirmOrder" layoutX="348.0" layoutY="36.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="112.0" text="SUBMIT ORDER" />
+                  <Button fx:id="submit" layoutX="679.0" layoutY="150.0" mnemonicParsing="false" onAction="#confirmOrder" prefHeight="26.0" prefWidth="228.0" text="SUBMIT ORDER" />
                     </children>
                 </AnchorPane>
             </items>
