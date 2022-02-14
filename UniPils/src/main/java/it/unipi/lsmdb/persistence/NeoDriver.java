@@ -859,7 +859,6 @@ public class NeoDriver {
         return true;
     }
 
-    // da collegare al profilo
     public ArrayList<String> SuggestedUsers(String username){
 
         ArrayList<String> users= new ArrayList<>();
@@ -881,10 +880,8 @@ public class NeoDriver {
 
                 while(result.hasNext()){
                     Record r= result.next();
-                    String user = r.get("u3.username").asString();
-                    String tot = String.valueOf(r.get("same_beers_purchased"));
-                    String row = user + " " + tot;
-                    users.add(row);
+                    String user = r.get("suggest_friend").asString();
+                    users.add(user);
                 }
                 return users;
             });
@@ -949,9 +946,13 @@ public class NeoDriver {
                                 "bid", beerID
                         )
                 );
-                while(result.hasNext()){
+                if(result.hasNext()){
                     Record r = result.next();
-                    avg.add(r.get("mean").asDouble());
+                    if(r.get("mean").isNull()){
+                        avg.add(null);
+                    }else{
+                        avg.add(r.get("mean").asDouble());
+                    }
                 }
 
                 return avg;
