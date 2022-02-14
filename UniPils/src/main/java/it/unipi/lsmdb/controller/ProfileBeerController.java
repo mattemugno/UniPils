@@ -232,6 +232,7 @@ public class ProfileBeerController implements Initializable {
             e.printStackTrace();
             Utils.showErrorAlert("Unable to add item to cart");
         }
+        cartButton.setDisable(true);
     }
 
 }
