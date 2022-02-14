@@ -1,6 +1,7 @@
 package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.Beer;
+import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
@@ -117,9 +118,9 @@ public class HomeController implements Initializable {
     private void printActiveUsers(NeoDriver neo4j) {
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
 
-        ArrayList<String> users = neo4j.MostActiveUsers();
+        ArrayList<User> users = neo4j.MostActiveUsers();
 
-        for(String user : users){
+        for(User user : users){
             double space = 5;
             VBox u = new VBox(space);
             u.setStyle("-fx-border-style: solid inside;"
@@ -127,7 +128,7 @@ public class HomeController implements Initializable {
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
             Label title = new Label();
-            title.setText(user);
+            title.setText(user.getUsername() + ": " + user.getInteractions());
             title.setFont(font);
 
             /*b.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {

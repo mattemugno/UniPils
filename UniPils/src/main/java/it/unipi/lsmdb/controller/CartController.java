@@ -148,17 +148,15 @@ public class CartController implements Initializable {
 
                 order.setOrderList(orderList);
 
+                levelDbDriver.deleteValue(key);
+
             }
 
-            MongoDriver.addOrder(username, order);
-
-            Utils.showInfoAlert("Order confirmed");
-            Utils.changeScene("homepage.fxml", actionEvent);
-
+            Utils.addOrder(username, order);
+            Utils.changeScene("profile-user.fxml", actionEvent);
             return true;
 
         } catch (Exception e){
-            Utils.showErrorAlert("Unable to confirm order");
             e.printStackTrace();
             return false;
         }
