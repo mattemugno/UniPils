@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.ConnectionString;
 import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.UpdateResult;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
 import it.unipi.lsmdb.bean.OrderList;
@@ -121,17 +123,16 @@ public class MongoDriver {
         try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
             while(cursor.hasNext()){
                 Document doc = cursor.next();
-                System.out.println(doc.toJson());
                 results.add(doc);
             }
 
             User user = objectMapper.readValue(results.get(0).toJson(), User.class);
-            System.out.println(user.toString());
 
             closeConnection();
             return user;
         } catch (Exception e){
             e.printStackTrace();
+            closeConnection();
             return null;
         }
     }
@@ -179,30 +180,39 @@ public class MongoDriver {
         openConnection("Users");
 
         ArrayList<Document> results = new ArrayList<>();
+        ArrayList<Document> beer_list = new ArrayList<>();
 
         try{
             Document doc = new Document();
 
-            doc.append("id_order",order.getIdOrder());
-                for (OrderList item: order.getOrderList()){
+            doc.append("id_order", order.getIdOrder());
+            ArrayList<OrderList> items = order.getOrderList();
+
+                for (OrderList item: items){
+
                     Document docList = new Document();
                     docList.append("beer_id", item.getBeerId());
                     docList.append("beer_name", item.getBeerName());
                     docList.append("beer_price", item.getBeerPrice());
-                    docList.append("beer_quantity", item.getQuantity());
+                    docList.append("quantity", item.getQuantity());
 
-                    doc.append("order_list", docList);
+                    beer_list.add(docList);
                 }
 
-            doc.append("delivery-date",order.getDeliveryDate());
-            doc.append("feedback",order.getFeedback());
-            doc.append("total_cost",order.getTotalCost());
-            doc.append("confirmation_date",order.getConfirmationDate());
+            doc.append("order_list", beer_list);
+            doc.append("delivery-date", order.getDeliveryDate());
+            doc.append("feedback", order.getFeedback());
+            doc.append("total_cost", order.getTotalCost());
+                Document docDate = new Document();
+                docDate.append("$date", order.getConfirmationDate());
+            doc.append("confirmation_date", docDate);
 
-            Bson filter = Filters.eq("username", username); //get the parent-document
+            System.out.println(doc.toJson());
+
             Bson setUpdate;
 
             User user = MongoDriver.getUserFromUsername(username);
+            user.setOrders(getUserOrders(username));
 
             if(user.getOrders() != null && user.getOrders().size() > 0)
                 setUpdate = Updates.push("orders", doc);
@@ -212,7 +222,11 @@ public class MongoDriver {
                 setUpdate = Updates.set("orders", results);
             }
 
-            collection.updateOne(filter, setUpdate);
+            UpdateOptions options = new UpdateOptions().upsert(true);
+
+            openConnection("Users");
+            collection.updateOne(eq("login.username", username), setUpdate);
+            closeConnection();
 
         }catch(Exception ex){
             closeConnection();
@@ -222,7 +236,7 @@ public class MongoDriver {
         return true;
     }
 
-    public static ArrayList<Order> getOrderListFromUsername(String username){
+    public static ArrayList<Order> getUserOrders(String username){
         openConnection("Users");
 
         ArrayList<Order> ordersByUsername = new ArrayList<>();
@@ -273,16 +287,37 @@ public class MongoDriver {
                 ordersByUsername.add(order);
             }
 
-            closeConnection();
-            System.out.println(ordersByUsername);
             User user = getUserFromUsername(username);
             user.setOrders(ordersByUsername);
-            System.out.println(user);
-            return ordersByUsername;
+
         } catch (Exception e){
             e.printStackTrace();
+            closeConnection();
             return null;
         }
+        closeConnection();
+        return ordersByUsername;
+    }
+
+    public static int getMaxIdOrder(String username){
+
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        Consumer<Document> createDocuments = doc -> {results.add(doc);};
+
+        Bson unwindOrders = unwind("$orders");
+        Bson group = group("$null", max("maxId", "$orders.id_order"));
+        Bson projectFields = project(fields(excludeId(), include("maxId")));
+
+        try {
+            collection.aggregate(Arrays.asList(unwindOrders, group, projectFields)).forEach(createDocuments);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        closeConnection();
+        return results.get(0).getInteger("maxId");
     }
 
     // CRUD BEER
@@ -386,7 +421,7 @@ public class MongoDriver {
                 results.add(doc);
             }
             beer = objectMapper.readValue(results.get(0).toJson(), Beer.class);
-            System.out.println(beer.toString());
+
             closeConnection();
             return beer;
         } catch (Exception e){

@@ -20,8 +20,12 @@ import javafx.scene.text.FontWeight;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class CartController implements Initializable {
@@ -111,7 +115,7 @@ public class CartController implements Initializable {
     }
 
     @FXML
-    private boolean confirmOrder(){
+    private boolean confirmOrder(ActionEvent actionEvent){
 
         String username = DataSession.getUserLogged();
 
@@ -119,8 +123,12 @@ public class CartController implements Initializable {
         List<String> keys = levelDbDriver.findKeysByPrefix(username);
 
         Order order = new Order();
-        order.setIdOrder(1);
-        order.setConfirmationDate(LocalDateTime.now().toString());
+        order.setIdOrder(MongoDriver.getMaxIdOrder(username) + 1);
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+        String confDate = (ZonedDateTime.now().format(dtf));
+
+        order.setConfirmationDate(confDate);
         order.setFeedback(3);
 
         try {
@@ -130,7 +138,7 @@ public class CartController implements Initializable {
                 key = username + ":" + beer_id + ":" + "quantity";
                 Beer beer = MongoDriver.getBeerById(beer_id);
 
-                int quantity = levelDbDriver.getInt(key);
+                int quantity = Integer.parseInt(levelDbDriver.getString(key));
                 String beer_name = beer.getName();
                 int price = beer.getPrice();
 
@@ -143,9 +151,14 @@ public class CartController implements Initializable {
             }
 
             MongoDriver.addOrder(username, order);
+
+            Utils.showInfoAlert("Order confirmed");
+            Utils.changeScene("homepage.fxml", actionEvent);
+
             return true;
 
         } catch (Exception e){
+            Utils.showErrorAlert("Unable to confirm order");
             e.printStackTrace();
             return false;
         }

@@ -25,8 +25,8 @@ public class LevelDbDriver {
         Options options = new Options();
         options.createIfMissing(true);
         try{
+            //factory.destroy(new File("unipils"), options);
             db = factory.open(new File("unipils"), options);
-            System.out.println("DB " + db + " opened.");
         }
         catch (IOException ioe) { closeDB(); }
     }
@@ -44,15 +44,16 @@ public class LevelDbDriver {
         closeDB();
     }
 
-    /*
+
     public String getString(String key)
     {
         openDB();
         byte[] bytes = db.get(bytes(key));
-        return (bytes == null ? null : asString(bytes));
+        String quantity =  (bytes == null ? null : asString(bytes));
         closeDB();
-    }*/
-
+        return quantity;
+    }
+/*
     public int getInt(String key)
     {
         openDB();
@@ -61,7 +62,7 @@ public class LevelDbDriver {
         closeDB();
         return quantity;
     }
-
+*/
     public List<String> findKeysByPrefix(String prefix)
     {
         openDB();

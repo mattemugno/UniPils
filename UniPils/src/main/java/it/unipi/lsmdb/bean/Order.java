@@ -11,6 +11,7 @@ public class Order {
     private String confirmation_date;
 
     public Order(){
+        this.total_cost = 0;
     }
 
     public Order(int idOrder,ArrayList<OrderList> orderList,String deliveryDate,double feedback,int totalCost,String confirmationDate){
