@@ -137,7 +137,7 @@ public class ProfileController implements Initializable {
             brewName.setText("Brewery:  " + b.getBrewery_name());
             brewName.setFont(font);
 
-            ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.get_id());
+            /*ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.get_id());
             TextArea comment = new TextArea();
             Label score = new Label();
             score.setFont(font);
@@ -152,11 +152,11 @@ public class ProfileController implements Initializable {
                 comment.setText("No comment");
                 comment.setFont(font);
                 comment.setDisable(true);
-            }
+            }*/
 
             Separator sep=new Separator();
 
-            boxBeer.getChildren().addAll(hb, style,brewName,score,comment);
+            boxBeer.getChildren().addAll(hb, style,brewName);
             oneBeer.getChildren().addAll(boxBeer,sep);
             beersInfoPane.getChildren().add(oneBeer);
         }
