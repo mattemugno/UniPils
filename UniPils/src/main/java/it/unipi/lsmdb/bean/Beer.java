@@ -21,6 +21,11 @@ public class Beer {
     private String brewery_types;
     private int view_count;
 
+    public Beer(int id,String name){
+        this._id=id;
+        this.name=name;
+    }
+
     public Beer(int id,String name,String style,String brewery_name){
         this._id=id;
         this.name=name;

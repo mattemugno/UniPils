@@ -30,6 +30,7 @@ public class ProfileController implements Initializable {
     @FXML private VBox profilePage;
     @FXML private AnchorPane userDataPane;
     @FXML private VBox beersInfoPane;
+    @FXML private AnchorPane beersPane;
 
     @FXML private Label userLabel;
     @FXML private Label firstLabel;
@@ -40,10 +41,9 @@ public class ProfileController implements Initializable {
     @FXML private Label addressLabel;
     @FXML private ScrollPane scroll;
     @FXML private Button addDelButton;
+    @FXML private VBox suggestedBeers;
 
     private int skip=0;
-
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,68 +95,7 @@ public class ProfileController implements Initializable {
         }
 
         printBeersPurchased(usernameLogged);
-
-        /*ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
-
-        System.out.println(beers);
-        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
-        for (Beer b : beers) {
-            AnchorPane oneBeer = new AnchorPane();
-            oneBeer.setStyle("-fx-border-style: solid inside;"
-                    + "-fx-border-width: 1;" +"-fx-border-insets: 5;"
-                    + "-fx-border-radius: 5;");
-            VBox boxBeer = new VBox();
-            boxBeer.setMaxWidth(491);
-            boxBeer.setPadding(new Insets(5,5,5,5));
-
-            HBox hb=new HBox();
-
-            Label nameBeer = new Label();
-            nameBeer.setText("Beer:  ");
-            nameBeer.setFont(font);
-
-            Button btn=new Button();
-            btn.setText(b.getName());
-            btn.setPadding(new Insets(5,5,5,5));
-            btn.setFont(font);
-            btn.setOnAction(actionEvent -> {
-                DataSession.setIdBeerToShow(b.get_id());
-                Utils.changeScene("profile-beer.fxml", actionEvent);});
-
-            hb.getChildren().addAll(nameBeer,btn);
-
-
-            Label style = new Label();
-            style.setText("Style:  " + b.getStyle());
-            style.setFont(font);
-
-            Label brewName = new Label();
-            brewName.setText("Brewery:  " + b.getBrewery_name());
-            brewName.setFont(font);
-
-            ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.get_id());
-            TextArea comment = new TextArea();
-            Label score = new Label();
-            score.setFont(font);
-
-            if(!reviews.isEmpty()){
-                score.setText("Score:  " + reviews.get(0).getScore());
-                comment.setText("Review:  " + reviews.get(0).getComment());
-                comment.setFont(font);
-                comment.setDisable(true);
-            }else{
-                score.setText("No score");
-                comment.setText("No comment");
-                comment.setFont(font);
-                comment.setDisable(true);
-            }
-
-            Separator sep=new Separator();
-
-            boxBeer.getChildren().addAll(hb, style,brewName,score,comment);
-            oneBeer.getChildren().addAll(boxBeer,sep);
-            beersInfoPane.getChildren().add(oneBeer);
-        }*/
+        printSuggestedBeers();
     }
 
     @FXML public void printBeersPurchased(String usernameLogged){
@@ -221,7 +160,7 @@ public class ProfileController implements Initializable {
             oneBeer.getChildren().addAll(boxBeer,sep);
             beersInfoPane.getChildren().add(oneBeer);
         }
-        skip=skip+2;
+        skip=skip+1;
         createShowMore(usernameLogged);
 
     }
@@ -236,6 +175,23 @@ public class ProfileController implements Initializable {
         Button showMore = new Button("Show more");
         showMore.setOnAction(actionEvent -> showMore(usernameLogged));
         beersInfoPane.getChildren().add(showMore);
+    }
+
+    @FXML public void printSuggestedBeers(){
+        ArrayList<Beer> suggBeers=neo4j.SuggestedBeers(DataSession.getUserLogged());
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
+        Label labTitle=new Label("Suggested beers: ");
+        labTitle.setFont(font);
+        suggestedBeers.getChildren().add(labTitle);
+        for(Beer sugg:suggBeers){
+            Button btn=new Button();
+            btn.setText(sugg.getName());
+            btn.setOnAction(actionEvent -> {
+                DataSession.setIdBeerToShow(sugg.get_id());
+                Utils.changeScene("profile-beer.fxml", actionEvent);});
+            suggestedBeers.getChildren().add(btn);
+        }
+
     }
 
     @FXML private void onClickFollower(ActionEvent actionEvent){
