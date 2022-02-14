@@ -60,6 +60,7 @@ public class ProfileBeerController implements Initializable {
         //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
+        MongoDriver.updateBeer(beer);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
 
         beerName.setText(beer.getName());
