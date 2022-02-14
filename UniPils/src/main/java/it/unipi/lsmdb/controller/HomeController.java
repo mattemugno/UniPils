@@ -81,7 +81,6 @@ public class HomeController implements Initializable {
 
     }
 
-
     @FXML
     private void disable(Event e, String value, ChoiceBox box) {
         if (!Objects.equals(value, "Beer Name"))

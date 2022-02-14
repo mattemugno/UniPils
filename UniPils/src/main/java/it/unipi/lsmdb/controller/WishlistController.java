@@ -3,6 +3,7 @@ package it.unipi.lsmdb.controller;
 import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.LevelDbDriver;
+import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
@@ -90,9 +91,18 @@ public class WishlistController implements Initializable {
 
         for (Beer beer: beer_list){
             int id = beer.get_id();
-            String key = username + ":" + id + ":" + "quantity";
+
+            int price = MongoDriver.getBeerById(beer.get_id()).getPrice();
+
+            String keyName = username + ":" + "beer_id_name" + ":" + id + ":" + "beer_name";
+            String keyPrice = username + ":" + "beer_id_price" + ":" + id + ":" + "price";
+            String keyQuantity = username + ":" + "beer_id_quantity" + ":" + id + ":" + "quantity";
+
             LevelDbDriver levelDbDriver = new LevelDbDriver();
-            levelDbDriver.put(key, 1);
+            levelDbDriver.put(keyName, beer.getName());
+            levelDbDriver.put(keyPrice, String.valueOf(price));
+            levelDbDriver.put(keyQuantity, String.valueOf(1));
+
         }
     }
 

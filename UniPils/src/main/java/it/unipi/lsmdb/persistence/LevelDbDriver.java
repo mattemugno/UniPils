@@ -31,19 +31,12 @@ public class LevelDbDriver {
         catch (IOException ioe) { closeDB(); }
     }
 
-    /*public void put(String key, String value)
-    {
-        db.put(bytes(key), bytes(value));
-    }
-    */
-
-    public void put(String key, int value)
+    public void put(String key, String value)
     {
         openDB();
-        db.put(bytes(key), bytes(String.valueOf(value)));
+        db.put(bytes(key), bytes(value));
         closeDB();
     }
-
 
     public String getString(String key)
     {
