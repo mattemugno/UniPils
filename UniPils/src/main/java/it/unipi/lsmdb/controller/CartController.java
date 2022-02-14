@@ -1,10 +1,9 @@
 package it.unipi.lsmdb.controller;
 
-import it.unipi.lsmdb.bean.Beer;
 import it.unipi.lsmdb.bean.Order;
 import it.unipi.lsmdb.bean.OrderList;
-import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.config.DataSession;
+import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
@@ -19,11 +18,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -34,7 +30,8 @@ public class CartController implements Initializable {
     Label title;
     @FXML
     VBox cartInfoPane;
-    @FXML Button submit;
+    @FXML
+    Button submit;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,17 +46,17 @@ public class CartController implements Initializable {
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
         List<String> keyList;
-        ArrayList<Beer> beer_cart = new ArrayList<>();
 
-        keyList = levelDbDriver.findKeysByPrefix(username);
+        keyList = levelDbDriver.findKeysByPrefix(username + ":" + "beer_id_name");
 
-        for (String key: keyList){
+        for (String key : keyList) {
+
             int beer_id = levelDbDriver.splitKeys(key);
-            Beer beer = MongoDriver.getBeerById(beer_id);
-            beer_cart.add(beer);
-        }
 
-        for (Beer item : beer_cart) {
+            key = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
+
+            String beer_name = levelDbDriver.getString(key);
+
             double space = 5;
             VBox beer = new VBox(space);
             beer.setMaxWidth(491);
@@ -67,16 +64,16 @@ public class CartController implements Initializable {
                     + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
 
-            Label title = new Label();
-            title.setText("Beer ID:  " + item.get_id() + "     " + "Beer Name:  " + item.getName());
-            title.setFont(font);
+            Label titleId = new Label();
+            titleId.setText("Beer ID:  " + beer_id + "     " + "Beer Name:  " + beer_name);
+            titleId.setFont(font);
 
-            Label details = new Label();
-            details.setText("Brewery Name:  " + item.getBrewery_name() + "     " + "Beer Style:  " + item.getStyle());
-            details.setFont(font);
+            Label titlePrice = new Label();
+            titlePrice.setText("Price:  " + levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price"));
+            titlePrice.setFont(font);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                DataSession.setIdBeerToShow(item.get_id());
+                DataSession.setIdBeerToShow(beer_id);
                 Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", event);
                 event.consume();
             });
@@ -84,71 +81,101 @@ public class CartController implements Initializable {
             Button button = new Button();
             button.setText("REMOVE BEER");
             button.setOnAction(e -> {
-                if(deleteItemFromCart(username, item.get_id(), e))
+                if (deleteItemFromCart(username, beer_id, e))
                     Utils.showInfoAlert("Beer removed successfully");
                 else Utils.showErrorAlert("Beer not removed");
-            }); //remove from wishlist
+            });
 
             Label quantity = new Label();
             quantity.setText("Quantity: ");
 
-            TextField q = new TextField();
+            TextField textField = new TextField();
+            textField.setText(String.valueOf(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity")));
+            textField.setMaxWidth(100);
 
-            beer.getChildren().addAll(quantity,q,button, title, details);
+            beer.getChildren().addAll(quantity, textField, button, titleId, titlePrice);
             cartInfoPane.getChildren().add(beer);
         }
     }
 
-    private boolean deleteItemFromCart(String username, int beer_id, ActionEvent actionEvent){
+    private boolean deleteItemFromCart(String username, int beer_id, ActionEvent actionEvent) {
 
         try {
             LevelDbDriver levelDbDriver = new LevelDbDriver();
 
-            String key = username + ":" + beer_id + ":" + "quantity";
-            levelDbDriver.deleteValue(key);
+            String keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
+            String keyPrice = username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price";
+            String keyQuantity = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+
+            levelDbDriver.deleteValue(keyName);
+            levelDbDriver.deleteValue(keyPrice);
+            levelDbDriver.deleteValue(keyQuantity);
+
             Utils.changeScene("cart-page.fxml", actionEvent);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+/*
+    private boolean updateQuantity(int beer_id){
+
+        String username = DataSession.getUserLogged();
+        LevelDbDriver levelDbDriver = new LevelDbDriver();
+        String key = username + ":" + beer_id + ":" + "beer_name";
+        int quantity = Integer.parseInt(q.getText());
+
+        try {
+            levelDbDriver.put(key, quantity);
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+    }*/
 
     @FXML
-    private boolean confirmOrder(ActionEvent actionEvent){
+    private boolean confirmOrder(ActionEvent actionEvent) {
 
         String username = DataSession.getUserLogged();
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        List<String> keys = levelDbDriver.findKeysByPrefix(username);
+        List<String> keys = levelDbDriver.findKeysByPrefix(username + ":" + "beer_id_name");
 
         Order order = new Order();
-        order.setIdOrder(MongoDriver.getMaxIdOrder(username) + 1);
 
+        order.setIdOrder(MongoDriver.getMaxIdOrder(username) + 1);
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         String confDate = (ZonedDateTime.now().format(dtf));
-
         order.setConfirmationDate(confDate);
         order.setFeedback(3);
 
         try {
-            for (String key: keys){
 
-                int beer_id = levelDbDriver.splitKeys(key);
-                key = username + ":" + beer_id + ":" + "quantity";
-                Beer beer = MongoDriver.getBeerById(beer_id);
+            for (String keyName : keys) {
 
-                int quantity = Integer.parseInt(levelDbDriver.getString(key));
-                String beer_name = beer.getName();
-                int price = beer.getPrice();
+                int beer_id = levelDbDriver.splitKeys(keyName);
 
-                order.setTotalCost(price*quantity);
+                keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
+                String keyPrice = username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price";
+                String keyQuantity = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+
+                String beer_name = levelDbDriver.getString(keyName);
+
+                int quantity = Integer.parseInt(levelDbDriver.getString(keyQuantity));
+                int price = Integer.parseInt(levelDbDriver.getString(keyPrice));
+
+                order.setTotalCost(price * quantity);
 
                 OrderList orderList = new OrderList(beer_id, beer_name, price, quantity);
 
                 order.setOrderList(orderList);
 
-                levelDbDriver.deleteValue(key);
+                levelDbDriver.deleteValue(keyName);
+                levelDbDriver.deleteValue(keyPrice);
+                levelDbDriver.deleteValue(keyQuantity);
 
             }
 
@@ -156,7 +183,7 @@ public class CartController implements Initializable {
             Utils.changeScene("profile-user.fxml", actionEvent);
             return true;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
