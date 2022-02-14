@@ -581,15 +581,15 @@ public class MongoDriver {
         Bson groupState = group("$_id.state", first("style", "$_id.style"),
                 max("mostPopularStyleCount", "$beers"));
         Bson sortMostPopular = sort(descending("mostPopularStyleCount"));
-        Bson limit = limit(15);
+        //Bson limit = limit(15);
         Bson projectFields = project(fields(excludeId(),
                 computed("state", "$_id"),
                 include("style"),
-                computed("MostPopularStyleCountry", "$mostPopularStyleCount")
+                computed("MostPopularStyleCount", "$mostPopularStyleCount")
         ));
 
         try {
-            collection.aggregate(Arrays.asList(matchState, groupStateStyle, sort, groupState, sortMostPopular, limit)).forEach(createDocuments);
+            collection.aggregate(Arrays.asList(matchState, groupStateStyle, sort, groupState, sortMostPopular, projectFields)).forEach(createDocuments);
         } catch (Exception e){
             e.printStackTrace();
         }

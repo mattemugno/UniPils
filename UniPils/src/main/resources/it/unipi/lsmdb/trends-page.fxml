@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.TrendController">
+    <children>
+        <SplitPane dividerPositions="0.29797979797979796" prefHeight="750.0" prefWidth="1200.0">
+            <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="200.0">
+                    <fx:include fx:id="embeddedMenu" layoutX="50" layoutY="250.0" source="menu-page.fxml" />
+                </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="1000.0">
+                    <children>
+                        <SplitPane dividerPositions="0.4088176352705411" prefHeight="750.0" prefWidth="1000.0">
+                            <items>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="500.0">
+                                    <children>
+                                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="750.0" prefWidth="404.0">
+                                            <items>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="500.0">
+                                                    <children>
+                                                        <ScrollPane layoutY="28.0" prefHeight="343.0" prefWidth="404.0">
+                                                            <content>
+                                                                <VBox fx:id="vboxOne" prefHeight="375.0" prefWidth="403.0" />
+                                                            </content>
+                                                        </ScrollPane>
+                                                        <Label layoutX="14.0" layoutY="4.0" text="Most popular beers for each USA state:" textFill="#bf0101">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                                        </Label>
+                                                    </children>
+                                                </AnchorPane>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="375.0" prefWidth="500.0">
+                                                    <children>
+                                                        <ScrollPane layoutY="35.0" prefHeight="337.0" prefWidth="402.0">
+                                                            <content>
+                                                                <VBox fx:id="vboxThree" prefHeight="335.0" prefWidth="411.0" />
+                                                            </content>
+                                                        </ScrollPane>
+                                                        <Label layoutX="14.0" layoutY="4.0" text="Most popular beers in all wishlists:" textFill="#bf0202">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font></Label>
+                                                    </children>
+                                                </AnchorPane>
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="750.0" prefWidth="500.0">
+                                    <children>
+                                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="750.0" prefWidth="423.0">
+                                            <items>
+                                                <AnchorPane fx:id="bar" minHeight="0.0" minWidth="0.0" prefHeight="375.0" prefWidth="500.0">
+                                                    <children>
+                                                        <ScrollPane layoutY="29.0" prefHeight="343.0" prefWidth="423.0">
+                                                            <content>
+                                                                <VBox fx:id="vboxTwo" prefHeight="375.0" prefWidth="422.0" />
+                                                            </content>
+                                                        </ScrollPane>
+                                                        <Label layoutX="2.0" layoutY="4.0" text="Cheapest and most clicked beers:" textFill="#b70404">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font></Label>
+                                                    </children>
+                                                </AnchorPane>
+                                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="375.0" prefWidth="500.0">
+                                                    <children>
+                                                        <ScrollPane layoutY="35.0" prefHeight="338.0" prefWidth="422.0">
+                                                            <content>
+                                                                <VBox fx:id="vboxFour" prefHeight="375.0" prefWidth="422.0" />
+                                                            </content>
+                                                        </ScrollPane>
+                                                        <Label layoutX="14.0" layoutY="4.0" text="Most interacted breweries:" textFill="#b50202">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font></Label>
+                                                    </children>
+                                                </AnchorPane>
+                                            </items>
+                                        </SplitPane>
+                                    </children>
+                                </AnchorPane>
+                            </items>
+                        </SplitPane>
+                    </children>
+                </AnchorPane>
+            </items>
+        </SplitPane>
+    </children>
+</AnchorPane>

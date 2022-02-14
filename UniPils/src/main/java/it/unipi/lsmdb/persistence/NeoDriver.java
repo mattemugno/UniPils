@@ -755,9 +755,9 @@ public class NeoDriver {
 
     //###########         COMPLEX QUERIES NEO4J            ##############
 
-    public ArrayList<String> MostPurchasedBeers(){
+    public ArrayList<Beer> MostPurchasedBeers(){
 
-        ArrayList<String> beers= new ArrayList<>();
+        ArrayList<Beer> beers= new ArrayList<>();
 
         try (Session session = driver.session()) {
 
@@ -771,9 +771,8 @@ public class NeoDriver {
                     Record r= result.next();
                     int beer_id = r.get("beer_id").asInt();
                     String beer_name = r.get("beer_name").asString();
-                    String tot = String.valueOf(r.get("total_purchased"));
-                    String row = beer_id + "  " + beer_name + " --> " + tot + " orders ";
-                    beers.add(row);
+                    int tot = r.get("total_purchased").asInt();
+                    beers.add(new Beer(beer_id,beer_name, tot));
                 }
                 return beers;
             });
@@ -811,24 +810,24 @@ public class NeoDriver {
         return users;
     }
 
-    public ArrayList<String> MostPopularBeerInWishlists(){
+    public ArrayList<Beer> MostPopularBeerInWishlists(){
 
-        ArrayList<String> beers= new ArrayList<>();
+        ArrayList<Beer> beers= new ArrayList<>();
 
         try (Session session = driver.session()) {
 
             session.readTransaction(tx -> {
                 Result result=tx.run("MATCH path=(u:User)-[h:HAS_IN_WISHLIST]-(b:Beer)"+
-                        "RETURN b.name AS beer_name, COUNT(h) AS quantity "+
+                        "RETURN b.id, b.name AS beer_name, COUNT(h) AS quantity "+
                         "ORDER BY quantity DESC LIMIT 10"
                 );
 
                 while(result.hasNext()){
                     Record r= result.next();
+                    int id = r.get("b.id").asInt();
                     String beer_name = r.get("beer_name").asString();
-                    String tot = String.valueOf(r.get("quantity"));
-                    String row = beer_name + " " + tot;
-                    beers.add(row);
+                    int tot = r.get("quantity").asInt();
+                    beers.add(new Beer(id, beer_name, tot));
                 }
                 return beers;
             });
@@ -839,10 +838,13 @@ public class NeoDriver {
         return beers;
     }
 
-    public boolean MostInteractedBreweries(){
+    public ArrayList<String> MostInteractedBreweries(){
+
+        ArrayList<String> breweries = new ArrayList<>();
+
         try (Session session = driver.session()) {
 
-            session.readTransaction((TransactionWork<Void>) tx -> {
+            session.readTransaction(tx -> {
                 Result result=tx.run("MATCH (u:User)-[r]->(b:Beer)<-[related:RELATED]-(review:Review)-[:POSTED]-(u:User)\n" +
                         "RETURN b.brewery_id, b.brewery_name, u.username,\n" +
                         "(COUNT(r) + COUNT(related)) AS num_interactions\n" +
@@ -850,13 +852,22 @@ public class NeoDriver {
                         "LIMIT 10"
                 );
 
-                return null;
+                while(result.hasNext()) {
+                    Record r = result.next();
+                    int id = r.get("b.brewery_id").asInt();
+                    String name = r.get("b.brewery_name").asString();
+                    String user = r.get("u.username").asString();
+                    int interactions = r.get("num_interactions").asInt();
+                    String row = user + " has done " + interactions + " with Brewery: " + id + " " + name;
+                    breweries.add(row);
+                }
+                return breweries;
             });
         } catch (Exception ex) {
             ex.printStackTrace();
-            return false;
+            return null;
         }
-        return true;
+        return breweries;
     }
 
     public ArrayList<String> SuggestedUsers(String username){
