@@ -615,9 +615,9 @@ public class NeoDriver {
                 Result result = tx.run("MATCH (u:User)-[:PURCHASED]->(b:Beer)" +
                                         "where u.username = $userId "+
                                         "RETURN b.id, b.name, b.style, b.brewery_name "+
-                                        "order by user asc "+
+                                        "order by b.name asc "+
                                         "skip $toSkip "+
-                                        "LIMIT  2 ",
+                                        "LIMIT  1 ",
                         Values.parameters("userId", username,"toSkip",skip));
 
                 while(result.hasNext()){
@@ -962,9 +962,9 @@ public class NeoDriver {
         return users;
     }
 
-    public ArrayList<String> SuggestedBeers(String username){
+    public ArrayList<Beer> SuggestedBeers(String username){
 
-        ArrayList<String> beers= new ArrayList<>();
+        ArrayList<Beer> beers= new ArrayList<>();
 
         try (Session session = driver.session()) {
 
@@ -989,9 +989,10 @@ public class NeoDriver {
 
                 while(result.hasNext()){
                     Record r= result.next();
-                    String beer_id = String.valueOf(r.get("beerId"));
-                    String beer_name = r.get("beerName").asString();
-                    String row = beer_id + " " + beer_name;
+                    Beer row=new Beer(r.get("beerId").asInt(),r.get("beerName").asString());
+                    //String beer_id = String.valueOf(r.get("beerId"));
+                    //String beer_name = r.get("beerName").asString();
+                    //String row = beer_id + " " + beer_name;
                     beers.add(row);
                 }
                 return beers;

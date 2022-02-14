@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="703.0" prefWidth="887.0" fx:controller="it.unipi.lsmdb.controller.FollowerController" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+
+<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.FollowerController">
     <items>
-        <AnchorPane fx:id="menuPane" minHeight="0.0" minWidth="0.0" prefHeight="672.0" prefWidth="262.0">
+        <AnchorPane fx:id="menuPane" minHeight="0.0" minWidth="0.0" prefHeight="718.0" prefWidth="269.0">
             <fx:include fx:id="embeddedMenu" layoutY="250.0" source="menu-page.fxml" />
         </AnchorPane>
         <SplitPane fx:id="rightContainer" dividerPositions="0.07417974322396577" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
             <items>
-                <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="33.0" prefWidth="838.0">
                     <children>
-                        <TextField fx:id="searchBar" layoutX="215.0" layoutY="9.0" />
+                        <TextField fx:id="searchBar" layoutX="68.0" layoutY="9.0" prefHeight="24.0" prefWidth="318.0" />
                     </children>
                 </AnchorPane>
-                <ScrollPane fx:id="scroll">
+                <ScrollPane fx:id="scroll" prefHeight="530.0" prefWidth="688.0">
                     <content>
-                        <AnchorPane fx:id="followerPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                            <Label layoutX="7.0" layoutY="4.0" text="Follower: " >
+                        <AnchorPane fx:id="followerPane" minHeight="0.0" minWidth="0.0" prefHeight="41.0" prefWidth="185.0">
+                            <Label layoutX="7.0" layoutY="4.0" text="Follower: ">
                                 <font>
                                     <Font size="24.0" />
                                 </font>
@@ -32,9 +33,9 @@
                                     <Font size="24.0" />
                                 </font>
                             </Label>
-                            <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="624.0" prefWidth="564.0">
+                            <ScrollPane fx:id="container" layoutX="-3.0" layoutY="150.0" prefHeight="510.0" prefWidth="838.0">
                                 <content>
-                                    <VBox fx:id="followerInfoPane"  layoutX="63.0" layoutY="150.0" prefHeight="339.0" prefWidth="491.0">
+                                    <VBox fx:id="followerInfoPane" layoutX="63.0" layoutY="150.0" prefHeight="506.0" prefWidth="830.0">
                                         <children>
 
                                         </children>
