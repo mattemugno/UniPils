@@ -269,16 +269,21 @@ public class NeoDriver {
         return true;
     }
 
-    public ArrayList<String> getFollowers(String username){
+    public ArrayList<String> getFollowers(String username,int skip,int limit){
         ArrayList<String> followers= new ArrayList<>();
         try (Session session = driver.session()) {
 
             session.readTransaction(tx -> {
                 Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
                                         "WHERE u2.username=$un "+
-                                        "RETURN u1.username AS user",
+                                        "RETURN u1.username AS user "+
+                                        "order by user asc "+
+                                        "skip $toSkip "+
+                                        "LIMIT $toLimit ",
                         Values.parameters(
-                                "un", username
+                                "un", username,
+                                            "toSkip",skip,
+                                            "toLimit",limit
                         )
                 );
 
@@ -322,16 +327,21 @@ public class NeoDriver {
         return res;
     }
 
-    public ArrayList<String> getFollowing(String username){
+    public ArrayList<String> getFollowing(String username,int skip,int limit){
         ArrayList<String> followers= new ArrayList<>();
         try (Session session = driver.session()) {
 
             session.readTransaction(tx -> {
                 Result result=tx.run("MATCH (u1:User)-[rel:FOLLOWS]->(u2:User) "+
                                 "WHERE u1.username=$un "+
-                                "RETURN u2.username AS user",
+                                "RETURN u2.username AS user "+
+                                "order by user asc "+
+                                "skip $toSkip "+
+                                "LIMIT  $toLimit ",
                         Values.parameters(
-                                "un", username
+                                "un", username,
+                                            "toSkip",skip,
+                                            "toLimit",limit
                         )
                 );
 
@@ -596,7 +606,7 @@ public class NeoDriver {
         return beers;
     }
 
-    public ArrayList<Beer> getBeersUser(String username){
+    public ArrayList<Beer> getBeersUser(String username,int skip){
         ArrayList<Beer> beers= new ArrayList<>();
 
         try(Session session= driver.session()){
@@ -604,7 +614,11 @@ public class NeoDriver {
             session.readTransaction(tx->{
                 Result result = tx.run("MATCH (u:User)-[:PURCHASED]->(b:Beer)" +
                                         "where u.username = $userId "+
-                                        "RETURN b.id, b.name, b.style, b.brewery_name", Values.parameters("userId", username));
+                                        "RETURN b.id, b.name, b.style, b.brewery_name "+
+                                        "order by user asc "+
+                                        "skip $toSkip "+
+                                        "LIMIT  2 ",
+                        Values.parameters("userId", username,"toSkip",skip));
 
                 while(result.hasNext()){
                     Record r= result.next();

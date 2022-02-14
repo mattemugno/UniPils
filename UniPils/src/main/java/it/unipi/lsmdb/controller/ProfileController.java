@@ -41,6 +41,8 @@ public class ProfileController implements Initializable {
     @FXML private ScrollPane scroll;
     @FXML private Button addDelButton;
 
+    private int skip=0;
+
 
 
     @Override
@@ -92,7 +94,73 @@ public class ProfileController implements Initializable {
             addDelButton.setVisible(false);
         }
 
-        ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
+        printBeersPurchased(usernameLogged);
+
+        /*ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged);
+
+        System.out.println(beers);
+        Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
+        for (Beer b : beers) {
+            AnchorPane oneBeer = new AnchorPane();
+            oneBeer.setStyle("-fx-border-style: solid inside;"
+                    + "-fx-border-width: 1;" +"-fx-border-insets: 5;"
+                    + "-fx-border-radius: 5;");
+            VBox boxBeer = new VBox();
+            boxBeer.setMaxWidth(491);
+            boxBeer.setPadding(new Insets(5,5,5,5));
+
+            HBox hb=new HBox();
+
+            Label nameBeer = new Label();
+            nameBeer.setText("Beer:  ");
+            nameBeer.setFont(font);
+
+            Button btn=new Button();
+            btn.setText(b.getName());
+            btn.setPadding(new Insets(5,5,5,5));
+            btn.setFont(font);
+            btn.setOnAction(actionEvent -> {
+                DataSession.setIdBeerToShow(b.get_id());
+                Utils.changeScene("profile-beer.fxml", actionEvent);});
+
+            hb.getChildren().addAll(nameBeer,btn);
+
+
+            Label style = new Label();
+            style.setText("Style:  " + b.getStyle());
+            style.setFont(font);
+
+            Label brewName = new Label();
+            brewName.setText("Brewery:  " + b.getBrewery_name());
+            brewName.setFont(font);
+
+            ArrayList<Review> reviews=neo4j.getReviewsUser(usernameLogged,b.get_id());
+            TextArea comment = new TextArea();
+            Label score = new Label();
+            score.setFont(font);
+
+            if(!reviews.isEmpty()){
+                score.setText("Score:  " + reviews.get(0).getScore());
+                comment.setText("Review:  " + reviews.get(0).getComment());
+                comment.setFont(font);
+                comment.setDisable(true);
+            }else{
+                score.setText("No score");
+                comment.setText("No comment");
+                comment.setFont(font);
+                comment.setDisable(true);
+            }
+
+            Separator sep=new Separator();
+
+            boxBeer.getChildren().addAll(hb, style,brewName,score,comment);
+            oneBeer.getChildren().addAll(boxBeer,sep);
+            beersInfoPane.getChildren().add(oneBeer);
+        }*/
+    }
+
+    @FXML public void printBeersPurchased(String usernameLogged){
+        ArrayList<Beer> beers = neo4j.getBeersUser(usernameLogged,skip);
 
         System.out.println(beers);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
@@ -153,6 +221,21 @@ public class ProfileController implements Initializable {
             oneBeer.getChildren().addAll(boxBeer,sep);
             beersInfoPane.getChildren().add(oneBeer);
         }
+        skip=skip+2;
+        createShowMore(usernameLogged);
+
+    }
+
+    private void showMore(String usernameLogged){
+        beersInfoPane.getChildren().remove(beersInfoPane.getChildren().size() - 1);
+        printBeersPurchased(usernameLogged);
+
+    }
+
+    private void createShowMore(String usernameLogged){
+        Button showMore = new Button("Show more");
+        showMore.setOnAction(actionEvent -> showMore(usernameLogged));
+        beersInfoPane.getChildren().add(showMore);
     }
 
     @FXML private void onClickFollower(ActionEvent actionEvent){
