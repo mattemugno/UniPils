@@ -33,7 +33,6 @@ public class NeoDriver {
         return instance;
     }
 
-
     private void openConnection() {
         try {
             driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
@@ -540,72 +539,6 @@ public class NeoDriver {
         return true;
     }
 
-    public ArrayList<String> findBeer(String searchInput){
-
-        ArrayList<String> beers= new ArrayList<>();
-
-        try (Session session = driver.session()) {
-
-            session.readTransaction(tx -> {
-                Result result=tx.run("MATCH (b:Beer)"+
-                          "WHERE b.name=$field or b.style=$field or b.brewery_name=$field or b.brewery_id=$field "+
-                          "RETURN b.id, b.name, b.style, b.brewery_name",
-                        Values.parameters(
-                                "field", searchInput
-                        )
-                );
-
-                while(result.hasNext()){
-                    Record r= result.next();
-                    String beer_id = String.valueOf(r.get("b.id"));
-                    String beer_name = r.get("b.name").asString();
-                    String style = r.get("b.style").asString();
-                    String brew = r.get("b.brewery_name").asString();
-                    String row = beer_id + " " + beer_name + " " + style + " " + brew;
-                    beers.add(row);
-                }
-                return beers;
-            });
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return beers;
-    }
-
-    public ArrayList<String> findBeerById(int field){
-
-        ArrayList<String> beers= new ArrayList<>();
-
-        try (Session session = driver.session()) {
-
-            session.readTransaction(tx -> {
-                Result result=tx.run("MATCH (b:Beer)"+
-                                "WHERE b.id=$field "+
-                                "RETURN b.id, b.name, b.style, b.brewery_name",
-                        Values.parameters(
-                                "field", field
-                        )
-                );
-
-                while(result.hasNext()){
-                    Record r= result.next();
-                    String b_id = String.valueOf(r.get("b.id"));
-                    String beer_name = r.get("b.name").asString();
-                    String style = r.get("b.style").asString();
-                    String brew = r.get("b.brewery_name").asString();
-                    String row = b_id + " " + beer_name + " " + style + " " + brew;
-                    beers.add(row);
-                }
-                return beers;
-            });
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return beers;
-    }
-
     public ArrayList<Beer> getBeersUser(String username,int skip){
         ArrayList<Beer> beers= new ArrayList<>();
 
@@ -851,9 +784,9 @@ public class NeoDriver {
         return beers;
     }
 
-    public ArrayList<String> MostActiveUsers(){
+    public ArrayList<User> MostActiveUsers(){
 
-        ArrayList<String> users= new ArrayList<>();
+        ArrayList<User> users= new ArrayList<>();
 
         try (Session session = driver.session()) {
 
@@ -866,9 +799,8 @@ public class NeoDriver {
                 while(result.hasNext()){
                     Record r= result.next();
                     String user = r.get("u.username").asString();
-                    String tot = String.valueOf(r.get("num_interactions"));
-                    String row = user + " " + " --> " + tot + " number of interactions with UniPils";
-                    users.add(row);
+                    int interactions = r.get("num_interactions").asInt();
+                    users.add(new User(user, interactions));
                 }
                 return users;
             });
@@ -927,6 +859,7 @@ public class NeoDriver {
         return true;
     }
 
+    // da collegare al profilo
     public ArrayList<String> SuggestedUsers(String username){
 
         ArrayList<String> users= new ArrayList<>();

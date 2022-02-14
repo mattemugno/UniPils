@@ -121,17 +121,21 @@ public class Utils {
             return false;
     }
 
-    public static boolean addOrder(User user, Order order){
+    public static boolean addOrder(String username, Order order){
 
         NeoDriver neo4j = NeoDriver.getInstance();
-        if(MongoDriver.addOrder(user.getUsername(), order)){
+
+        if(MongoDriver.addOrder(username, order)){
+
             for (OrderList ol : order.getOrderList()) {
-                neo4j.addPurchased(user.getUsername(), ol.getBeerId());
+                neo4j.addPurchased(username, ol.getBeerId());
             }
-            Utils.showInfoAlert("Order succesfully added");
+
+            Utils.showInfoAlert("Order successfully added");
+
             return true;
         }
-        showErrorAlert("Error in adding Order");
+        showErrorAlert("Unable to confirm order");
         return false;
     }
 

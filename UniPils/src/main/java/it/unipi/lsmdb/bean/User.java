@@ -20,6 +20,7 @@ public class User {
     private ArrayList<Order> orders;
     private ArrayList<Payment> payments;
     private ArrayList<String> address;
+    private int interactions;
 
     public User(String gender, String first, String last, String email, String username, String password,
                 LocalDateTime dob, String cell){
@@ -43,6 +44,11 @@ public class User {
         this.last=l;
         this.username=uname;
         this.password=pass;
+    }
+
+    public User (String username, int interactions){
+        this.username = username;
+        this.interactions = interactions;
     }
 
     public String getGender(){
@@ -131,6 +137,14 @@ public class User {
 
     public void setLast(String last) {
         this.last = last;
+    }
+
+    public int getInteractions() {
+        return interactions;
+    }
+
+    public void setInteractions(int interactions) {
+        this.interactions = interactions;
     }
 
     @Override
