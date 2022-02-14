@@ -6,7 +6,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800" prefWidth="1200" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.HomeController">
 <children>
-    <SplitPane dividerPositions="0.29797979797979796" prefHeight="687.0" prefWidth="895.0">
+    <SplitPane dividerPositions="0.4" prefHeight="687.0" prefWidth="895.0">
         <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                 <children>
