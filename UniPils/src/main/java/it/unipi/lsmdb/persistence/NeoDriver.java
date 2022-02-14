@@ -881,10 +881,8 @@ public class NeoDriver {
 
                 while(result.hasNext()){
                     Record r= result.next();
-                    String user = r.get("u3.username").asString();
-                    String tot = String.valueOf(r.get("same_beers_purchased"));
-                    String row = user + " " + tot;
-                    users.add(row);
+                    String user = r.get("suggest_friend").asString();
+                    users.add(user);
                 }
                 return users;
             });

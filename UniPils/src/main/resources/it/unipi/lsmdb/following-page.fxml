@@ -33,9 +33,14 @@
                                     <Font size="24.0" />
                                 </font>
                             </Label>
-                            <ScrollPane fx:id="container" layoutX="3.0" layoutY="141.0" prefHeight="515.0" prefWidth="830.0">
+                            <VBox fx:id="suggestedFriends"  layoutX="410.0" layoutY="6.0" prefHeight="339.0" prefWidth="491.0" >
+                                <children>
+
+                                </children>
+                            </VBox>
+                            <ScrollPane fx:id="container" layoutX="3.0" layoutY="50.0" prefHeight="515.0" prefWidth="400.0">
                                 <content>
-                                    <VBox fx:id="followingInfoPane" layoutX="63.0" layoutY="150.0" prefHeight="506.0" prefWidth="819.0">
+                                    <VBox fx:id="followingInfoPane" layoutX="63.0" layoutY="150.0" prefHeight="506.0" prefWidth="350.0">
                                         <children>
 
                                         </children>
