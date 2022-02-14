@@ -537,26 +537,21 @@ public class MongoDriver {
         Consumer<Document> createDocuments = doc -> {results.add(doc);};
 
         Bson matchStyle = match(eq("style", style));
-        Bson groupPrice = group(fields(
-                eq("price", "$price"), eq("beer_id", "$_id")),
-                first("beer_name", "$name"),
-                first("view_count", "$view_count")
-        );
-        Bson sort = sort(fields(ascending("_id.price"), descending("view_count")));
-
-        Bson limitResults = limit(10);
+        Bson groupPrice = group("$price", push("beer_name", "$name"));
+        Bson sort = sort(ascending("_id"));
 
         Bson projectFields = project(
-                fields( computed("Beer Name", "$beer_name"),
-                        computed("View Count", "$view_count"))
+                fields(excludeId(), computed("price", "$_id"),
+                        computed("Beer Name", 10))
         );
 
         try {
-            collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, limitResults, projectFields)).forEach(createDocuments);
+            collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, projectFields)).forEach(createDocuments);
         } catch (Exception e){
             e.printStackTrace();
         }
 
+        System.out.println(results);
         closeConnection();
         return results;
     }
