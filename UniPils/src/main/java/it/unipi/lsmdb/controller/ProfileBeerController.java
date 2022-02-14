@@ -72,12 +72,12 @@ public class ProfileBeerController implements Initializable {
         country.setText("Country: " + beer.getCountry());
         state.setText("State: " + beer.getState());
 
-       /* ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());  //AVG SCORE
+        ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());
         if(!avg.isEmpty()){
             AVGscore.setText("AVG score: "+avg.get(0).toString());
         }else{
             AVGscore.setText("No score yet");
-        }*/
+        }
 
         if(Objects.equals(DataSession.getUserLogged(), "admin")) {
             wishButton.setVisible(false);
