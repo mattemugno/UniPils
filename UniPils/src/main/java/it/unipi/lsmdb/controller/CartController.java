@@ -148,6 +148,8 @@ public class CartController implements Initializable {
 
                 order.setOrderList(orderList);
 
+                levelDbDriver.deleteValue(key);
+
             }
 
             MongoDriver.addOrder(username, order);
