@@ -73,7 +73,7 @@ public class ProfileBeerController implements Initializable {
         state.setText("State: " + beer.getState());
 
         ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());
-        if(!avg.isEmpty()){
+        if(!(avg.get(0)==null)){
             AVGscore.setText("AVG score: "+avg.get(0).toString());
         }else{
             AVGscore.setText("No score yet");

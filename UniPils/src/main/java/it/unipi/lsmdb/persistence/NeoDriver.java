@@ -949,9 +949,13 @@ public class NeoDriver {
                                 "bid", beerID
                         )
                 );
-                while(result.hasNext()){
+                if(result.hasNext()){
                     Record r = result.next();
-                    avg.add(r.get("mean").asDouble());
+                    if(r.get("mean").isNull()){
+                        avg.add(null);
+                    }else{
+                        avg.add(r.get("mean").asDouble());
+                    }
                 }
 
                 return avg;
