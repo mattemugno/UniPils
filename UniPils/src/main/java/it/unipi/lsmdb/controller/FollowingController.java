@@ -1,7 +1,5 @@
 package it.unipi.lsmdb.controller;
 
-import it.unipi.lsmdb.bean.Beer;
-import it.unipi.lsmdb.bean.User;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;

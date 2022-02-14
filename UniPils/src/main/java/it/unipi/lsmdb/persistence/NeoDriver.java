@@ -859,7 +859,6 @@ public class NeoDriver {
         return true;
     }
 
-    // da collegare al profilo
     public ArrayList<String> SuggestedUsers(String username){
 
         ArrayList<String> users= new ArrayList<>();
