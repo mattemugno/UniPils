@@ -7,6 +7,7 @@ import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -29,6 +30,7 @@ import org.bson.Document;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -50,14 +52,22 @@ public class HomeController implements Initializable {
                 "Beer Name", "Username", "Brewery Name", "Beer Style", "Beer Id"));
         choiceBox.setValue("Beer Name");
 
+
+        ChoiceBox filter = new ChoiceBox();
+        filter.setItems((FXCollections.observableArrayList(
+                "Price", "ABV", "Country", "State")));
+        filter.setValue("Price");
+
+        choiceBox.setOnAction(e->disable(e,choiceBox.getValue().toString(), filter));
+
         TextField textField = new TextField();
         textField.setPromptText("Search here!");
         textField.setOnKeyPressed(event->search(event, (String) choiceBox.getValue(), textField.getText()));
 
-        HBox hBox = new HBox(choiceBox, textField);//Add choiceBox and textField to hBox
-        hBox.setAlignment(Pos.CENTER);//Center HBox
-        hBox.setLayoutX(37.0);
-        hBox.setLayoutY(149.0);
+        HBox hBox = new HBox(choiceBox, filter, textField);//Add choiceBox and textField to hBox
+        hBox.setAlignment(Pos.BOTTOM_LEFT);//Center HBox
+        hBox.setLayoutX(5);
+        hBox.setLayoutY(200);
 
         searchBarContainer.getChildren().addAll(hBox);
 
@@ -66,6 +76,15 @@ public class HomeController implements Initializable {
         printActiveUsers(neo4j);
         printMostPurchased(neo4j);
 
+    }
+
+
+    @FXML
+    private void disable(Event e, String value, ChoiceBox box) {
+        if (!Objects.equals(value, "Beer Name"))
+            box.setDisable(true);
+        else
+            box.setDisable(false);
     }
 
     private void printMostPurchased(NeoDriver neo4j) {
