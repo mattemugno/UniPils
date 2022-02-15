@@ -6,6 +6,7 @@ import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -86,10 +87,15 @@ public class TrendController implements Initializable {
 
     @FXML
     private void printCheapestBeerByStyle(KeyEvent e, String style) {
+
+        vboxTwo.getChildren().clear();
         if(e.getCode() == KeyCode.ENTER) {
             Font font = Font.font("Comic Sans", FontWeight.BOLD, 14);
 
             ArrayList<Document> beers = MongoDriver.getCheapestBeersByStyle(style);
+
+            if(beers == null)
+                Utils.showInfoAlert("No results found for this input, retry");
 
             for (Document beer : beers) {
                 double space = 5;
