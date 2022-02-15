@@ -78,7 +78,7 @@ public class TrendController implements Initializable {
             int tot = beer.getInteger("MostPopularStyleCount");
 
             Label title = new Label();
-            title.setText("Most popular style in " + state + " is " + style + " with " + tot + " beers crafted");
+            title.setText(state + ": " + style + " with " + tot + " beers crafted");
             title.setFont(font);
 
             b.getChildren().add(title);
@@ -105,9 +105,10 @@ public class TrendController implements Initializable {
                 //int price = beer.getInteger("_id");
                 String name = beer.getString("Beer Name");
                 int tot = beer.getInteger("View Count");
+                int price = beer.getInteger("_id.price");
 
                 Label title = new Label();
-                title.setText("Most popular cheapest beer is " + name  + " with " + tot + " views ");
+                title.setText(name  + " with " + tot + " views " + ", price: " + price);
                 title.setFont(font);
 
                 b.getChildren().add(title);
