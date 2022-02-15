@@ -94,9 +94,9 @@ public class WishlistController implements Initializable {
 
             int price = MongoDriver.getBeerById(beer.get_id()).getPrice();
 
-            String keyName = username + ":" + "beer_id_name" + ":" + id + ":" + "beer_name";
-            String keyPrice = username + ":" + "beer_id_price" + ":" + id + ":" + "price";
-            String keyQuantity = username + ":" + "beer_id_quantity" + ":" + id + ":" + "quantity";
+            String keyName = username + ":" + id + ":" + "name";
+            String keyPrice = username + ":" + id + ":" + "price";
+            String keyQuantity = username + ":" + id + ":" + "quantity";
 
             LevelDbDriver levelDbDriver = new LevelDbDriver();
             levelDbDriver.put(keyName, beer.getName());

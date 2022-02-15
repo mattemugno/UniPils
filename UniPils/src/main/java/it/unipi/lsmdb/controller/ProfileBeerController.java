@@ -204,9 +204,9 @@ public class ProfileBeerController implements Initializable {
     public void addToCart(String username, int beer_id, String beer_name, int price) {
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        String keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
-        String keyPrice = username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price";
-        String keyQuantity = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+        String keyName = username + ":" + beer_id + ":" + "name";
+        String keyPrice = username + ":" + beer_id + ":" + "price";
+        String keyQuantity = username + ":" + beer_id + ":" + "quantity";
 
         try {
             levelDbDriver.put(keyName, beer_name);
