@@ -62,9 +62,10 @@ public class ProfileBeerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //manca da sistemare il cambio bottone ADD/REMOVE wish
         //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
+        NeoDriver neo4j = NeoDriver.getInstance();
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
-        MongoDriver.updateBeer(beer);
+        MongoDriver.updateBeerViewCount(beer);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
 
         beerName.setText(beer.getName());
@@ -231,6 +232,7 @@ public class ProfileBeerController implements Initializable {
             e.printStackTrace();
             Utils.showErrorAlert("Unable to add item to cart");
         }
+        cartButton.setDisable(true);
     }
 
 }

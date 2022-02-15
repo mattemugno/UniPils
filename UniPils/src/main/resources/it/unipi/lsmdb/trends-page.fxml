@@ -26,7 +26,7 @@
                                                                 <VBox fx:id="vboxOne" prefHeight="375.0" prefWidth="403.0" />
                                                             </content>
                                                         </ScrollPane>
-                                                        <Label layoutX="14.0" layoutY="4.0" text="Most popular beers for each USA state:" textFill="#bf0101">
+                                                        <Label layoutX="14.0" layoutY="4.0" text="Most popular style for each USA state:" textFill="#bf0101">
                                              <font>
                                                 <Font name="System Bold" size="18.0" />
                                              </font>

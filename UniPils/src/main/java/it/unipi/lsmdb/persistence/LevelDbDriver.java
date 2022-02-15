@@ -1,63 +1,50 @@
 package it.unipi.lsmdb.persistence;
 
 import com.google.common.collect.Lists;
-import org.iq80.leveldb.*;
-import static org.iq80.leveldb.impl.Iq80DBFactory.*;
-
-import java.nio.ByteBuffer;
-import java.util.HashMap;
-import java.util.List;
+import org.iq80.leveldb.DB;
+import org.iq80.leveldb.DBIterator;
+import org.iq80.leveldb.Options;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
-// id_utente:id_birra:quantity = quantity
+import static org.iq80.leveldb.impl.Iq80DBFactory.*;
 
 public class LevelDbDriver {
 
-    public LevelDbDriver(){
-    }
-
     private DB db = null;
 
-    private void openDB()
-    {
-        Options options = new Options();
-        options.createIfMissing(true);
-        try{
-            //factory.destroy(new File("unipils"), options);
-            db = factory.open(new File("unipils"), options);
-        }
-        catch (IOException ioe) { closeDB(); }
+    public LevelDbDriver() {
     }
 
-    public void put(String key, String value)
-    {
+    private void openDB() {
+        Options options = new Options();
+        options.createIfMissing(true);
+        try {
+            //factory.destroy(new File("unipils"), options);
+            db = factory.open(new File("unipils"), options);
+        } catch (IOException ioe) {
+            closeDB();
+        }
+    }
+
+    public void put(String key, String value) {
         openDB();
         db.put(bytes(key), bytes(value));
         closeDB();
     }
 
-    public String getString(String key)
-    {
+    public String getString(String key) {
         openDB();
         byte[] bytes = db.get(bytes(key));
-        String quantity =  (bytes == null ? null : asString(bytes));
+        String quantity = (bytes == null ? null : asString(bytes));
         closeDB();
         return quantity;
     }
-/*
-    public int getInt(String key)
-    {
-        openDB();
-        byte[] bytes = db.get(bytes(key));
-        int quantity = (bytes == null ? null : ByteBuffer.wrap(bytes).getInt());
-        closeDB();
-        return quantity;
-    }
-*/
-    public List<String> findKeysByPrefix(String prefix)
-    {
+
+    public List<String> findKeysByPrefix(String prefix) {
         openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> keys = Lists.newArrayList();
@@ -76,8 +63,7 @@ public class LevelDbDriver {
         }
     }
 
-    public List<String> findValuesByPrefix(String prefix)
-    {
+    public List<String> findValuesByPrefix(String prefix) {
         openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> values = Lists.newArrayList();
@@ -95,8 +81,7 @@ public class LevelDbDriver {
         }
     }
 
-    public HashMap<String, String> findByPrefix(String prefix)
-    {
+    public HashMap<String, String> findByPrefix(String prefix) {
         openDB();
         try (DBIterator iterator = db.iterator()) {
             HashMap<String, String> entries = new HashMap<>();
@@ -114,24 +99,23 @@ public class LevelDbDriver {
         }
     }
 
-    public void deleteValue(String key)
-    {
+    public void deleteValue(String key) {
         openDB();
         db.delete(bytes(key));
         closeDB();
     }
 
-    public int splitKeys(String key){
+    public int splitKeys(String key) {
         String beer_id = key.split(":")[1];
         return Integer.parseInt(beer_id);
     }
 
-    private void closeDB()
-    {
+    private void closeDB() {
         try {
-            if( db != null) db.close();
+            if (db != null) db.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
-        catch (IOException ioe) { ioe.printStackTrace(); }
     }
-    
+
 }

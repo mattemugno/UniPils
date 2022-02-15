@@ -41,7 +41,7 @@ public class MongoDriver {
     private static final String connectionString = "mongodb://" + InfoConfig.getMongoFirstIp() + ":" + InfoConfig.getMongoFirstPort() +
             "," + InfoConfig.getMongoSecondIp() + ":" + InfoConfig.getMongoSecondPort() +
             "," + InfoConfig.getMongoThirdIp() + ":" + InfoConfig.getMongoThirdPort() +
-            "/?retryWrites=true&w=3&wtimeoutMS=5000&readPreference=nearest";
+            "/?retryWrites=true&w=1&wtimeoutMS=5000&readPreference=primaryPreferred";
 
     private static final ConnectionString uri= new ConnectionString(connectionString);
 
@@ -207,7 +207,6 @@ public class MongoDriver {
                 docDate.append("$date", order.getConfirmationDate());
             doc.append("confirmation_date", docDate);
 
-            System.out.println(doc.toJson());
 
             Bson setUpdate;
 
@@ -345,7 +344,6 @@ public class MongoDriver {
 
             doc.append("view_count",b.getView_count());
 
-            System.out.println(doc);
             collection.insertOne(doc);
 
         }catch(Exception ex){
@@ -368,23 +366,11 @@ public class MongoDriver {
         return true;
     }
 
-    // update view count e availability
-    public static boolean updateBeer(Beer b){
+    public static boolean updateBeerViewCount(Beer b){
         openConnection("Beers");
         try{
-            boolean res=deleteBeer(b.get_id());
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify beer");
-                return false;
-            }
-
-            res= addBeer(b);
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify beer");
-                return false;
-            }
+            Bson setUpdate = Updates.inc("view_count", 1);
+            collection.updateOne(eq("_id", b.get_id()), setUpdate);
 
         }catch(Exception ex){
             closeConnection();
@@ -448,7 +434,6 @@ public class MongoDriver {
         try{
             for (Document doc: r){
                 Beer beer = objectMapper.readValue(doc.toJson(), Beer.class);
-                System.out.println(beer.toString());
                 beers.add(beer);
             }
 
@@ -551,6 +536,7 @@ public class MongoDriver {
 
         Bson projectFields = project(fields
                 (computed("Beer Name", "$beer_name"),
+                        computed("Price", "$_id.price"),
                  computed("View Count", "$view_count"))
         );
 
@@ -558,6 +544,7 @@ public class MongoDriver {
             collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, limitResults, projectFields)).forEach(createDocuments);
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
 
         closeConnection();
@@ -645,7 +632,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }
@@ -667,7 +653,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }
@@ -691,7 +676,6 @@ public class MongoDriver {
             e.printStackTrace();
         }
 
-        System.out.println(results);
         closeConnection();
         return results;
     }

@@ -9,10 +9,12 @@ import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -59,7 +61,7 @@ public class CartController implements Initializable {
 
             double space = 5;
             VBox beer = new VBox(space);
-            beer.setMaxWidth(491);
+            beer.setMinWidth(600);
             beer.setStyle("-fx-border-style: solid inside;"
                     + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                     + "-fx-border-radius: 5;" + "-fx-border-color: #596cc2;");
@@ -69,7 +71,7 @@ public class CartController implements Initializable {
             titleId.setFont(font);
 
             Label titlePrice = new Label();
-            titlePrice.setText("Price:  " + levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price"));
+            titlePrice.setText("Price:  " + levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price") + " USD");
             titlePrice.setFont(font);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -78,9 +80,9 @@ public class CartController implements Initializable {
                 event.consume();
             });
 
-            Button button = new Button();
-            button.setText("REMOVE BEER");
-            button.setOnAction(e -> {
+            Button buttonRemove = new Button();
+            buttonRemove.setText("Remove beer");
+            buttonRemove.setOnAction(e -> {
                 if (deleteItemFromCart(username, beer_id, e))
                     Utils.showInfoAlert("Beer removed successfully");
                 else Utils.showErrorAlert("Beer not removed");
@@ -90,10 +92,20 @@ public class CartController implements Initializable {
             quantity.setText("Quantity: ");
 
             TextField textField = new TextField();
-            textField.setText(String.valueOf(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity")));
+            textField.setText(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity"));
             textField.setMaxWidth(100);
 
-            beer.getChildren().addAll(quantity, textField, button, titleId, titlePrice);
+            Button buttonQuantity = new Button();
+            buttonQuantity.setText("Update quantity");
+            buttonQuantity.setOnAction(e -> {
+                if (updateQuantity(beer_id, e, textField.getText()))
+                    Utils.showInfoAlert("Quantity updated");
+                else Utils.showErrorAlert("Quantity not updated");
+            });
+
+            HBox hBox = new HBox(buttonRemove, buttonQuantity);//Add choiceBox and textField to hBox
+
+            beer.getChildren().addAll(quantity, textField, hBox, titleId, titlePrice);
             cartInfoPane.getChildren().add(beer);
         }
     }
@@ -118,23 +130,23 @@ public class CartController implements Initializable {
             return false;
         }
     }
-/*
-    private boolean updateQuantity(int beer_id){
+
+    private boolean updateQuantity(int beer_id, ActionEvent actionEvent, String quantity){
 
         String username = DataSession.getUserLogged();
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        String key = username + ":" + beer_id + ":" + "beer_name";
-        int quantity = Integer.parseInt(q.getText());
+        String key = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
 
         try {
             levelDbDriver.put(key, quantity);
+            Utils.changeScene("cart-page.fxml", actionEvent);
             return true;
         } catch (Exception e){
             e.printStackTrace();
             return false;
         }
 
-    }*/
+    }
 
     @FXML
     private boolean confirmOrder(ActionEvent actionEvent) {
@@ -165,6 +177,7 @@ public class CartController implements Initializable {
                 String beer_name = levelDbDriver.getString(keyName);
 
                 int quantity = Integer.parseInt(levelDbDriver.getString(keyQuantity));
+                System.out.println("quantity: " + quantity);
                 int price = Integer.parseInt(levelDbDriver.getString(keyPrice));
 
                 order.setTotalCost(price * quantity);
