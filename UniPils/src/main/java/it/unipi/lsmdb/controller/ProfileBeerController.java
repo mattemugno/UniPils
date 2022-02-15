@@ -89,6 +89,8 @@ public class ProfileBeerController implements Initializable {
             wishButton.setVisible(false);
             revButton.setVisible(false);
             cartButton.setVisible(false);
+            score.setDisable(true);
+            comment.setDisable(true);
             Button cancel = new Button();
             cancel.setText("DELETE BEER");
             cancel.setOnAction(e -> deleteBeer(e, beer_id));
@@ -102,23 +104,19 @@ public class ProfileBeerController implements Initializable {
         if (DataSession.getUserLogged() != null) {
             String usernameLogged = DataSession.getUserLogged();
 
-            if (Objects.equals(cartButton.getText(), "ADD TO CART")) {
-                cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id, beer.getName(), beer.getPrice()));
-            }
+            cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id, beer.getName(), beer.getPrice()));
 
             wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
 
-            //cartButton.setOnAction();
+            revButton.setOnAction(e -> writeReview(e, usernameLogged, beer_id));
 
-            if (Objects.equals(revButton.getText(), "POST REVIEW"))
-                revButton.setOnAction(e -> writeReview(e, usernameLogged, beer_id));
-            else
-                revButton.setOnAction(e -> modifyReview(e, usernameLogged, beer_id));
         } else {
             Utils.showInfoAlert("Log in/Sign in to have all interactions with beer");
-            wishButton.setVisible(false);
-            revButton.setVisible(false);
-            cartButton.setVisible(false);
+            wishButton.setDisable(true);
+            revButton.setDisable(true);
+            cartButton.setDisable(true);
+            comment.setDisable(true);
+            score.setDisable(true);
         }
     }
 
@@ -188,22 +186,9 @@ public class ProfileBeerController implements Initializable {
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addReview(review, usernameLogged, beer);
-        //comment.setText(writtenReview.getComment());
-        //score.setText(String.valueOf(writtenReview.getScore()));
-        revButton.setText("MODIFY REVIEW");
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+        Utils.changeScene("/profile-beer.fxml", actionEvent);
     }
 
-    private void modifyReview(ActionEvent actionEvent, String usernameLogged, int beer) {
-        if (comment.getText() == null || score.getText() == null) {
-            Utils.showErrorAlert("You need to compile both fields");
-            return;
-        }
-        Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
-        NeoDriver neo4j = NeoDriver.getInstance();
-        neo4j.updateReview(review, usernameLogged, beer);
-        //Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
-    }
 
     @FXML
     private void addWishlist(ActionEvent actionEvent, String user, int beer) {
