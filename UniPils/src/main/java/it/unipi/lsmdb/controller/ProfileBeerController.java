@@ -105,9 +105,9 @@ public class ProfileBeerController implements Initializable {
         if (DataSession.getUserLogged() != null) {
             String usernameLogged = DataSession.getUserLogged();
 
-            cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id, beer.getName(), beer.getPrice()));
+            cartButton.setOnAction(e -> addToCart( usernameLogged, beer_id, beer.getName(), beer.getPrice()));
 
-            wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
+            wishButton.setOnAction(e -> addWishlist( usernameLogged, beer_id));
 
             revButton.setOnAction(e -> writeReview(e, usernameLogged, beer_id));
 
