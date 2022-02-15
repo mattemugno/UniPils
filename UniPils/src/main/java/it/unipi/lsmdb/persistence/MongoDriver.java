@@ -521,8 +521,15 @@ public class MongoDriver {
 
         openConnection("Beers");
 
+        int field;
         ArrayList<Document> r;
-        r = collection.find(eq(fieldName, fieldValue)).into(new ArrayList<>());
+        if (fieldName=="abv" || fieldName=="price") {
+            field = Integer.parseInt(fieldValue);
+            r = collection.find(eq(fieldName, field)).into(new ArrayList<>());
+        }
+        else{
+            r = collection.find(eq(fieldName, fieldValue)).into(new ArrayList<>());
+        }
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

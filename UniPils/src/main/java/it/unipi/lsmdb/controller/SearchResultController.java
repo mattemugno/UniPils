@@ -60,6 +60,25 @@ public class SearchResultController  {
             ArrayList<Beer> beer = neo4j.getBeerById(Integer.parseInt(search));
             printBeers(beer);
         }
+        else if(Objects.equals(value, "Price")){
+            ArrayList<Beer> beer = MongoDriver.getBeersByFilter("price", search);
+            printBeers(beer);
+
+        }
+        else if(Objects.equals(value, "ABV")){
+            ArrayList<Beer> beer = MongoDriver.getBeersByFilter("abv", search);
+            printBeers(beer);
+
+        }
+        else if(Objects.equals(value, "Country")){
+            ArrayList<Beer> beer = MongoDriver.getBeersByFilter("country",search);
+            printBeers(beer);
+
+        }
+        else if(Objects.equals(value, "State")){
+            ArrayList<Beer> beer = MongoDriver.getBeersByFilter("state", search);
+            printBeers(beer);
+        }
 
     }
 
@@ -67,6 +86,8 @@ public class SearchResultController  {
     private void printBeers(ArrayList<Beer> beers) {
         Font font = Font.font("Comic Sans", FontWeight.BOLD, 18);
 
+        if(beers.size() == 0)
+            Utils.showInfoAlert("No results found for this input");
         for (Beer i : beers) {
             double space = 5;
             VBox beer = new VBox(space);

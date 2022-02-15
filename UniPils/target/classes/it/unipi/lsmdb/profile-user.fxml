@@ -17,11 +17,6 @@
       </AnchorPane>
    <SplitPane fx:id="rightContainer" dividerPositions="0.07417974322396577" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
          <items>
-            <AnchorPane fx:id="searchBarContainer" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-               <children>
-                  <TextField fx:id="searchBar" layoutX="215.0" layoutY="9.0" />
-               </children>
-            </AnchorPane>
             <ScrollPane fx:id="scroll">
                <content>
                   <AnchorPane fx:id="beersPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
