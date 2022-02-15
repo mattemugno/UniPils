@@ -60,5 +60,9 @@ public class RegistrationBeerController {
         Utils.changeScene("homepage.fxml", actionEvent);
     }
 
+    @FXML private void goHome(ActionEvent actionEvent){
+        Utils.changeScene("homepage.fxml", actionEvent);
+    }
+
 
 }

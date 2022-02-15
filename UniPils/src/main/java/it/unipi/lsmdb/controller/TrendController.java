@@ -6,6 +6,7 @@ import it.unipi.lsmdb.persistence.MongoDriver;
 import it.unipi.lsmdb.persistence.NeoDriver;
 import it.unipi.lsmdb.utils.Utils;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -63,9 +64,6 @@ public class TrendController implements Initializable {
         Font font = Font.font("Comic Sans", FontWeight.BOLD, 14);
 
         ArrayList<Document> beers = MongoDriver.getMostPopularEachState();
-
-        System.out.println(beers);
-
         for (Document beer : beers) {
             double space = 5;
             VBox b = new VBox(space);
@@ -89,11 +87,15 @@ public class TrendController implements Initializable {
 
     @FXML
     private void printCheapestBeerByStyle(KeyEvent e, String style) {
+
+        vboxTwo.getChildren().clear();
         if(e.getCode() == KeyCode.ENTER) {
             Font font = Font.font("Comic Sans", FontWeight.BOLD, 14);
 
             ArrayList<Document> beers = MongoDriver.getCheapestBeersByStyle(style);
-            System.out.println(beers);
+
+            if(beers == null)
+                Utils.showInfoAlert("No results found for this input, retry");
 
             for (Document beer : beers) {
                 double space = 5;
@@ -105,7 +107,7 @@ public class TrendController implements Initializable {
                 //int price = beer.getInteger("_id");
                 String name = beer.getString("Beer Name");
                 int tot = beer.getInteger("View Count");
-                int price = beer.getInteger("_id.price");
+                int price = beer.getInteger("Price");
 
                 Label title = new Label();
                 title.setText(name  + " with " + tot + " views " + ", price: " + price);

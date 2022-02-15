@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.RegistrationBeerController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.unipi.lsmdb.controller.RegistrationBeerController">
    <children>
       <Label layoutX="258.0" layoutY="63.0" prefHeight="35.0" prefWidth="104.0" text="Beer name:">
          <font>
@@ -73,5 +73,6 @@
       <TextField fx:id="brewery_name" layoutX="383.0" layoutY="388.0" />
       <TextField fx:id="brewery_city" layoutX="383.0" layoutY="429.0" prefHeight="24.0" prefWidth="171.0" />
       <TextField fx:id="brewery_types" layoutX="383.0" layoutY="473.0" />
+      <Button onAction="#goHome" layoutX="375.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="92.0" text="HOMEPAGE" />
    </children>
 </AnchorPane>

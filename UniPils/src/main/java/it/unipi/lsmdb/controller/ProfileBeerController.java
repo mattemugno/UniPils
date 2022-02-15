@@ -60,12 +60,11 @@ public class ProfileBeerController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //manca da sistemare il cambio bottone ADD/REMOVE wish
-        //manca da sistemare lo scroll sostituendo un pane con uno scroll pane
+
         NeoDriver neo4j = NeoDriver.getInstance();
         int beer_id = DataSession.getIdBeerToShow();
         Beer beer = MongoDriver.getBeerById(beer_id);
-        MongoDriver.updateBeer(beer);
+        MongoDriver.updateBeerViewCount(beer);
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  25);
 
         beerName.setText(beer.getName());
@@ -79,6 +78,7 @@ public class ProfileBeerController implements Initializable {
         state.setText("State: " + beer.getState());
 
         ArrayList<Double> avg=neo4j.getAVGScore(beer.get_id());
+
         if(!(avg.get(0)==null)){
             AVGscore.setText("AVG score: "+avg.get(0).toString());
         }else{
@@ -86,9 +86,12 @@ public class ProfileBeerController implements Initializable {
         }
 
         if (Objects.equals(DataSession.getUserLogged(), "admin")) {
+
             wishButton.setVisible(false);
             revButton.setVisible(false);
             cartButton.setVisible(false);
+            score.setDisable(true);
+            comment.setDisable(true);
             Button cancel = new Button();
             cancel.setText("DELETE BEER");
             cancel.setOnAction(e -> deleteBeer(e, beer_id));
@@ -102,23 +105,19 @@ public class ProfileBeerController implements Initializable {
         if (DataSession.getUserLogged() != null) {
             String usernameLogged = DataSession.getUserLogged();
 
-            if (Objects.equals(cartButton.getText(), "ADD TO CART")) {
-                cartButton.setOnAction(e -> addToCart(e, usernameLogged, beer_id, beer.getName(), beer.getPrice()));
-            }
+            cartButton.setOnAction(e -> addToCart( usernameLogged, beer_id, beer.getName(), beer.getPrice()));
 
-            wishButton.setOnAction(e -> addWishlist(e, usernameLogged, beer_id));
+            wishButton.setOnAction(e -> addWishlist( usernameLogged, beer_id));
 
-            //cartButton.setOnAction();
+            revButton.setOnAction(e -> writeReview(e, usernameLogged, beer_id));
 
-            if (Objects.equals(revButton.getText(), "POST REVIEW"))
-                revButton.setOnAction(e -> writeReview(e, usernameLogged, beer_id));
-            else
-                revButton.setOnAction(e -> modifyReview(e, usernameLogged, beer_id));
         } else {
             Utils.showInfoAlert("Log in/Sign in to have all interactions with beer");
-            wishButton.setVisible(false);
-            revButton.setVisible(false);
-            cartButton.setVisible(false);
+            wishButton.setDisable(true);
+            revButton.setDisable(true);
+            cartButton.setDisable(true);
+            comment.setDisable(true);
+            score.setDisable(true);
         }
     }
 
@@ -171,7 +170,7 @@ public class ProfileBeerController implements Initializable {
     private void delReview(ActionEvent e, int beer, String user) {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.deleteReview(user, beer);
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", e);
+        Utils.changeScene("profile-beer.fxml", e);
         showBeerReviews(beer, user);
     }
 
@@ -188,25 +187,12 @@ public class ProfileBeerController implements Initializable {
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addReview(review, usernameLogged, beer);
-        //comment.setText(writtenReview.getComment());
-        //score.setText(String.valueOf(writtenReview.getScore()));
-        revButton.setText("MODIFY REVIEW");
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
+        Utils.changeScene("profile-beer.fxml", actionEvent);
     }
 
-    private void modifyReview(ActionEvent actionEvent, String usernameLogged, int beer) {
-        if (comment.getText() == null || score.getText() == null) {
-            Utils.showErrorAlert("You need to compile both fields");
-            return;
-        }
-        Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
-        NeoDriver neo4j = NeoDriver.getInstance();
-        neo4j.updateReview(review, usernameLogged, beer);
-        //Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", actionEvent);
-    }
 
     @FXML
-    private void addWishlist(ActionEvent actionEvent, String user, int beer) {
+    private void addWishlist(String user, int beer) {
 
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addHasInWishlist(user, beer);
@@ -215,7 +201,7 @@ public class ProfileBeerController implements Initializable {
     }
 
     @FXML
-    public void addToCart(ActionEvent actionEvent, String username, int beer_id, String beer_name, int price) {
+    public void addToCart(String username, int beer_id, String beer_name, int price) {
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
         String keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
