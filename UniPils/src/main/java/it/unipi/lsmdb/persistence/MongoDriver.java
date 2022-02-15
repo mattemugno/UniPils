@@ -366,23 +366,11 @@ public class MongoDriver {
         return true;
     }
 
-    // update view count e availability
-    public static boolean updateBeer(Beer b){
+    public static boolean updateBeerViewCount(Beer b){
         openConnection("Beers");
         try{
-            boolean res=deleteBeer(b.get_id());
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify beer");
-                return false;
-            }
-
-            res= addBeer(b);
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify beer");
-                return false;
-            }
+            Bson setUpdate = Updates.inc("view_count", 1);
+            collection.updateOne(eq("_id", b.get_id()), setUpdate);
 
         }catch(Exception ex){
             closeConnection();
@@ -548,6 +536,7 @@ public class MongoDriver {
 
         Bson projectFields = project(fields
                 (computed("Beer Name", "$beer_name"),
+                        computed("Price", "$_id.price"),
                  computed("View Count", "$view_count"))
         );
 
@@ -555,6 +544,7 @@ public class MongoDriver {
             collection.aggregate(Arrays.asList(matchStyle, groupPrice, sort, limitResults, projectFields)).forEach(createDocuments);
         } catch (Exception e){
             e.printStackTrace();
+            return null;
         }
 
         closeConnection();
