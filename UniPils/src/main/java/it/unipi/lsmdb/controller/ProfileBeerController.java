@@ -86,6 +86,7 @@ public class ProfileBeerController implements Initializable {
         }
 
         if (Objects.equals(DataSession.getUserLogged(), "admin")) {
+
             wishButton.setVisible(false);
             revButton.setVisible(false);
             cartButton.setVisible(false);
@@ -186,7 +187,7 @@ public class ProfileBeerController implements Initializable {
         Review review = new Review(comment.getText(), Integer.parseInt(score.getText()));
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addReview(review, usernameLogged, beer);
-        Utils.changeScene("/profile-beer.fxml", actionEvent);
+        Utils.changeScene("profile-beer.fxml", actionEvent);
     }
 
 
