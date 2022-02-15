@@ -49,25 +49,24 @@ public class HomeController implements Initializable {
     @FXML @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+
         ChoiceBox choiceBox = new ChoiceBox();
-        choiceBox.setItems(FXCollections.observableArrayList(
-                "Beer Name", "Username", "Brewery Name", "Beer Style", "Beer Id"));
-        choiceBox.setValue("Beer Name");
-
-
-        ChoiceBox filter = new ChoiceBox();
-        filter.setItems((FXCollections.observableArrayList(
-                "Price", "ABV", "Country", "State")));
-        filter.setValue("Price");
-
-        choiceBox.setOnAction(e->disable(e,choiceBox.getValue().toString(), filter));
-
+        if(DataSession.getUserLogged()!=null) {
+            choiceBox.setItems(FXCollections.observableArrayList(
+                    "Beer Name", "Username", "Brewery Name", "Beer Style", "Beer Id", "Price", "ABV", "Country", "State"));
+            choiceBox.setValue("Beer Name");
+        }
+        else{
+            choiceBox.setItems(FXCollections.observableArrayList(
+                    "Beer Name", "Brewery Name", "Beer Style", "Beer Id", "Price", "ABV", "Country", "State"));
+            choiceBox.setValue("Beer Name");
+        }
 
         TextField textField = new TextField();
         textField.setPromptText("Search here!");
         textField.setOnKeyPressed(event->search(event, (String) choiceBox.getValue(), textField.getText()));
 
-        HBox hBox = new HBox(choiceBox, filter, textField);//Add choiceBox and textField to hBox
+        HBox hBox = new HBox(choiceBox, textField);//Add choiceBox and textField to hBox
         hBox.setAlignment(Pos.BOTTOM_LEFT);//Center HBox
         hBox.setLayoutX(300);
         hBox.setLayoutY(20);
@@ -81,13 +80,6 @@ public class HomeController implements Initializable {
 
     }
 
-    @FXML
-    private void disable(Event e, String value, ChoiceBox box) {
-        if (!Objects.equals(value, "Beer Name"))
-            box.setDisable(true);
-        else
-            box.setDisable(false);
-    }
 
     private void printMostPurchased(NeoDriver neo4j) {
         Font font = Font.font("Comic Sans", FontWeight.BOLD,  18);
