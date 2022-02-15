@@ -170,7 +170,7 @@ public class ProfileBeerController implements Initializable {
     private void delReview(ActionEvent e, int beer, String user) {
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.deleteReview(user, beer);
-        Utils.changeScene("/it/unipi/lsmdb/profile-beer.fxml", e);
+        Utils.changeScene("profile-beer.fxml", e);
         showBeerReviews(beer, user);
     }
 
@@ -192,7 +192,7 @@ public class ProfileBeerController implements Initializable {
 
 
     @FXML
-    private void addWishlist(ActionEvent actionEvent, String user, int beer) {
+    private void addWishlist(String user, int beer) {
 
         NeoDriver neo4j = NeoDriver.getInstance();
         neo4j.addHasInWishlist(user, beer);
@@ -201,7 +201,7 @@ public class ProfileBeerController implements Initializable {
     }
 
     @FXML
-    public void addToCart(ActionEvent actionEvent, String username, int beer_id, String beer_name, int price) {
+    public void addToCart(String username, int beer_id, String beer_name, int price) {
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
         String keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
