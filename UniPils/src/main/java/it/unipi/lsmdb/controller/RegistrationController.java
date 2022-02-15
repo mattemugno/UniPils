@@ -29,6 +29,10 @@ public class RegistrationController {
     @FXML private CheckBox female;
     @FXML private TextField cellular;
     @FXML private DatePicker dob;
+    @FXML private TextField addressFX;
+    @FXML private TextField cvvFX;
+    @FXML private TextField cardNumberFX;
+    @FXML private TextField expDateFX;
 
     @FXML
     private void register(ActionEvent actionEvent) {
@@ -44,6 +48,10 @@ public class RegistrationController {
         boolean f = female.isSelected();
         String cell = cellular.getText();
         String gen;
+        String address = addressFX.getText();
+        int cvv = Integer.parseInt(cvvFX.getText());
+        int cardNumber = Integer.parseInt(cardNumberFX.getText());
+        String expDate = expDateFX.getText();
 
         if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("") || !m && !f || cell.equals("")) {
             Utils.showErrorAlert("Fill in all fields");
@@ -66,7 +74,7 @@ public class RegistrationController {
         }
 
         NeoDriver neo4j = NeoDriver.getInstance();
-        User user = new User(gen, first, last, em, uName, pwd, date, cell);
+        User user = new User(gen, first, last, em, uName, pwd, date, cell, address, cvv, cardNumber, expDate);
 
         Utils.addUser(user);
         //Utils.showInfoAlert("User inserted successfully");

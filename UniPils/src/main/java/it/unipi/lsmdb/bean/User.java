@@ -22,13 +22,13 @@ public class User {
     @JsonIgnore
     private ArrayList<Order> orders;
     @JsonIgnore
-    private ArrayList<Payment> payments;
+    private ArrayList<Payment> payments = new ArrayList<>();
     @JsonIgnore
-    private ArrayList<String> address;
+    private ArrayList<String> address = new ArrayList<>();
     private int interactions;
 
     public User(String gender, String first, String last, String email, String username, String password,
-                LocalDateTime dob, String cell){
+                LocalDateTime dob, String cell, String address, int cvv, int cardNumber, String expDate){
         this.first=first;
         this.last=last;
         this.username=username;
@@ -38,8 +38,9 @@ public class User {
         this.dob=dob;
         this.cell=cell;
         this.orders = new ArrayList<>();
-        this.payments = new ArrayList<>();
-        this.address = new ArrayList<>();
+        Payment payment = new Payment(cardNumber, cvv, expDate);
+        this.payments.add(payment);
+        this.address.add(address);
     }
 
     public User(){};

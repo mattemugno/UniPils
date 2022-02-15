@@ -64,34 +64,50 @@ public class MongoDriver {
 
     // CRUD USERS //
 
-    public static boolean addUser(User u){
+    public static boolean addUser(User user){
         openConnection("Users");
 
         try{
 
+            ArrayList<Document> arrayPayments = new ArrayList<>();
+            ArrayList<String> arrayAddress = new ArrayList<>();
+
             Document doc= new Document();
 
-            doc.append("gender", u.getGender());
+            doc.append("gender", user.getGender());
 
             Document doc_name = new Document();
-                doc_name.append("first", u.getFirst());
-                doc_name.append("last", u.getLast());
+                doc_name.append("first", user.getFirst());
+                doc_name.append("last", user.getLast());
             doc.append("name", doc_name);
 
-            doc.append("email", u.getEmail());
+            doc.append("email", user.getEmail());
 
             Document doc_login = new Document();
-                doc_login.append("username", u.getUsername());
-                doc_login.append("password", u.getPassword());
+                doc_login.append("username", user.getUsername());
+                doc_login.append("password", user.getPassword());
             doc.append("login", doc_login);
 
             Document doc_dob = new Document();
-                doc_dob.append("date", u.getDob().toString());
+                doc_dob.append("date", user.getDob().toString());
                 LocalDate lt = LocalDate.now();
-                doc_dob.append("age", calculateAge(u.getDob().toLocalDate(), lt));
+                doc_dob.append("age", calculateAge(user.getDob().toLocalDate(), lt));
             doc.append("dob", doc_dob);
 
-            doc.append("cell", u.getCell());
+            doc.append("cell", user.getCell());
+
+            Document docPayments = new Document();
+                int cvv = user.getPayments().get(0).getCVV();
+                int cardNumber = user.getPayments().get(0).getCardNumber();
+                String expDate = user.getPayments().get(0).getExpDate();
+                docPayments.append("CVV", cvv);
+                docPayments.append("card_number", cardNumber);
+                docPayments.append("exp_date", expDate);
+                arrayPayments.add(docPayments);
+            doc.append("payments", arrayPayments);
+
+            arrayAddress.addAll(user.getAddress());
+            doc.append("address", arrayAddress);
 
             try {
                 collection.insertOne(doc);
@@ -193,7 +209,7 @@ public class MongoDriver {
                 Payment payment = new Payment();
 
                 payment.setCVV(((Long) paymentJson.get("CVV")).intValue());
-                payment.setCardNumber((String) paymentJson.get("card_number"));
+                payment.setCardNumber(((Long) paymentJson.get("card_number")).intValue());
                 payment.setExpDate((String) paymentJson.get("exp_date"));
 
                 payments.add(payment);
@@ -347,6 +363,8 @@ public class MongoDriver {
 
             JSONObject object = (JSONObject) new JSONParser().parse(results.get(0).toJson());
             JSONArray orders_list = (JSONArray) object.get("orders");
+
+            if (orders_list == null) return null;
 
             for (int i = 0; i < orders_list.size(); i++){
                 // take each order
