@@ -1,6 +1,8 @@
 package it.unipi.lsmdb.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.json.JSONPropertyIgnore;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,8 +19,11 @@ public class User {
     private String password;
     private LocalDateTime dob;
     private String cell;
+    @JsonIgnore
     private ArrayList<Order> orders;
+    @JsonIgnore
     private ArrayList<Payment> payments;
+    @JsonIgnore
     private ArrayList<String> address;
     private int interactions;
 

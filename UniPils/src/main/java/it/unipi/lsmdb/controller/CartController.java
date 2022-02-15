@@ -2,6 +2,7 @@ package it.unipi.lsmdb.controller;
 
 import it.unipi.lsmdb.bean.Order;
 import it.unipi.lsmdb.bean.OrderList;
+import it.unipi.lsmdb.bean.Payment;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.persistence.LevelDbDriver;
 import it.unipi.lsmdb.persistence.MongoDriver;
@@ -9,7 +10,6 @@ import it.unipi.lsmdb.utils.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -22,6 +22,7 @@ import javafx.scene.text.FontWeight;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -34,6 +35,20 @@ public class CartController implements Initializable {
     VBox cartInfoPane;
     @FXML
     Button submit;
+    @FXML
+    Label totalPrice;
+    @FXML
+    Label defaultDA;
+    @FXML
+    TextField insertDA;
+    @FXML
+    Label defaultPM;
+    @FXML
+    TextField insertCVV;
+    @FXML
+    TextField insertcardNumber;
+    @FXML
+    TextField insertExpDate;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -50,6 +65,8 @@ public class CartController implements Initializable {
         List<String> keyList;
 
         keyList = levelDbDriver.findKeysByPrefix(username + ":" + "beer_id_name");
+        int totalPricePrinted = 0;
+
 
         for (String key : keyList) {
 
@@ -71,7 +88,8 @@ public class CartController implements Initializable {
             titleId.setFont(font);
 
             Label titlePrice = new Label();
-            titlePrice.setText("Price:  " + levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price") + " USD");
+            int price = Integer.parseInt(levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price"));
+            titlePrice.setText("Price:  " + price + " USD");
             titlePrice.setFont(font);
 
             beer.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -88,12 +106,15 @@ public class CartController implements Initializable {
                 else Utils.showErrorAlert("Beer not removed");
             });
 
-            Label quantity = new Label();
-            quantity.setText("Quantity: ");
+            Label quantityLabel = new Label();
+            quantityLabel.setText("Quantity: ");
 
+            int quantity = Integer.parseInt(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity"));
             TextField textField = new TextField();
-            textField.setText(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity"));
+            textField.setText(String.valueOf(quantity));
             textField.setMaxWidth(100);
+
+            totalPricePrinted += price*quantity;
 
             Button buttonQuantity = new Button();
             buttonQuantity.setText("Update quantity");
@@ -105,9 +126,16 @@ public class CartController implements Initializable {
 
             HBox hBox = new HBox(buttonRemove, buttonQuantity);//Add choiceBox and textField to hBox
 
-            beer.getChildren().addAll(quantity, textField, hBox, titleId, titlePrice);
+            beer.getChildren().addAll(quantityLabel, textField, hBox, titleId, titlePrice);
             cartInfoPane.getChildren().add(beer);
         }
+
+        String deliveryAddress = MongoDriver.getAddresses(username).get(0);
+        defaultDA.setText(deliveryAddress);
+        totalPrice.setText(totalPrice.getText() + " " + totalPricePrinted + " USD");
+
+        ArrayList<Payment> payment = MongoDriver.getPaymentsFromUsername(username);
+        defaultPM.setText("CVV: " + payment.get(0).getCVV() + ", Card Number: " + payment.get(0).getCVV() + ", Exp Date: " + payment.get(0).getExpDate());
     }
 
     private boolean deleteItemFromCart(String username, int beer_id, ActionEvent actionEvent) {
@@ -164,6 +192,14 @@ public class CartController implements Initializable {
         order.setConfirmationDate(confDate);
         order.setFeedback(3);
 
+        if (!insertDA.getText().isBlank()) {
+            MongoDriver.addDeliveryAd(insertDA.getText(), username);
+        }
+
+        if (!insertCVV.getText().isBlank() || !insertcardNumber.getText().isBlank() || !insertExpDate.getText().isBlank()){
+            MongoDriver.addPayment(username, Integer.parseInt(insertCVV.getText()) , Integer.parseInt(insertcardNumber.getText()), insertExpDate.getText());
+        }
+
         try {
 
             for (String keyName : keys) {
@@ -177,7 +213,6 @@ public class CartController implements Initializable {
                 String beer_name = levelDbDriver.getString(keyName);
 
                 int quantity = Integer.parseInt(levelDbDriver.getString(keyQuantity));
-                System.out.println("quantity: " + quantity);
                 int price = Integer.parseInt(levelDbDriver.getString(keyPrice));
 
                 order.setTotalCost(price * quantity);

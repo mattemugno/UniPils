@@ -7,13 +7,10 @@ import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
-import com.mongodb.client.result.UpdateResult;
-import it.unipi.lsmdb.bean.Beer;
-import it.unipi.lsmdb.bean.Order;
-import it.unipi.lsmdb.bean.OrderList;
-import it.unipi.lsmdb.bean.User;
+import it.unipi.lsmdb.bean.*;
 import it.unipi.lsmdb.config.DataSession;
 import it.unipi.lsmdb.config.InfoConfig;
+import it.unipi.lsmdb.utils.Utils;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.json.simple.JSONObject;
@@ -172,6 +169,107 @@ public class MongoDriver {
         }
         closeConnection();
         return true;
+    }
+
+    public static ArrayList<Payment> getPaymentsFromUsername(String username){
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        ArrayList<Payment> payments = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
+            while(cursor.hasNext()){
+                Document doc = cursor.next();
+                results.add(doc);
+            }
+
+            JSONObject object = (JSONObject) new JSONParser().parse(results.get(0).toJson());
+            JSONArray paymentsJson = (JSONArray) object.get("payments");
+
+            for (int i = 0; i < paymentsJson.size(); i++){
+
+                JSONObject paymentJson = (JSONObject) paymentsJson.get(0);
+
+                Payment payment = new Payment();
+
+                payment.setCVV(((Long) paymentJson.get("CVV")).intValue());
+                payment.setCardNumber((String) paymentJson.get("card_number"));
+                payment.setExpDate((String) paymentJson.get("exp_date"));
+
+                payments.add(payment);
+            }
+
+            closeConnection();
+            return payments;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            closeConnection();
+            return null;
+        }
+    }
+
+    public static ArrayList<String> getAddresses(String username){
+        openConnection("Users");
+
+        ArrayList<Document> results = new ArrayList<>();
+        ArrayList<String> addresses = new ArrayList<>();
+
+        try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()){
+            while(cursor.hasNext()){
+                Document doc = cursor.next();
+                results.add(doc);
+            }
+
+            JSONObject object = (JSONObject) new JSONParser().parse(results.get(0).toJson());
+            JSONArray addressJson = (JSONArray) object.get("address");
+
+            for (int i = 0; i < addressJson.size(); i++){
+
+                String address = (String) addressJson.get(i);
+
+                addresses.add(address);
+            }
+
+            closeConnection();
+            return addresses;
+
+        } catch (Exception e){
+            e.printStackTrace();
+            closeConnection();
+            return null;
+        }
+    }
+
+    public static boolean addDeliveryAd(String deliveryAD, String username){
+        openConnection("Users");
+        try {
+            collection.updateOne(eq("login.username", username), Updates.push("address", deliveryAD));
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            Utils.showErrorAlert("Unable to add delivery address");
+            return false;
+        }
+    }
+
+    public static boolean addPayment(String username, int CVV, int card_number, String expDate){
+        openConnection("Users");
+        try {
+
+            Document doc = new Document();
+
+            doc.append("CVV", CVV);
+            doc.append("card_number", card_number);
+            doc.append("exp_date", expDate);
+
+            collection.updateOne(eq("login.username", username), Updates.push("payments", doc.toJson()));
+            return true;
+        } catch (Exception e){
+            e.printStackTrace();
+            Utils.showErrorAlert("Unable to add payment method");
+            return false;
+        }
     }
 
     // CRUD ORDER

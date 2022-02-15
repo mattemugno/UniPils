@@ -71,12 +71,12 @@ public class RegistrationController {
         Utils.addUser(user);
         //Utils.showInfoAlert("User inserted successfully");
         DataSession.setUserLogged(user.getUsername());
-        Utils.changeScene("menu-page.fxml", actionEvent);
+        Utils.changeScene("homepage.fxml", actionEvent);
     }
 
     @FXML
     public void goBack(ActionEvent actionEvent) {
         ActionEvent ae = new ActionEvent(actionEvent.getSource(), actionEvent.getTarget());
-        Utils.changeScene("menu-page.fxml", ae);
+        Utils.changeScene("homepage.fxml", ae);
     }
 }
