@@ -50,7 +50,7 @@ public class RegistrationController {
         String gen;
         String address = addressFX.getText();
         int cvv = Integer.parseInt(cvvFX.getText());
-        int cardNumber = Integer.parseInt(cardNumberFX.getText());
+        String cardNumber = cardNumberFX.getText();
         String expDate = expDateFX.getText();
 
         if (first.equals("") || last.equals("") || em.equals("") || uName.equals("") || pwd.equals("") || !m && !f || cell.equals("")) {

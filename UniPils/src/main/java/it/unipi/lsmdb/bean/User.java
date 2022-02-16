@@ -28,7 +28,7 @@ public class User {
     private int interactions;
 
     public User(String gender, String first, String last, String email, String username, String password,
-                LocalDateTime dob, String cell, String address, int cvv, int cardNumber, String expDate){
+                LocalDateTime dob, String cell, String address, int cvv, String cardNumber, String expDate){
         this.first=first;
         this.last=last;
         this.username=username;
