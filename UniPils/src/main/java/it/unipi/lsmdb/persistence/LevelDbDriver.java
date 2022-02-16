@@ -44,57 +44,21 @@ public class LevelDbDriver {
         return quantity;
     }
 
-    public List<String> findKeysByPrefix(String prefix) {
+    public List<String> findKeysByPrefix(String name) {
         openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> keys = Lists.newArrayList();
-            for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
+            for (iterator.seek(bytes(name)); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
-                if (!key.startsWith(prefix)) {
+                if (!key.contains(name)) {
                     break;
                 }
-                keys.add(key.substring(prefix.length()));
+                keys.add(key.substring(name.length()));
             }
             closeDB();
             return keys;
         } catch (IOException e) {
             closeDB();
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<String> findValuesByPrefix(String prefix) {
-        openDB();
-        try (DBIterator iterator = db.iterator()) {
-            List<String> values = Lists.newArrayList();
-            for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
-                String key = asString(iterator.peekNext().getKey());
-                if (!key.startsWith(prefix)) {
-                    break;
-                }
-                values.add(asString(iterator.peekNext().getValue()));
-            }
-            closeDB();
-            return values;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public HashMap<String, String> findByPrefix(String prefix) {
-        openDB();
-        try (DBIterator iterator = db.iterator()) {
-            HashMap<String, String> entries = new HashMap<>();
-            for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
-                String key = asString(iterator.peekNext().getKey());
-                String value = asString(iterator.peekNext().getValue());
-                if (!key.startsWith(prefix)) {
-                    break;
-                }
-                entries.put(key.substring(prefix.length()), value);
-            }
-            return entries;
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }

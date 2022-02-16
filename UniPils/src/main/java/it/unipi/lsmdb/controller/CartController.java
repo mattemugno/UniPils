@@ -64,7 +64,7 @@ public class CartController implements Initializable {
         LevelDbDriver levelDbDriver = new LevelDbDriver();
         List<String> keyList;
 
-        keyList = levelDbDriver.findKeysByPrefix(username + ":" + "beer_id_name");
+        keyList = levelDbDriver.findKeysByPrefix("name");
         int totalPricePrinted = 0;
 
 
@@ -72,7 +72,7 @@ public class CartController implements Initializable {
 
             int beer_id = levelDbDriver.splitKeys(key);
 
-            key = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
+            key = username + ":" + beer_id + ":" + "name";
 
             String beer_name = levelDbDriver.getString(key);
 
@@ -88,7 +88,7 @@ public class CartController implements Initializable {
             titleId.setFont(font);
 
             Label titlePrice = new Label();
-            int price = Integer.parseInt(levelDbDriver.getString(username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price"));
+            int price = Integer.parseInt(levelDbDriver.getString(username + ":" + beer_id + ":" + "price"));
             titlePrice.setText("Price:  " + price + " USD");
             titlePrice.setFont(font);
 
@@ -109,7 +109,7 @@ public class CartController implements Initializable {
             Label quantityLabel = new Label();
             quantityLabel.setText("Quantity: ");
 
-            int quantity = Integer.parseInt(levelDbDriver.getString(username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity"));
+            int quantity = Integer.parseInt(levelDbDriver.getString(username + ":" + beer_id + ":" + "quantity"));
             TextField textField = new TextField();
             textField.setText(String.valueOf(quantity));
             textField.setMaxWidth(100);
@@ -143,9 +143,9 @@ public class CartController implements Initializable {
         try {
             LevelDbDriver levelDbDriver = new LevelDbDriver();
 
-            String keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
-            String keyPrice = username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price";
-            String keyQuantity = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+            String keyName = username + ":" + beer_id + ":" + "name";
+            String keyPrice = username + ":" + beer_id + ":" + "price";
+            String keyQuantity = username + ":" + beer_id + ":" + "quantity";
 
             levelDbDriver.deleteValue(keyName);
             levelDbDriver.deleteValue(keyPrice);
@@ -163,7 +163,7 @@ public class CartController implements Initializable {
 
         String username = DataSession.getUserLogged();
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        String key = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+        String key = username + ":" + beer_id + ":" + "quantity";
 
         try {
             levelDbDriver.put(key, quantity);
@@ -182,7 +182,7 @@ public class CartController implements Initializable {
         String username = DataSession.getUserLogged();
 
         LevelDbDriver levelDbDriver = new LevelDbDriver();
-        List<String> keys = levelDbDriver.findKeysByPrefix(username + ":" + "beer_id_name");
+        List<String> keys = levelDbDriver.findKeysByPrefix("name");
 
         Order order = new Order();
 
@@ -206,9 +206,9 @@ public class CartController implements Initializable {
 
                 int beer_id = levelDbDriver.splitKeys(keyName);
 
-                keyName = username + ":" + "beer_id_name" + ":" + beer_id + ":" + "beer_name";
-                String keyPrice = username + ":" + "beer_id_price" + ":" + beer_id + ":" + "price";
-                String keyQuantity = username + ":" + "beer_id_quantity" + ":" + beer_id + ":" + "quantity";
+                keyName = username + ":" + beer_id + ":" + "beer_name";
+                String keyPrice = username + ":" + beer_id + ":" + "price";
+                String keyQuantity = username + ":" + beer_id + ":" + "quantity";
 
                 String beer_name = levelDbDriver.getString(keyName);
 
