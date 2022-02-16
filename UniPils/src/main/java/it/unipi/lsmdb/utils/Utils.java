@@ -79,6 +79,10 @@ public class Utils {
 
     }
 
+    //*******************************************************************************************
+    //                          CONSISTENCY MANAGEMENT
+    //*******************************************************************************************
+
     public static boolean addUser(User u){
         NeoDriver neo4j = NeoDriver.getInstance();
         if(MongoDriver.addUser(u))
@@ -139,11 +143,32 @@ public class Utils {
         return false;
     }
 
-    public static boolean deleteUser(User user) {
+    public static boolean updateUser(String username, String field, String value){
+
+        NeoDriver neo4j = NeoDriver.getInstance();
+        String oldValue = MongoDriver.updateUser(username, field, value);
+        if(oldValue != null)
+        {
+            if(!neo4j.updateUser(username, field, value))
+            {
+                MongoDriver.updateUser(username, field, oldValue);
+                showErrorAlert("Error in updating user");
+                return false;
+            }
+            else
+            {
+                Utils.showInfoAlert("Field succesfully updated");
+                return true;
+            }
+        } else
+            return false;
+    }
+
+    public static boolean deleteUser(String username) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
-        if (MongoDriver.deleteUser(user.getUsername())) {
-            if(neo4j.deleteUser(user.getUsername())) {
+        if (MongoDriver.deleteUser(username)) {
+            if(neo4j.deleteUser(username)) {
                 Utils.showInfoAlert("User succesfully deleted");
                 return true;
             }else{
@@ -156,11 +181,11 @@ public class Utils {
         return false;
     }
 
-    public static boolean deleteBeer(Beer beer) {
+    public static boolean deleteBeer(int beer_id) {
         NeoDriver neo4j = NeoDriver.getInstance();
 
-        if (MongoDriver.deleteBeer(beer.get_id())) {
-            if(neo4j.deleteBeer(beer.get_id())) {
+        if (MongoDriver.deleteBeer(beer_id)) {
+            if(neo4j.deleteBeer(beer_id)) {
                 Utils.showInfoAlert("Beer succesfully deleted");
                 return true;
             }else{

@@ -162,29 +162,35 @@ public class MongoDriver {
         return true;
     }
 
-    public static boolean updateUser(User u){
+    public static String updateUser(String username, String field, String value){
         openConnection("Users");
+
+        String oldValue = null;
+
         try{
-            boolean res=deleteUser(u.getUsername());
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify user");
-                return false;
+            Bson setUpdate = Updates.set(field, value);
+
+            ArrayList<Document> results = new ArrayList<>();
+
+            try (MongoCursor<Document> cursor = collection.find(eq("login.username", username)).iterator()) {
+                while (cursor.hasNext()) {
+                    Document doc = cursor.next();
+                    results.add(doc);
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                return oldValue;
             }
 
-            res= addUser(u);
-            if(!res)
-            {
-                System.out.println("A problem has occurred in modify user");
-                return false;
-            }
+            oldValue = results.get(0).getString(field);
+            collection.updateOne(eq("_id", username), setUpdate);
 
         }catch(Exception ex){
             closeConnection();
-            return false;
+            return oldValue;
         }
         closeConnection();
-        return true;
+        return oldValue;
     }
 
     public static ArrayList<Payment> getPaymentsFromUsername(String username){

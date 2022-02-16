@@ -104,6 +104,29 @@ public class NeoDriver {
         return found.get();
     }
 
+    public boolean updateUser(String username, String field, String value){
+        try (Session session = driver.session()) {
+
+            session.writeTransaction((TransactionWork<Void>) tx -> {
+                tx.run("MATCH (u:User) "+
+                                "WHERE u.username=$username "+
+                                "SET u.$field = $value ",
+                        Values.parameters(
+                                "username", username,
+                                "field", field,
+                                "value", value
+                        )
+                );
+
+                return null;
+            });
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     //function called by admin when need to add new beer
     public boolean addBeer(Beer beer) {
         try (Session session = driver.session()) {
@@ -931,9 +954,6 @@ public class NeoDriver {
                 while(result.hasNext()){
                     Record r= result.next();
                     Beer row=new Beer(r.get("beerId").asInt(),r.get("beerName").asString());
-                    //String beer_id = String.valueOf(r.get("beerId"));
-                    //String beer_name = r.get("beerName").asString();
-                    //String row = beer_id + " " + beer_name;
                     beers.add(row);
                 }
                 return beers;

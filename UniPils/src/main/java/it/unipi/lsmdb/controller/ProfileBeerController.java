@@ -49,15 +49,6 @@ public class ProfileBeerController implements Initializable {
     @FXML Label AVGscore;
 
     @FXML
-    public static void deleteBeer(ActionEvent ae, int beerId) {
-        NeoDriver neo4j = NeoDriver.getInstance();
-        neo4j.deleteBeer(beerId);
-        MongoDriver.deleteBeer(beerId);
-        Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
-        Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", ae);
-    }
-
-    @FXML
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -119,6 +110,14 @@ public class ProfileBeerController implements Initializable {
             comment.setDisable(true);
             score.setDisable(true);
         }
+    }
+
+    @FXML
+    public static void deleteBeer(ActionEvent ae, int beerId) {
+        NeoDriver neo4j = NeoDriver.getInstance();
+        Utils.deleteBeer(beerId);
+        Utils.showInfoAlert("Beer " + beerId + " deleted from both DB");
+        Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", ae);
     }
 
     @FXML
@@ -189,7 +188,6 @@ public class ProfileBeerController implements Initializable {
         neo4j.addReview(review, usernameLogged, beer);
         Utils.changeScene("profile-beer.fxml", actionEvent);
     }
-
 
     @FXML
     private void addWishlist(String user, int beer) {

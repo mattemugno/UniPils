@@ -42,6 +42,7 @@ public class ProfileController implements Initializable {
     @FXML private ScrollPane scroll;
     @FXML private Button addDelButton;
     @FXML private VBox suggestedBeers;
+    @FXML private Button deleteUserButton;
 
     private int skip=0;
 
@@ -54,11 +55,11 @@ public class ProfileController implements Initializable {
         else
             usernameLogged=DataSession.getUserView();
 
-        /*if(Objects.equals(usernameLogged, "admin")){
-            Button cancel = new Button();
-            cancel.setText("DELETE BEER");
-            cancel.setOnAction(e -> deleteUser(e, beer_id));
-        }*/
+        if(Objects.equals(DataSession.getUserLogged(), "admin")){
+            deleteUserButton.setVisible(true);
+        }  else {
+            deleteUserButton.setVisible(false);
+        }
 
         User user= MongoDriver.getUserFromUsername(usernameLogged);
         Font font_u = Font.font("Comic Sans", FontWeight.BOLD,  25);
@@ -70,11 +71,11 @@ public class ProfileController implements Initializable {
         emailLabel.setText(user.getEmail());
         cellLabel.setText(user.getCell());
         genderLabel.setText(user.getGender());
-        //addressLabel.setText(user.getAddress());
+        addressLabel.setText(MongoDriver.getAddresses(usernameLogged).get(0));
 
         if(DataSession.getUserView()!=null){
             if(neo4j.getFollower(DataSession.getUserLogged(),DataSession.getUserView()).isEmpty()){
-                addDelButton.setText("Add follower");
+                addDelButton.setText("Follow");
                 addDelButton.setOnAction(actionEvent -> {
                     if(neo4j.addFollows(DataSession.getUserLogged(),DataSession.getUserView())){
                         Utils.changeScene("profile-user.fxml", actionEvent);
@@ -96,6 +97,13 @@ public class ProfileController implements Initializable {
 
         printBeersPurchased(usernameLogged);
         printSuggestedBeers();
+    }
+
+    @FXML
+    public void deleteUser(ActionEvent ae) {
+        Utils.deleteUser(DataSession.getUserView());
+        Utils.showInfoAlert("User " + DataSession.getUserView() + " deleted from both DB");
+        Utils.changeScene("/it/unipi/lsmdb/admin-page.fxml", ae);
     }
 
     @FXML public void printBeersPurchased(String usernameLogged){
@@ -188,7 +196,5 @@ public class ProfileController implements Initializable {
         Utils.changeScene("following-page.fxml", ae);
 
     }
-
-
 
 }

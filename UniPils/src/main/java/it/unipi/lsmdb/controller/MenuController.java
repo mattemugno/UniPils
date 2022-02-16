@@ -30,7 +30,7 @@ public class MenuController implements Initializable {
                 //admin case
                 buttonCart.setVisible(false);
                 buttonWish.setVisible(false);
-                usernameLabel.setDisable(true);
+                usernameLabel.setOnAction(e -> Utils.changeScene("admin-page.fxml", e));
             }
             String usernameLogged = DataSession.getUserLogged();
             usernameLabel.setText(usernameLogged);
