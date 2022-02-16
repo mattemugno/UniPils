@@ -44,16 +44,16 @@ public class LevelDbDriver {
         return quantity;
     }
 
-    public List<String> findKeysByPrefix(String name) {
+    public List<String> findKeysByPrefix(String prefix) {
         openDB();
         try (DBIterator iterator = db.iterator()) {
             List<String> keys = Lists.newArrayList();
-            for (iterator.seek(bytes(name)); iterator.hasNext(); iterator.next()) {
+            for (iterator.seek(bytes(prefix)); iterator.hasNext(); iterator.next()) {
                 String key = asString(iterator.peekNext().getKey());
-                if (!key.contains(name)) {
+                if (!key.startsWith(prefix)) {
                     break;
                 }
-                keys.add(key.substring(name.length()));
+                keys.add(key.substring(prefix.length()));
             }
             closeDB();
             return keys;
