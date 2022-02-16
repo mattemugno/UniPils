@@ -98,7 +98,7 @@ public class MongoDriver {
 
             Document docPayments = new Document();
                 int cvv = user.getPayments().get(0).getCVV();
-                int cardNumber = user.getPayments().get(0).getCardNumber();
+                String cardNumber = user.getPayments().get(0).getCardNumber();
                 String expDate = user.getPayments().get(0).getExpDate();
                 docPayments.append("CVV", cvv);
                 docPayments.append("card_number", cardNumber);
@@ -209,7 +209,7 @@ public class MongoDriver {
                 Payment payment = new Payment();
 
                 payment.setCVV(((Long) paymentJson.get("CVV")).intValue());
-                payment.setCardNumber(((Long) paymentJson.get("card_number")).intValue());
+                payment.setCardNumber((String) paymentJson.get("card_number"));
                 payment.setExpDate((String) paymentJson.get("exp_date"));
 
                 payments.add(payment);
@@ -543,10 +543,10 @@ public class MongoDriver {
         ArrayList<Document> r;
         if (fieldName=="abv" || fieldName=="price") {
             field = Integer.parseInt(fieldValue);
-            r = collection.find(eq(fieldName, field)).into(new ArrayList<>());
+            r = collection.find(eq(fieldName, field)).limit(30).into(new ArrayList<>());
         }
         else{
-            r = collection.find(eq(fieldName, fieldValue)).into(new ArrayList<>());
+            r = collection.find(eq(fieldName, fieldValue)).limit(30).into(new ArrayList<>());
         }
 
         ObjectMapper objectMapper = new ObjectMapper();

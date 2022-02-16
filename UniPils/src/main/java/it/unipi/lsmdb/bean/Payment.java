@@ -1,11 +1,11 @@
 package it.unipi.lsmdb.bean;
 
 public class Payment {
-    private int cardNumber;
+    private String cardNumber;
     private int CVV;
     private String expDate;
 
-    public Payment(int cardNumber, int CVV, String expDate) {
+    public Payment(String cardNumber, int CVV, String expDate) {
         this.cardNumber = cardNumber;
         this.CVV = CVV;
         this.expDate = expDate;
@@ -14,11 +14,11 @@ public class Payment {
     public Payment() {
     }
 
-    public int getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 
