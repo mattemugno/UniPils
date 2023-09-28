@@ -1,1 +1,2 @@
-# LSMDB-Project
+# Unipils
+Unipils is an online e-commerce platform centered around buying and selling beers, incorporating various social features such as user profile creation and the ability to connect with other users as friends. It was developed for the Large Scale and Multi-Structured Database course. The data was sourced from kaggle.com and collected through a scraping process from the website ratebeer.com. The technologies used include MongoDB, Neo4J, a key-value database, with Java as the primary development language.
